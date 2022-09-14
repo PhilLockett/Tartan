@@ -1,0 +1,470 @@
+/*  Tartan - a JavaFX based playing card image generator.
+ *
+ *  Copyright 2022 Philip Lockett.
+ *
+ *  This file is part of Tartan.
+ *
+ *  Tartan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Tartan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Tartan.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*
+ * CardSample is a class that is responsible for creating the Stage, drawing 
+ * and refreshing the card.
+ */
+package phillockett65.Tartan;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
+
+public class Sample extends Stage {
+    
+    private Model model;
+
+    private Scene scene;
+
+    private double dx;	// Difference between the size of the stage and the size of the scene.
+    private double dy;
+
+    private ObservableList<Thread> colList = FXCollections.observableArrayList();
+    private ObservableList<Thread> rowList = FXCollections.observableArrayList();
+
+
+
+    /************************************************************************
+     * General support code.
+     */
+
+    private static int OFFSET = 30;
+
+    private double colToXPos(int col) {
+        final double size = model.getThreadSize();
+        return OFFSET + (col * size);
+    }
+
+    private double rowToYPos(int row) {
+        final double size = model.getThreadSize();
+        return OFFSET + (row * size);
+    }
+
+    private int xPosToCol(double x) {
+        final double size = model.getThreadSize();
+        return (int)((x - OFFSET) / size);
+    }
+
+    private int yPosToRow(double y) {
+        final double size = model.getThreadSize();
+        return (int)((y - OFFSET) / size);
+    }
+
+
+    /**
+     * Class to represent a single thread as a sequence of rectangles.
+     */
+    private class Thread {
+        private int index;
+        private int colour;
+        private Rectangle stitch;
+        private ObservableList<Rectangle> stitchList = FXCollections.observableArrayList();
+
+        /**
+         * The Constructor is singularly responsible for adding the Rectangles
+         * to the Group.
+         * @param index of the row or column.
+         * @param colour index for the Thread.
+         */
+        public Thread(int index, int colour) {
+            this.index = index;
+            this.colour = colour;
+            ObservableList<Node> items =  model.getGroup().getChildren();
+
+            final Color color = model.getSwatchColour(colour);
+            stitch = new Rectangle();
+            stitch.setFill(color);
+
+            items.add(stitch);
+
+            final int count = Default.WIDTH.getInt() / 4;
+            for (int i = 0; i < count; ++i) {
+                Rectangle stitch = new Rectangle();
+                stitch.setFill(color);
+
+                items.add(stitch);
+                stitchList.add(stitch);
+            }
+        }
+
+        /**
+         * Set the colour of the thread to the given swatch colour.
+         * @param colourIndex of the selected swatch.
+         */
+        public void setColour(int colourIndex) {
+            final Color color = model.getSwatchColour(colourIndex);
+            colour = colourIndex;
+            stitch.setFill(color);
+            for (Rectangle stitch : stitchList)
+                stitch.setFill(color);
+        }
+
+        /**
+         * Synchronise the colour of the thread to the updated swatch colour.
+         * @return true if this thread needed to be updated, false otherwise.
+         */
+        public boolean syncCurrentColour() {
+            if (colour != model.getSelectedColour())
+                return false;
+
+            final Color color = model.getCurrentColour();
+
+            stitch.setFill(color);
+            for (Rectangle stitch : stitchList)
+                stitch.setFill(color);
+
+            return true;
+        }
+
+        /**
+         * Synchronise the colour of the thread border.
+         */
+        public void syncBorderColour() {
+            final Color colour = model.getBorderColour();
+
+            stitch.setStroke(colour);
+            for (Rectangle stitch : stitchList)
+                stitch.setStroke(colour);
+
+        }
+
+        /**
+         * Synchronise the thickness of the thread.
+         */
+        public void syncBorderThickness() {
+            final double thickness = model.getBorderThickness();
+
+            stitch.setStrokeWidth(thickness);
+            for (Rectangle stitch : stitchList)
+                stitch.setStrokeWidth(thickness);
+
+        }
+
+        /**
+         * Set the visibilty of the lead thread.
+         * @param visible 
+         */
+        public void setVisible(boolean visible) {
+            stitch.setVisible(visible);
+        }
+
+        /**
+         * Synchronise the thread size for a row. Sets the size and position of
+         * the Rectangles.
+         */
+        public void syncRowSize() {
+            final double size = model.getThreadSize();
+            final double size2 = size * 2;
+            final double yPos = rowToYPos(index);
+
+            stitch.setWidth(Default.BORDER_WIDTH.getFloat());
+            stitch.setHeight(size);
+            stitch.setX(0D);
+            stitch.setY(yPos);
+            stitch.setVisible(index < model.getVerticalCount());
+
+            int c = index % 4;
+            c = (4 - c) % 4;
+            for (Rectangle stitch : stitchList) {
+                stitch.setWidth(size2);
+                stitch.setHeight(size);
+                stitch.setX(colToXPos(c));
+                stitch.setY(yPos);
+
+                c += 4;
+            }
+        }
+
+        /**
+         * Synchronise the thread size for a column. Sets the size and position
+         * of the Rectangles.
+         */
+        public void syncColSize() {
+            final double size = model.getThreadSize();
+            final double size2 = size * 2;
+            final double xPos = colToXPos(index);
+
+            stitch.setWidth(size);
+            stitch.setHeight(Default.BORDER_WIDTH.getFloat());
+            stitch.setX(xPos);
+            stitch.setY(0D);
+            stitch.setVisible(index < model.getHorizontalCount());
+
+            int r = index % 4;
+            r = (6 - r) % 4;
+            for (Rectangle stitch : stitchList) {
+                stitch.setWidth(size);
+                stitch.setHeight(size2);
+                stitch.setX(xPos);
+                stitch.setY(rowToYPos(r));
+
+                r += 4;
+            }
+        }
+
+    }
+
+
+
+    /************************************************************************
+     * Support code for the Initialization of the Sample.
+     */
+
+    /**
+     * Constructor.
+     * 
+     * @param mainController    - used to call the centralized controller.
+     * @param mainModel         - used to call the centralized data model.
+     * @param title             - string displayed as the heading of the Stage.
+     */
+    public Sample(Model mainModel, String title) {
+		// System.out.println("CardSample constructed: " + title);
+
+        // resizableProperty().setValue(false);
+        setOnCloseRequest(e -> Platform.exit());
+        // initStyle(StageStyle.TRANSPARENT);
+
+        model = mainModel;
+
+        this.setTitle(title);
+        initializeCardSample();
+
+        this.show();
+    }
+
+    /**
+     * Initializes the stage and adds handlers to the scene.
+     */
+    private void initializeCardSample() {
+
+        final double WIDTH = Default.MPC_WIDTH.getFloat();
+        final double HEIGHT = Default.MPC_HEIGHT.getFloat();
+        // System.out.println("initializeCardSample(" + WIDTH + ", " + HEIGHT + ")");
+
+        scene = new Scene(model.getGroup(), WIDTH, HEIGHT, Color.WHITE);
+        drawBlankLoom();
+
+        this.setScene(scene);
+        this.setX(0);
+        this.setY(0);
+
+        dx = this.getWidth() - WIDTH;
+        dy = this.getHeight() - HEIGHT;
+
+        this.setMinWidth(Default.MIN_WIDTH.getFloat() + dx);
+        this.setMinHeight(Default.MIN_HEIGHT.getFloat() + dy);
+        this.setMaxWidth(Default.MAX_WIDTH.getFloat() + dx);
+        this.setMaxHeight(Default.MAX_HEIGHT.getFloat() + dy);
+        
+        scene.setOnMouseClicked(event -> {
+            final double x = event.getSceneX();
+            final double y = event.getSceneY();
+            final int colour = model.getSelectedColour();
+
+            if (x < OFFSET) {
+                setRowColour(yPosToRow(y), colour);
+
+            } else if (y < OFFSET) {
+                setColColour(xPosToCol(x), colour);
+
+            } else {
+                
+                final int c = xPosToCol(x);
+                final int r = yPosToRow(y);
+
+                if ((r < model.getRowCount()) && (c < model.getColCount())) {
+
+                    final int s = r + c;
+                    if (s % 4 < 2) {
+                        setRowColour(r, colour);
+                    } else {
+                        setColColour(c, colour);
+                    }
+                }
+
+            }
+        });
+
+    }
+
+    /**
+     * Called on initialization to set up the blank loom.
+     */
+    private void drawBlankLoom() {
+        final int VCOUNT = model.getVerticalCount();
+        final int ROWS = Default.HEIGHT.getInt();
+        for (int r = 0; r < ROWS; ++r) {
+            Thread row = new Thread(r, model.getRowColourIndex(r % VCOUNT));
+            rowList.add(row);
+        }
+
+        final int HCOUNT = model.getHorizontalCount();
+        final int COLS = Default.WIDTH.getInt();
+        for (int c = 0; c < COLS; ++c) {
+            Thread col = new Thread(c, model.getColColourIndex(c % HCOUNT));
+            colList.add(col);
+        }
+
+        syncBorderColour();
+        syncThreadSize();
+    }
+
+    /**
+     * Initialization after the model has been initialised.
+     */
+    public void init() {
+        for (int i = 0; i < model.getRowCount(); ++i)
+            rowList.get(i).setColour(model.getRowColourIndex(i));
+
+        for (int i = 0; i < model.getColCount(); ++i)
+            colList.get(i).setColour(model.getColColourIndex(i));
+    }
+
+
+
+    /************************************************************************
+     * Support code for the mouse click handler.
+     */
+
+    /**
+     * Set the row (and repeat rows) to the selected swatch colour.
+     * @param row to set the colour of.
+     * @param colour index to set the row to.
+     */
+    private void setRowColour(int row, int colour) {
+        model.setRowColourIndex(row, colour);
+        for (int i = 0; i < Default.WIDTH.getInt(); i += model.getHorizontalCount()) {
+            final int index = i + row;
+            if (index >= Default.WIDTH.getInt())
+                break;
+
+            rowList.get(index).setColour(colour);
+        }
+    }
+
+    /**
+     * Set the column (and repeat columns) to the selected swatch colour.
+     * @param col to set the colour of.
+     * @param colour index to set the column to.
+     */
+    private void setColColour(int col, int colour) {
+        model.setColColourIndex(col, colour);
+        for (int i = 0; i < Default.HEIGHT.getInt(); i += model.getVerticalCount()) {
+            final int index = i + col;
+            if (index >= Default.HEIGHT.getInt())
+                break;
+
+            colList.get(index).setColour(colour);
+        }
+    }
+
+
+
+    /************************************************************************
+     * Synchronize interface.
+     */
+
+    /**
+     * Synchronise to the current swatch colour.
+     */
+    public void syncColour() {
+        for (Thread stitch : rowList) {
+            stitch.syncCurrentColour();
+        }
+        for (Thread stitch : colList) {
+            stitch.syncCurrentColour();
+        }
+    }
+
+    /**
+     * Synchronise to the stitch border colour.
+     */
+    public void syncBorderColour() {
+        for (Thread stitch : rowList) {
+            stitch.syncBorderColour();
+        }
+        for (Thread stitch : colList) {
+            stitch.syncBorderColour();
+        }
+    }
+
+    /**
+     * Synchronise to the thread size.
+     */
+    public void syncThreadSize() {
+        for (Thread stitch : rowList) {
+            stitch.syncRowSize();
+            stitch.syncBorderThickness();
+        }
+
+        for (Thread stitch : colList) {
+            stitch.syncColSize();
+            stitch.syncBorderThickness();
+        }
+    }
+
+    /**
+     * Synchronise to the vertical repeat count.
+     */
+    public void syncVerticalCount() {
+        final int COUNT = model.getVerticalCount();
+        final int ROWS = Default.HEIGHT.getInt();
+        int index = 0;
+        boolean visible = true;
+
+        for (int r = 0; r < ROWS; ++r) {
+            Thread stitch = rowList.get(r);
+            stitch.setColour(model.getRowColourIndex(index));
+            stitch.setVisible(visible);
+            if (++index >= COUNT) {
+                visible = false;
+                index = 0;
+            }
+        }
+    }
+
+    /**
+     * Synchronise to the horizontal repeat count.
+     */
+    public void syncHorizontalCount() {
+        final int COUNT = model.getHorizontalCount();
+        final int COLS = Default.WIDTH.getInt();
+        int index = 0;
+        boolean visible = true;
+
+        for (int c = 0; c < COLS; ++c) {
+            Thread stitch = colList.get(c);
+            stitch.setColour(model.getColColourIndex(index));
+            stitch.setVisible(visible);
+            if (++index >= COUNT) {
+                visible = false;
+                index = 0;
+            }
+        }
+    }
+    
+}
