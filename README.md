@@ -1,13 +1,13 @@
 # Tartan
 
-'Tartan' is a JavaFX application for designing a Tartan patterns.
+'Tartan' is a JavaFX application for designing Tartan patterns.
 
 ## Overview
 This project has been set up as a Maven project that uses JavaFX, FXML and 
 CSS to render the GUI. Maven can be run from the command line as shown below.
 Maven resolves dependencies and builds the application independently of an IDE.
 
-This application helps design Tartan and can generate a png image.
+This application helps design Tartan patterns and can generate a png image.
 
 ## Dependencies
 'Tartan' is dependent on the following:
