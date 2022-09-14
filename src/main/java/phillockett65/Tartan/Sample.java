@@ -27,6 +27,7 @@ package phillockett65.Tartan;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -279,14 +280,41 @@ public class Sample extends Stage {
         this.setMinHeight(Default.MIN_HEIGHT.getFloat() + dy);
         this.setMaxWidth(Default.MAX_WIDTH.getFloat() + dx);
         this.setMaxHeight(Default.MAX_HEIGHT.getFloat() + dy);
-        
+
+        scene.setOnMouseMoved(event -> {
+            final double x = event.getSceneX();
+            final double y = event.getSceneY();
+
+            if ((x < OFFSET) && (y < OFFSET)) {
+                scene.setCursor(Cursor.DEFAULT);
+
+                return;
+            }
+
+            final int c = xPosToCol(x);
+            final int r = yPosToRow(y);
+
+            if ((r < model.getRowCount()) && (c < model.getColCount())) {
+                scene.setCursor(Cursor.CROSSHAIR);
+
+                return;
+            }
+
+            scene.setCursor(Cursor.DEFAULT);
+        });
+
+        scene.setOnMouseExited(event -> {
+            scene.setCursor(Cursor.DEFAULT);
+        });
+
         scene.setOnMouseClicked(event -> {
             final double x = event.getSceneX();
             final double y = event.getSceneY();
             final int colour = model.getSelectedColour();
 
             if (x < OFFSET) {
-                setRowColour(yPosToRow(y), colour);
+                if (y >= OFFSET)
+                    setRowColour(yPosToRow(y), colour);
 
             } else if (y < OFFSET) {
                 setColColour(xPosToCol(x), colour);
