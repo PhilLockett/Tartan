@@ -52,21 +52,18 @@
     -fx-background-color: #9B4642;
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
-    -fx-background-radius: 12;
 }
 .toggle-button:selected{
     -fx-background-color: green;
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
-    -fx-background-radius: 12;
 }
 .toggle-button{
     -fx-background-color: red;
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
-    -fx-background-radius: 12;
 }
-.context-menu{
+.context-menu, .menu-bar{
     -fx-background-color: #9B4642;
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
@@ -99,20 +96,3 @@
     -fx-background-color: #9B4642;
     -fx-font-weight: bold;
 }
-/*
-.list-cell{
-    -fx-font-weight: bold;
-}
-
-.list-cell:selected{
-    -fx-text-fill: black;
-    -fx-background-color: #9B4642;
-    -fx-accent: #9B4642;
-}
-.list-cell:even{
-    -fx-background-color: #f8f8f8;
-}
-.list-cell:odd{
-    -fx-background-color: #e8e8e8;
-}
-*/

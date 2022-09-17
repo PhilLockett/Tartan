@@ -24,10 +24,17 @@
  */
 package phillockett65.Tartan;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -91,9 +98,9 @@ public class PrimaryController {
     /**
      * Save the current state to disc, called by the application on shut down.
      */
-    public void saveState() {
-        model.writeData();
-    }
+    // public void saveState() {
+    //     model.writeData();
+    // }
 
     /**
      * Synchronise all controls with the model. This should be the last step 
@@ -109,6 +116,178 @@ public class PrimaryController {
 
         borderColourPicker.setValue(model.getBorderColour());
 
+    }
+
+
+
+    /************************************************************************
+     * Support code for "Tartan Designer" Menu structure.
+     */
+
+    @FXML
+    private void fileLoadOnAction() {
+        launchLoadWindow();
+    }
+
+    @FXML
+    private void fileSaveOnAction() {
+        if (model.isNamed())
+            model.saveTartan();
+        else
+            launchSaveAsWindow();
+    }
+
+    @FXML
+    private void fileSaveAsOnAction() {
+        launchSaveAsWindow();
+    }
+
+    @FXML
+    private void fileCloseOnAction() {
+        sample.close();
+        model.getStage().close();
+    }
+
+    @FXML
+    private void editClearOnAction() {
+        model.defaultSettings();
+        syncUI();
+    }
+
+
+    @FXML
+    private void helpAboutOnAction() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("About Tartan Designer");
+        alert.setHeaderText("Tartan Designer 1.0");
+        alert.setContentText("Tartan Designer is an application for generating Tartan designs.");
+
+        alert.showAndWait();
+    }
+
+
+
+    /************************************************************************
+     * Support code for "Load" panel. 
+     */
+
+    private LoadController loadController;
+    private Stage loadStage;
+
+    private boolean launchLoadWindow() {
+        // System.out.println("launchLoadWindow() " + model.isLoadWindowLaunched());
+        if (model.isLoadWindowLaunched())
+            return false;
+
+        model.setLoadWindowLaunched(true);
+
+        if (loadController != null) {
+            loadController.syncLoadPanel();
+            loadStage.show();
+
+            return true;
+        }
+
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("load.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(App.class.getResource("application.css").toExternalForm());
+
+            loadStage = new Stage();
+            loadStage.setTitle("Load Tartan");
+            loadStage.resizableProperty().setValue(false);
+            loadStage.setScene(scene);
+            loadStage.setOnCloseRequest(e -> Platform.exit());
+
+            loadController = fxmlLoader.getController();
+            loadController.init(model);
+            loadController.syncUI();
+
+            loadStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean closeLoadWindow() {
+        // System.out.println("closeLoadWindow() " + model.isLoadWindowLaunched());
+        if (!model.isLoadWindowLaunched())
+            return false;
+
+        model.setLoadWindowLaunched(false);
+
+        loadStage.hide();
+
+        return true;
+    }
+
+
+
+    /************************************************************************
+     * Support code for "Save As" panel. 
+     */
+
+    private SaveAsController saveAsController;
+    private Stage saveAsStage;
+
+    private boolean launchSaveAsWindow() {
+        // System.out.println("launchSaveAsWindow() " + model.isSaveAsWindowLaunched());
+        if (model.isSaveAsWindowLaunched())
+            return false;
+
+        model.setSaveAsWindowLaunched(true);
+
+        if (saveAsController != null) {
+            saveAsStage.show();
+
+            return true;
+        }
+
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("saveAs.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(App.class.getResource("application.css").toExternalForm());
+
+            saveAsStage = new Stage();
+            saveAsStage.setTitle("Save Tartan");
+            saveAsStage.resizableProperty().setValue(false);
+            saveAsStage.setScene(scene);
+            saveAsStage.setOnCloseRequest(e -> Platform.exit());
+
+            saveAsController = fxmlLoader.getController();
+            saveAsController.init(model);
+            saveAsController.syncUI();
+
+            saveAsStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean closeSaveAsWindow() {
+        // System.out.println("closeSaveAsWindow() " + model.isSaveAsWindowLaunched());
+        if (!model.isSaveAsWindowLaunched())
+            return false;
+
+        model.setSaveAsWindowLaunched(false);
+
+        saveAsStage.hide();
+
+        return true;
     }
 
 
@@ -392,13 +571,13 @@ public class PrimaryController {
 
         threadSizeSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("ringRadiusSpinner.Listener(" + newValue + "))");
-            model.setThreadSize(newValue);
+            model.initThreadSize(newValue);
             sample.syncThreadSize();
         });
 
         borderThicknessSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("ringThicknessSpinner.Listener(" + newValue + "))");
-            model.setBorderThickness(newValue);
+            model.initBorderThickness(newValue);
             sample.syncThreadSize();
         });
 
@@ -418,7 +597,7 @@ public class PrimaryController {
 
     @FXML
     void generateButtonActionPerformed(ActionEvent event) {
-        final String path = model.generate();
+        final String path = model.saveTartan();
         setStatusMessage("Generated in: " + path);
     }
 

@@ -61,7 +61,7 @@ public class App extends Application {
 
     @Override
     public void stop() throws Exception {
-        controller.saveState();
+        // controller.saveState();
     }
 
     public static void main(String[] args) {

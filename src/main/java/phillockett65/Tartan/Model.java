@@ -45,20 +45,15 @@ import javafx.stage.Stage;
 public class Model {
 
     private final static String DATAFILE = "Settings.dat";
-    private String baseDirectory = ".";
+    private final static String SWATCHES = "swatches";
+    private final static String IMAGEFILE = "tartan.png";
+
 
 
     /************************************************************************
      * General support code.
      */
-
-    /**
-     * @return the file path of the settings data file.
-     */
-    public String getSettingsFile() {
-        return DATAFILE;
-    }
-
+    
 
 
     /************************************************************************
@@ -109,14 +104,14 @@ public class Model {
      * Set all attributes to the default values.
      */
     public void defaultSettings() {
+        clearSwatches();
         setSelectedColour(1);
-
-        setBorderColour(Color.BLACK);
-
+        
         initHorizontalCount(114);
         initVerticalCount(114);
-        setThreadSize(6.0);
-        setBorderThickness(1.0);
+        initThreadSize(6.0);
+        setBorderColour(Color.BLACK);
+        initBorderThickness(1.0);
     }
 
     public PrimaryController getController() { return controller; }
@@ -133,7 +128,9 @@ public class Model {
      * Instantiate a DataStore, populate it with data and save it to disc.
      * @return true if data successfully written to disc, false otherwise.
      */
-    public boolean writeData() {
+    private boolean writeData() {
+        final String file = getSettingsFile();
+        // makeTartanDirectory();
         DataStore data = new DataStore();
 
         data.setRowCount(rowList.size());
@@ -155,7 +152,7 @@ public class Model {
         data.setBorderColour(getBorderColour());
         data.setBorderThickness(getBorderThickness());
 
-        if (!DataStore.writeData(data, getSettingsFile())) {
+        if (!DataStore.writeData(data, file)) {
             data.dump();
 
             return false;
@@ -169,8 +166,9 @@ public class Model {
      * the model with the data.
      * @return true if the model is successfully updated, false otherwise.
      */
-    public boolean readData() {
-        DataStore data = DataStore.readData(getSettingsFile());
+    private boolean readData() {
+        final String file = getSettingsFile();
+        DataStore data = DataStore.readData(file);
         if (data == null)
             return false;
 
@@ -188,9 +186,9 @@ public class Model {
 
         initHorizontalCount(data.getHorizontalCount());
         initVerticalCount(data.getVerticalCount());
-        setThreadSize(data.getThreadSize());
+        initThreadSize(data.getThreadSize());
         setBorderColour(data.getBorderColour());
-        setBorderThickness(data.getBorderThickness());
+        initBorderThickness(data.getBorderThickness());
 
         return true;
     }
@@ -266,6 +264,65 @@ public class Model {
 
 
     /************************************************************************
+     * Support code for "Load" panel.
+     */
+
+    private ObservableList<String> tartanList = FXCollections.observableArrayList();
+
+    private boolean loadWindowLaunched = false;
+
+    public boolean isLoadWindowLaunched() { return loadWindowLaunched; }
+    public void setLoadWindowLaunched(boolean state) { loadWindowLaunched = state; }
+
+    private boolean fillDirectoryList() {
+
+        final String directoryName = getBaseDirectory();
+        final File tartanPath= new File(directoryName);
+
+        tartanList.clear();
+        for (final File tartan : tartanPath.listFiles()) {
+            if (tartan.isDirectory()) {
+                // System.out.println(directoryName + "\\" + tartan.getName());
+                tartanList.add(tartan.getName());
+            }
+        }
+
+        return !tartanList.isEmpty();
+    }
+
+    public ObservableList<String> getTartanList() {
+        fillDirectoryList();
+
+        return tartanList;
+    }
+
+    /**
+     * Called by the controller to initialize the load controller.
+     */
+    public void initializeLoadPanel() {
+        // System.out.println("Load Controller initialized.");
+    }
+
+
+    /************************************************************************
+     * Support code for "Save" panel.
+     */
+
+    private boolean saveWindowLaunched = false;
+
+    public boolean isSaveAsWindowLaunched() { return saveWindowLaunched; }
+    public void setSaveAsWindowLaunched(boolean state) { saveWindowLaunched = state; }
+
+    /**
+     * Called by the controller to initialize the Save controller.
+     */
+    public void initializeSavePanel() {
+        // System.out.println("Save Controller initialized.");
+
+    }
+
+
+    /************************************************************************
      * Support code for "Colour Palette" panel.
      */
 
@@ -275,7 +332,9 @@ public class Model {
     public int getSelectedColour() { return colourSelected; }
 
     private class ColourSwatch  {
-        public ColourSwatch() { colour = Color.WHITE; name = null; }
+        public ColourSwatch() { clear(); }
+
+        public void clear() { colour = Color.WHITE; name = null; }
 
         public Color colour;
         public String name;
@@ -330,6 +389,12 @@ public class Model {
     }
 
 
+    public void clearSwatches() {
+        for (ColourSwatch swatch : colourSwatches) {
+            swatch.clear();
+        }
+    }
+
     /**
      * Initialize "Colour Palette" panel.
      */
@@ -370,9 +435,9 @@ public class Model {
     public void initVerticalCount(int value) { verticalCountSVF.setValue(value); }
     public void setHorizontalCount(int value) { setColCount(value); }
     public void setVerticalCount(int value) { setRowCount(value); }
-    public void setThreadSize(double value) { threadSizeSVF.setValue(value); }
+    public void initThreadSize(double value) { threadSizeSVF.setValue(value); }
     public void setBorderColour(Color colour) { borderColour = colour; }
-    public void setBorderThickness(double value) { borderThicknessSVF.setValue(value); }
+    public void initBorderThickness(double value) { borderThicknessSVF.setValue(value); }
 
 
     /**
@@ -391,12 +456,25 @@ public class Model {
      * Support code for "Status Line" panel.
      */
 
-    private String getOutputPath() {
-        return baseDirectory + "\\swatches";
-    }
+    private String baseDirectory = ".\\" + SWATCHES;
+    private String name = "";
 
-    private String getOutputImageFile() {
-        return getOutputPath() + "\\tartan.png";
+    public String getBaseDirectory() { return baseDirectory; }
+    // public void setBaseDirectory(String baseDirectory) { this.baseDirectory = baseDirectory; }
+
+    public boolean isNamed() { return !name.isBlank(); }
+    public String getName() { return name; }
+    // public void setName(String name) { this.name = name; }
+    public void setName(String name) { 
+        System.out.println("Name: " + name);
+        this.name = name; }
+
+    private String getOutputPath() {
+        final String base = getBaseDirectory();
+        if (name.isBlank())
+            return base;
+        
+        return base + "\\" + name;
     }
 
     /**
@@ -404,12 +482,28 @@ public class Model {
      * @return true if the directory exists, false otherwise.
      */
     private boolean makeTartanDirectory() {
-        File dir = new File(getOutputPath());
+        final String base = getOutputPath();
+        File dir = new File(base);
         if (dir.exists())
             return true;
 
         return dir.mkdir();
     }
+
+    private String getOutputImageFile() {
+        return getOutputPath() + "\\" + IMAGEFILE;
+    }
+
+    /**
+     * @return the file path of the settings data file.
+     */
+    public String getSettingsFile() {
+        return getOutputPath() + "\\" + DATAFILE;
+    }
+
+    // private String getOutputSettingsFile() {
+    //     return DATAFILE;
+    // }
 
     /**
      * Save the tartan design as an image.
@@ -499,12 +593,23 @@ public class Model {
     }
 
     /**
-     * Save the tartan design as an image.
-     * @return the file path of the saved image.
+     * Save the tartan design data and as an image.
+     * @return the file path of the saved data.
      */
-    public String generate() {
+    public String saveTartan() {
         makeTartanDirectory();
+        writeData();
         saveImage();
+
+        return getOutputImageFile();
+    }
+
+    /**
+     * Load the tartan design data.
+     * @return the file path of the loaded data.
+     */
+    public String loadTartan() {
+        readData();
 
         return getOutputImageFile();
     }
@@ -513,6 +618,7 @@ public class Model {
      * Initialize "Status Line" panel.
      */
     private void initializeStatusLine() {
+        makeTartanDirectory();
     }
 
 
