@@ -11,7 +11,7 @@
 <VBox spacing="8.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phillockett65.Tartan.LoadController">
    <children>
       <Label text="Select tartan to load" />
-      <ListView fx:id="tartanListView" prefHeight="121.0" prefWidth="200.0" />
+      <ListView fx:id="tartanListView" prefHeight="121.0" prefWidth="250.0" />
       <HBox spacing="8.0">
          <children>
             <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonActionPerformed" text="Cancel" />
