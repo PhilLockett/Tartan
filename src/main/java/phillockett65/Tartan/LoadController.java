@@ -85,15 +85,15 @@ public class LoadController {
 
     @FXML
     void cancelButtonActionPerformed(ActionEvent event) {
-        model.getController().closeLoadWindow();
+        model.getController().closeLoadWindow(null);
     }
 
     @FXML
     void loadButtonActionPerformed(ActionEvent event) {
-        model.loadTartan();
+        final String prompt = model.loadTartan();
         model.getController().syncUI();
 
-        model.getController().closeLoadWindow();
+        model.getController().closeLoadWindow(prompt);
     }
 
     /**

@@ -601,17 +601,17 @@ public class Model {
         writeData();
         saveImage();
 
-        return getOutputImageFile();
+        return getOutputPath();
     }
 
     /**
      * Load the tartan design data.
-     * @return the file path of the loaded data.
+     * @return the name of the loaded data.
      */
     public String loadTartan() {
         readData();
 
-        return getOutputImageFile();
+        return getName();
     }
 
     /**

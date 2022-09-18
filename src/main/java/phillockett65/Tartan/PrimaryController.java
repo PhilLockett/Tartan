@@ -216,14 +216,15 @@ public class PrimaryController {
         return true;
     }
 
-    public boolean closeLoadWindow() {
+    public boolean closeLoadWindow(String prompt) {
         // System.out.println("closeLoadWindow() " + model.isLoadWindowLaunched());
         if (!model.isLoadWindowLaunched())
             return false;
 
         model.setLoadWindowLaunched(false);
-
         loadStage.hide();
+        if (prompt != null)
+            setStatusMessage("Loaded " + prompt);
 
         return true;
     }
@@ -278,14 +279,15 @@ public class PrimaryController {
         return true;
     }
 
-    public boolean closeSaveAsWindow() {
+    public boolean closeSaveAsWindow(String prompt) {
         // System.out.println("closeSaveAsWindow() " + model.isSaveAsWindowLaunched());
         if (!model.isSaveAsWindowLaunched())
             return false;
 
         model.setSaveAsWindowLaunched(false);
-
         saveAsStage.hide();
+        if (prompt != null)
+            setStatusMessage("Saved to: " + prompt);
 
         return true;
     }

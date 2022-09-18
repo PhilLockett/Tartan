@@ -87,13 +87,13 @@ public class SaveAsController {
 
     @FXML
     void cancelButtonActionPerformed(ActionEvent event) {
-        model.getController().closeSaveAsWindow();
+        model.getController().closeSaveAsWindow(null);
     }
 
     @FXML
     void saveButtonActionPerformed(ActionEvent event) {
-        model.saveTartan();
-        model.getController().closeSaveAsWindow();
+        final String prompt = model.saveTartan();
+        model.getController().closeSaveAsWindow(prompt);
     }
 
     /**
