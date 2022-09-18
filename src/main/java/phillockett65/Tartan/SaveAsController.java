@@ -64,6 +64,8 @@ public class SaveAsController {
      * Synchronise all controls with the model.
      */
     public void syncUI() {
+        saveAsTextField.setText(model.getName());
+        saveButton.setDisable(!model.isNamed());
     }
 
 
@@ -101,8 +103,6 @@ public class SaveAsController {
      * Initialize "Save As" panel.
      */
     private void initializeSaveAsPanel() {
-        saveButton.setDisable(!model.isNamed());
-
         saveAsTextField.setTooltip(new Tooltip("Enter a name for the tartan"));
         saveButton.setTooltip(new Tooltip("Save tartan using the specified name"));
         cancelButton.setTooltip(new Tooltip("Cancel save"));

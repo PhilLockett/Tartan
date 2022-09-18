@@ -41,7 +41,7 @@ public enum Default {
     MPC_HEIGHT (1050F),
     SWATCH_COUNT (8F),
     BORDER_WIDTH (30F),
-    INIT_THREAD_COUNT (116F);
+    INIT_THREAD_COUNT (114F);
 
     private final int	iValue;
     private final float	rValue;

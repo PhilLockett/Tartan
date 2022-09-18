@@ -35,7 +35,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -131,8 +130,12 @@ public class PrimaryController {
 
     @FXML
     private void fileSaveOnAction() {
-        if (model.isNamed())
-            model.saveTartan();
+        if (model.isNamed()) {
+            final String prompt = model.saveTartan();
+
+            if (prompt != null)
+                setStatusMessage("Saved to: " + prompt);
+        }
         else
             launchSaveAsWindow();
     }
@@ -530,6 +533,9 @@ public class PrimaryController {
     private Spinner<Integer> verticalCountSpinner;
 
     @FXML
+    private Spinner<Integer> threadCountSpinner;
+
+    @FXML
     private Spinner<Double> threadSizeSpinner;
 
     @FXML
@@ -550,11 +556,13 @@ public class PrimaryController {
     private void initializeLayout() {
         horizontalCountSpinner.setValueFactory(model.getHorizontalCountSVF());
         verticalCountSpinner.setValueFactory(model.getVerticalCountSVF());
+        threadCountSpinner.setValueFactory(model.getThreadCountSVF());
         threadSizeSpinner.setValueFactory(model.getThreadSizeSVF());
         borderThicknessSpinner.setValueFactory(model.getBorderThicknessSVF());
 
-        horizontalCountSpinner.setTooltip(new Tooltip("Select the horizontal ring count"));
-        verticalCountSpinner.setTooltip(new Tooltip("Select the vertical ring count"));
+        horizontalCountSpinner.setTooltip(new Tooltip("Select the horizontal repeat count"));
+        verticalCountSpinner.setTooltip(new Tooltip("Select the vertical repeat count"));
+        threadCountSpinner.setTooltip(new Tooltip("Select the thread repeat count"));
         threadSizeSpinner.setTooltip(new Tooltip("Select the thread size"));
         borderColourPicker.setTooltip(new Tooltip("Select a thread border colour"));
         borderThicknessSpinner.setTooltip(new Tooltip("Select the border thickness"));
@@ -573,13 +581,11 @@ public class PrimaryController {
 
         threadSizeSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("ringRadiusSpinner.Listener(" + newValue + "))");
-            model.initThreadSize(newValue);
             sample.syncThreadSize();
         });
 
         borderThicknessSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("ringThicknessSpinner.Listener(" + newValue + "))");
-            model.initBorderThickness(newValue);
             sample.syncThreadSize();
         });
 
@@ -593,15 +599,6 @@ public class PrimaryController {
 
     @FXML
     private Label statusLabel;
-
-    @FXML
-    private Button generateButton;
-
-    @FXML
-    void generateButtonActionPerformed(ActionEvent event) {
-        final String path = model.saveTartan();
-        setStatusMessage("Generated in: " + path);
-    }
 
     /**
      * Set the status line message.

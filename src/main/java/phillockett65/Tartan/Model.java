@@ -421,6 +421,8 @@ public class Model {
 
     private SpinnerValueFactory<Integer> verticalCountSVF;
 
+    private SpinnerValueFactory<Integer> threadCountSVF;
+
     private SpinnerValueFactory<Double> threadSizeSVF;
 
     private Color borderColour;
@@ -429,11 +431,13 @@ public class Model {
 
     public SpinnerValueFactory<Integer> getHorizontalCountSVF() { return horizontalCountSVF; }
     public SpinnerValueFactory<Integer> getVerticalCountSVF() { return verticalCountSVF; }
+    public SpinnerValueFactory<Integer> getThreadCountSVF() { return threadCountSVF; }
     public SpinnerValueFactory<Double> getThreadSizeSVF() { return threadSizeSVF; }
     public SpinnerValueFactory<Double> getBorderThicknessSVF() { return borderThicknessSVF; }
 
     public int getHorizontalCount() { return getColCount(); }
     public int getVerticalCount() { return getRowCount(); }
+    public int getThreadCount() { return threadCountSVF.getValue(); }
     public double getThreadSize() { return threadSizeSVF.getValue(); }
     public Color getBorderColour() { return borderColour; }
     public double getBorderThickness() { return borderThicknessSVF.getValue(); }
@@ -453,6 +457,7 @@ public class Model {
     private void initializeLayout() {
         horizontalCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Default.WIDTH.getInt(), Default.INIT_THREAD_COUNT.getInt());
         verticalCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Default.HEIGHT.getInt(), Default.INIT_THREAD_COUNT.getInt());
+        threadCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 8, 1);
         threadSizeSVF = new SpinnerValueFactory.DoubleSpinnerValueFactory(2.0, 40.0, 30.0, 1.0);
         borderThicknessSVF = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 10.0, 1.0, 0.1);
     }

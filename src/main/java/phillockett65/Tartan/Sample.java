@@ -384,13 +384,21 @@ public class Sample extends Stage {
      * @param colour index to set the row to.
      */
     private void setRowColour(int row, int colour) {
-        model.setRowColourIndex(row, colour);
-        for (int i = 0; i < Default.WIDTH.getInt(); i += model.getHorizontalCount()) {
-            final int index = i + row;
-            if (index >= Default.WIDTH.getInt())
-                break;
+        final int count = model.getThreadCount();
+        final int repeat = model.getHorizontalCount();
+        for (int c = 0; c < count; ++c) {
+            model.setRowColourIndex(row, colour);
 
-            rowList.get(index).setColour(colour);
+            for (int i = 0; i < Default.WIDTH.getInt(); i += repeat) {
+                final int index = i + row;
+                if (index >= Default.WIDTH.getInt())
+                    break;
+                
+                rowList.get(index).setColour(colour);
+            }
+
+            if (++row >= repeat)
+                break;
         }
     }
 
@@ -400,13 +408,21 @@ public class Sample extends Stage {
      * @param colour index to set the column to.
      */
     private void setColColour(int col, int colour) {
-        model.setColColourIndex(col, colour);
-        for (int i = 0; i < Default.HEIGHT.getInt(); i += model.getVerticalCount()) {
-            final int index = i + col;
-            if (index >= Default.HEIGHT.getInt())
-                break;
+        final int count = model.getThreadCount();
+        final int repeat = model.getVerticalCount();
+        for (int c = 0; c < count; ++c) {
+            model.setColColourIndex(col, colour);
 
-            colList.get(index).setColour(colour);
+            for (int i = 0; i < Default.HEIGHT.getInt(); i += repeat) {
+                final int index = i + col;
+                if (index >= Default.HEIGHT.getInt())
+                    break;
+                
+                colList.get(index).setColour(colour);
+            }
+
+            if (++col >= repeat)
+                break;
         }
     }
 
