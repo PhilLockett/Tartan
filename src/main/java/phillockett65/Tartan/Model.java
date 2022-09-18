@@ -130,7 +130,6 @@ public class Model {
      */
     private boolean writeData() {
         final String file = getSettingsFile();
-        // makeTartanDirectory();
         DataStore data = new DataStore();
 
         data.setRowCount(rowList.size());
@@ -274,6 +273,11 @@ public class Model {
     public boolean isLoadWindowLaunched() { return loadWindowLaunched; }
     public void setLoadWindowLaunched(boolean state) { loadWindowLaunched = state; }
 
+    /**
+     * Builds a list of tartans using the names of directories in the base 
+     * directory.
+     * @return true if the list contains entries, alse otherwise.
+     */
     private boolean fillDirectoryList() {
 
         final String directoryName = getBaseDirectory();
@@ -290,6 +294,10 @@ public class Model {
         return !tartanList.isEmpty();
     }
 
+    /**
+     * Provide access to the latest list of tartans.
+     * @return the latest list of tartans.
+     */
     public ObservableList<String> getTartanList() {
         fillDirectoryList();
 
@@ -460,14 +468,10 @@ public class Model {
     private String name = "";
 
     public String getBaseDirectory() { return baseDirectory; }
-    // public void setBaseDirectory(String baseDirectory) { this.baseDirectory = baseDirectory; }
 
     public boolean isNamed() { return !name.isBlank(); }
     public String getName() { return name; }
-    // public void setName(String name) { this.name = name; }
-    public void setName(String name) { 
-        System.out.println("Name: " + name);
-        this.name = name; }
+    public void setName(String name) { this.name = name; }
 
     private String getOutputPath() {
         final String base = getBaseDirectory();
@@ -500,10 +504,6 @@ public class Model {
     public String getSettingsFile() {
         return getOutputPath() + "\\" + DATAFILE;
     }
-
-    // private String getOutputSettingsFile() {
-    //     return DATAFILE;
-    // }
 
     /**
      * Save the tartan design as an image.
