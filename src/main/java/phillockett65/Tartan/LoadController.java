@@ -65,6 +65,8 @@ public class LoadController {
      * Synchronise all controls with the model.
      */
     public void syncUI() {
+        tartanListView.setItems(model.getTartanList());
+        loadButton.setDisable(true);
     }
 
 
@@ -94,16 +96,10 @@ public class LoadController {
         model.getController().closeLoadWindow();
     }
 
-    public void syncLoadPanel() {
-        tartanListView.setItems(model.getTartanList());
-        loadButton.setDisable(true);
-    }
-
     /**
      * Initialize "Load" panel.
      */
     private void initializeLoadPanel() {
-        syncLoadPanel();
         tartanListView.setItems(model.getTartanList());
         tartanListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 

@@ -182,7 +182,7 @@ public class PrimaryController {
         model.setLoadWindowLaunched(true);
 
         if (loadController != null) {
-            loadController.syncLoadPanel();
+            loadController.syncUI();
             loadStage.show();
 
             return true;
