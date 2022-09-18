@@ -96,6 +96,7 @@ public class LoadController {
 
     public void syncLoadPanel() {
         tartanListView.setItems(model.getTartanList());
+        loadButton.setDisable(true);
     }
 
     /**
@@ -109,6 +110,7 @@ public class LoadController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 model.setName(newValue);
+                loadButton.setDisable(false);
             }
         } );
 
