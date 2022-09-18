@@ -85,8 +85,7 @@ public class Model {
         initializeSample();
         initializeStatusLine();
 
-        if (!readData())
-            defaultSettings();
+        defaultSettings();
     }
 
     /**

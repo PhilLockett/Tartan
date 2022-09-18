@@ -83,6 +83,7 @@ public class SaveAsController {
     @FXML
     void saveAsTextFieldKeyPressed(KeyEvent event) {
         model.setName(saveAsTextField.getText());
+        saveButton.setDisable(!model.isNamed());
     }
 
     @FXML
@@ -100,6 +101,8 @@ public class SaveAsController {
      * Initialize "Save As" panel.
      */
     private void initializeSaveAsPanel() {
+        saveButton.setDisable(!model.isNamed());
+
         saveAsTextField.setTooltip(new Tooltip("Enter a name for the tartan"));
         saveButton.setTooltip(new Tooltip("Save tartan using the specified name"));
         cancelButton.setTooltip(new Tooltip("Cancel save"));
