@@ -494,8 +494,6 @@ public class PrimaryController {
      */
     private void initializeColourPalette() {
 
-        setSelectedColourRadioButtonToolTips();
-
         selectedColour.add(colour0RadioButton);
         selectedColour.add(colour1RadioButton);
         selectedColour.add(colour2RadioButton);
@@ -522,6 +520,10 @@ public class PrimaryController {
             String id = String.valueOf(i);
             selectedColour.get(i).setId(id);
         }
+
+        setSelectedColourRadioButtonToolTips();
+        selectedColourPicker.setTooltip(new Tooltip("Select colour to use as active colour"));
+
     }
 
 
@@ -564,12 +566,12 @@ public class PrimaryController {
         threadSizeSpinner.setValueFactory(model.getThreadSizeSVF());
         borderThicknessSpinner.setValueFactory(model.getBorderThicknessSVF());
 
-        horizontalCountSpinner.setTooltip(new Tooltip("Select the horizontal repeat count"));
-        verticalCountSpinner.setTooltip(new Tooltip("Select the vertical repeat count"));
-        threadCountSpinner.setTooltip(new Tooltip("Select the thread repeat count"));
-        threadSizeSpinner.setTooltip(new Tooltip("Select the thread size"));
-        borderColourPicker.setTooltip(new Tooltip("Select a thread border colour"));
-        borderThicknessSpinner.setTooltip(new Tooltip("Select the border thickness"));
+        horizontalCountSpinner.setTooltip(new Tooltip("Select the horizontal thread repeat count"));
+        verticalCountSpinner.setTooltip(new Tooltip("Select the vertical thread repeat count"));
+        threadCountSpinner.setTooltip(new Tooltip("Select the multiple adjacent thread colouring count"));
+        threadSizeSpinner.setTooltip(new Tooltip("Select the thread size in pixels"));
+        borderColourPicker.setTooltip(new Tooltip("Select the thread border colour"));
+        borderThicknessSpinner.setTooltip(new Tooltip("Select the thread border thickness in pixels"));
 
         horizontalCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("horizontalCountSpinner.Listener(" + newValue + "))");
