@@ -91,7 +91,6 @@ public class LoadController {
     @FXML
     void loadButtonActionPerformed(ActionEvent event) {
         final String prompt = model.loadTartan();
-        model.getController().syncUI();
 
         model.getController().closeLoadWindow(prompt);
     }

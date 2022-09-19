@@ -226,8 +226,12 @@ public class PrimaryController {
 
         model.setLoadWindowLaunched(false);
         loadStage.hide();
-        if (prompt != null)
+        if (prompt != null) {
+            syncUI();
+            sample.syncHorizontalCount();
+            sample.syncVerticalCount();
             setStatusMessage("Loaded " + prompt);
+        }
 
         return true;
     }
