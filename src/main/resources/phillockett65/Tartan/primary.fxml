@@ -21,7 +21,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane stylesheets="@application.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phillockett65.Tartan.PrimaryController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
@@ -153,6 +152,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -163,14 +163,14 @@
                   <Spinner fx:id="horizontalCountSpinner" layoutX="168.0" layoutY="91.0" GridPane.columnIndex="1" />
                   <Label layoutX="20.0" layoutY="27.0" text="Vertical Repeat Count:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                   <Spinner fx:id="verticalCountSpinner" layoutX="168.0" layoutY="23.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label layoutX="79.0" layoutY="71.0" text="Thread Repeat Count:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                  <Spinner fx:id="threadCountSpinner" layoutX="231.0" layoutY="26.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="Thread Size:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                  <Spinner fx:id="threadSizeSpinner" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Border Thickness:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                  <Spinner fx:id="borderThicknessSpinner" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <Label text="Border Colour:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-                  <ColorPicker fx:id="borderColourPicker" onAction="#borderColourPickerActionPerformed" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <Label layoutX="79.0" layoutY="71.0" text="Thread Repeat Count:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                  <Spinner fx:id="threadCountSpinner" layoutX="231.0" layoutY="26.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label text="Thread Size:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                  <Spinner fx:id="threadSizeSpinner" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="Border Thickness:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                  <Spinner fx:id="borderThicknessSpinner" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <Label text="Border Colour:" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+                  <ColorPicker fx:id="borderColourPicker" onAction="#borderColourPickerActionPerformed" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                </children>
             </GridPane>
          </content>
