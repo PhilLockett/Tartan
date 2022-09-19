@@ -182,7 +182,7 @@ public class Sample extends Stage {
             final double size2 = size * 2;
             final double yPos = rowToYPos(index);
 
-            stitch.setWidth(Default.BORDER_WIDTH.getFloat());
+            stitch.setWidth(Default.BORDER_WIDTH.getFloat() + size);
             stitch.setHeight(size);
             stitch.setX(0D);
             stitch.setY(yPos);
@@ -210,7 +210,7 @@ public class Sample extends Stage {
             final double xPos = colToXPos(index);
 
             stitch.setWidth(size);
-            stitch.setHeight(Default.BORDER_WIDTH.getFloat());
+            stitch.setHeight(Default.BORDER_WIDTH.getFloat() + size);
             stitch.setX(xPos);
             stitch.setY(0D);
             stitch.setVisible(index < model.getHorizontalCount());
