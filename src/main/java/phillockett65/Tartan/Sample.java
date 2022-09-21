@@ -510,5 +510,14 @@ public class Sample extends Stage {
             }
         }
     }
+
+    /**
+     * Convienience method to synchronise to both the vertical and horizontal 
+     * repeat count.
+     */
+    public void syncCount() {
+        syncVerticalCount();
+        syncHorizontalCount();
+    }
     
 }

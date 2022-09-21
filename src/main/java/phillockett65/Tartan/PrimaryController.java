@@ -155,8 +155,7 @@ public class PrimaryController {
     private void editClearOnAction() {
         model.defaultSettings();
         syncUI();
-        sample.syncHorizontalCount();
-        sample.syncVerticalCount();
+        sample.syncCount();
         setStatusMessage("Settings cleared");
 }
 
@@ -231,8 +230,7 @@ public class PrimaryController {
         loadStage.hide();
         if (prompt != null) {
             syncUI();
-            sample.syncHorizontalCount();
-            sample.syncVerticalCount();
+            sample.syncCount();
             setStatusMessage("Loaded " + prompt);
         }
 
