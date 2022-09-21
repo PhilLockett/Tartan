@@ -169,9 +169,9 @@
                   <Spinner fx:id="threadCountSpinner" layoutX="231.0" layoutY="26.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Thread Size:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
                   <Spinner fx:id="threadSizeSpinner" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label text="Border Thickness:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                  <Label text="Thread Border Thickness:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
                   <Spinner fx:id="borderThicknessSpinner" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <Label text="Border Colour:" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+                  <Label text="Thread Border Colour:" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
                   <ColorPicker fx:id="borderColourPicker" onAction="#borderColourPickerActionPerformed" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                </children>
             </GridPane>

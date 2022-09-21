@@ -155,7 +155,10 @@ public class PrimaryController {
     private void editClearOnAction() {
         model.defaultSettings();
         syncUI();
-    }
+        sample.syncHorizontalCount();
+        sample.syncVerticalCount();
+        setStatusMessage("Settings cleared");
+}
 
 
     @FXML
@@ -566,12 +569,12 @@ public class PrimaryController {
         threadSizeSpinner.setValueFactory(model.getThreadSizeSVF());
         borderThicknessSpinner.setValueFactory(model.getBorderThicknessSVF());
 
-        horizontalCountSpinner.setTooltip(new Tooltip("Select the horizontal thread repeat count"));
-        verticalCountSpinner.setTooltip(new Tooltip("Select the vertical thread repeat count"));
-        threadCountSpinner.setTooltip(new Tooltip("Select the multiple adjacent thread colouring count"));
-        threadSizeSpinner.setTooltip(new Tooltip("Select the thread size in pixels"));
+        horizontalCountSpinner.setTooltip(new Tooltip("Set the horizontal thread repeat count"));
+        verticalCountSpinner.setTooltip(new Tooltip("Set the vertical thread repeat count"));
+        threadCountSpinner.setTooltip(new Tooltip("Set the number of adjacent threads to colour"));
+        threadSizeSpinner.setTooltip(new Tooltip("Set the thread size in pixels"));
+        borderThicknessSpinner.setTooltip(new Tooltip("Set the thread border thickness in pixels"));
         borderColourPicker.setTooltip(new Tooltip("Select the thread border colour"));
-        borderThicknessSpinner.setTooltip(new Tooltip("Select the thread border thickness in pixels"));
 
         horizontalCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("horizontalCountSpinner.Listener(" + newValue + "))");
