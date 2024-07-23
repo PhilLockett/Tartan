@@ -13,7 +13,7 @@
     -fx-text-fill: black;
 }
 .title{
-    -fx-background-color: #e8e8e8;
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #c8c8c8);
     -fx-font-weight: bold;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .choice-box, .color-picker, .button{
-    -fx-background-color: #9B4642;
+    -fx-background-color: linear-gradient(to bottom, #BB6662, #7B2622);
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
 }
@@ -66,19 +66,19 @@
     -fx-font-weight: bold;
 }
 .context-menu, .menu-bar{
-    -fx-background-color: #9B4642;
+    -fx-background-color: linear-gradient(to bottom, #BB6662, #7B2622);
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
 }
 
-.increment-arrow-button, .decrement-arrow-button{
-    -fx-background-color: #9B4642;
+.increment-arrow-button{
+    -fx-background-color: linear-gradient(to bottom, #BB6662, #9B4642);
 }
-.increment-arrow, .decrement-arrow{
+.decrement-arrow-button{
+    -fx-background-color: linear-gradient(to bottom, #9B4642, #7B2622);
+}
+.increment-arrow, .decrement-arrow, .arrow{
     -fx-background-color: #e8e8e8;
-}
-.arrow{
-    -fx-background-color: black;
 }
 
 .imageButton{

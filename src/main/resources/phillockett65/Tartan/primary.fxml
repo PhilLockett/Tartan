@@ -22,7 +22,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane stylesheets="@application.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phillockett65.Tartan.PrimaryController">
+<BorderPane stylesheets="@application.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phillockett65.Tartan.PrimaryController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -84,7 +84,7 @@
       </HBox>
    </bottom>
    <left>
-      <TitledPane text="Colour Palette" BorderPane.alignment="CENTER">
+      <TitledPane collapsible="false" text="Colour Palette" BorderPane.alignment="CENTER">
          <content>
             <GridPane hgap="4.0" vgap="2.0">
               <columnConstraints>
@@ -143,7 +143,7 @@
       </TitledPane>
    </left>
    <center>
-      <TitledPane prefHeight="333.0" prefWidth="330.0" text="Layout" BorderPane.alignment="CENTER">
+      <TitledPane collapsible="false" prefHeight="333.0" prefWidth="330.0" text="Layout" BorderPane.alignment="CENTER">
          <content>
             <GridPane hgap="4.0" vgap="4.0">
               <columnConstraints>
