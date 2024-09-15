@@ -386,6 +386,15 @@ public class Sample extends Stage {
     private void setRowColour(int row, int colour) {
         final int count = model.getThreadCount();
         final int repeat = model.getHorizontalCount();
+
+        colourRows(row, colour, count, repeat);
+
+        if (model.isDuplicate()) {
+            colourColumns(row, colour, count, repeat);
+        }
+    }
+
+    private void colourRows(int row, int colour, int count, int repeat) {
         for (int c = 0; c < count; ++c) {
             model.setRowColourIndex(row, colour);
 
@@ -410,6 +419,15 @@ public class Sample extends Stage {
     private void setColColour(int col, int colour) {
         final int count = model.getThreadCount();
         final int repeat = model.getVerticalCount();
+
+        colourColumns(col, colour, count, repeat);
+
+        if (model.isDuplicate()) {
+            colourRows(col, colour, count, repeat);
+        }
+    }
+
+    private void colourColumns(int col, int colour, int count, int repeat) {
         for (int c = 0; c < count; ++c) {
             model.setColColourIndex(col, colour);
 

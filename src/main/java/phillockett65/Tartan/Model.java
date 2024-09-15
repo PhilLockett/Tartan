@@ -421,6 +421,8 @@ public class Model {
 
     private SpinnerValueFactory<Integer> verticalCountSVF;
 
+    private boolean duplicate = false;
+
     private SpinnerValueFactory<Integer> threadCountSVF;
 
     private SpinnerValueFactory<Double> threadSizeSVF;
@@ -437,6 +439,7 @@ public class Model {
 
     public int getHorizontalCount() { return getColCount(); }
     public int getVerticalCount() { return getRowCount(); }
+    public boolean isDuplicate() { return duplicate; }
     public int getThreadCount() { return threadCountSVF.getValue(); }
     public double getThreadSize() { return threadSizeSVF.getValue(); }
     public Color getBorderColour() { return borderColour; }
@@ -446,6 +449,7 @@ public class Model {
     public void initVerticalCount(int value) { verticalCountSVF.setValue(value); }
     public void setHorizontalCount(int value) { setColCount(value); }
     public void setVerticalCount(int value) { setRowCount(value); }
+    public void setDuplicate(boolean state) { duplicate = state; }
     public void initThreadSize(double value) { threadSizeSVF.setValue(value); }
     public void setBorderColour(Color colour) { borderColour = colour; }
     public void initBorderThickness(double value) { borderThicknessSVF.setValue(value); }

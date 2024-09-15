@@ -35,6 +35,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -540,6 +541,9 @@ public class PrimaryController {
     private Spinner<Integer> verticalCountSpinner;
 
     @FXML
+    private CheckBox duplicateCheckbox;
+
+    @FXML
     private Spinner<Integer> threadCountSpinner;
 
     @FXML
@@ -550,6 +554,11 @@ public class PrimaryController {
 
     @FXML
     private Spinner<Double> borderThicknessSpinner;
+
+    @FXML
+    void duplicateCheckboxOnAction(ActionEvent event) {
+        model.setDuplicate(duplicateCheckbox.isSelected());
+    }
 
     @FXML
     void borderColourPickerActionPerformed(ActionEvent event) {
@@ -563,12 +572,14 @@ public class PrimaryController {
     private void initializeLayout() {
         horizontalCountSpinner.setValueFactory(model.getHorizontalCountSVF());
         verticalCountSpinner.setValueFactory(model.getVerticalCountSVF());
+        duplicateCheckbox.setSelected(model.isDuplicate());
         threadCountSpinner.setValueFactory(model.getThreadCountSVF());
         threadSizeSpinner.setValueFactory(model.getThreadSizeSVF());
         borderThicknessSpinner.setValueFactory(model.getBorderThicknessSVF());
 
         horizontalCountSpinner.setTooltip(new Tooltip("Set the horizontal thread repeat count"));
         verticalCountSpinner.setTooltip(new Tooltip("Set the vertical thread repeat count"));
+        duplicateCheckbox.setTooltip(new Tooltip("Duplicate threads vertically and horizontally"));
         threadCountSpinner.setTooltip(new Tooltip("Set the number of adjacent threads to colour"));
         threadSizeSpinner.setTooltip(new Tooltip("Set the thread size in pixels"));
         borderThicknessSpinner.setTooltip(new Tooltip("Set the thread border thickness in pixels"));
