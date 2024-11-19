@@ -44,6 +44,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -53,6 +54,10 @@ public class PrimaryController {
 
     private Model model;
     private Sample sample;
+    private ColourSelect colourSelect;
+
+    @FXML
+    private VBox colourSelectSetUpHBox;
 
 
     /************************************************************************
@@ -79,6 +84,10 @@ public class PrimaryController {
         initializeColourPalette();
         initializeLayout();
         initializeStatusLine();
+
+        colourSelect = new ColourSelect();
+        colourSelectSetUpHBox.getChildren().addAll(colourSelect);
+        colourSelectSetUpHBox.addEventFilter(ColourEvent.ANY, this::handleColourEvent);
     }
 
     /**
@@ -112,7 +121,7 @@ public class PrimaryController {
             setSwatch(i, model.getSwatchColour(i), model.getSwatchName(i));
 
         setSelectedColourRadioButton(model.getSelectedColour());
-        selectedColourPicker.setValue(model.getCurrentColour());
+        colourSelect.setColour(model.getCurrentColour());
 
         borderColourPicker.setValue(model.getBorderColour());
 
@@ -386,25 +395,13 @@ public class PrimaryController {
     TextField colour7TextField;
 
     @FXML
-    private ColorPicker selectedColourPicker;
-
-    @FXML
     void selectedColourRadioButtonActionPerformed(ActionEvent event) {
         RadioButton field = (RadioButton)event.getSource();
         // System.out.println("selectedColourRadioButtonActionPerformed(" + field.getId() + ", " + field.getText() + ")");
 
         int index = idToInt(field.getId());
         model.setSelectedColour(index);
-        selectedColourPicker.setValue(model.getSwatchColour(index));
-    }
-
-    @FXML
-    void selectedColourPickerActionPerformed(ActionEvent event) {
-        final int index = model.getSelectedColour();
-        final Color colour = selectedColourPicker.getValue();
-        model.setSwatchColour(index, colour);
-        colourSwatches.get(index).setColor(colour);
-        sample.syncColour();
+        colourSelect.setColour(model.getSwatchColour(index));
     }
 
     @FXML
@@ -415,6 +412,13 @@ public class PrimaryController {
         model.setSwatchName(idToInt(field.getId()), field.getText());
     }
 
+    public void handleColourEvent(ColourEvent event) {
+        final int index = model.getSelectedColour();
+        final Color colour = event.getColour();
+        model.setSwatchColour(index, colour);
+        colourSwatches.get(index).setColor(colour);
+        sample.syncColour();
+    }
 
     /**
      * Convert a String representation of an integer to an int.
@@ -524,8 +528,6 @@ public class PrimaryController {
         }
 
         setSelectedColourRadioButtonToolTips();
-        selectedColourPicker.setTooltip(new Tooltip("Select colour to use as active colour"));
-
     }
 
 

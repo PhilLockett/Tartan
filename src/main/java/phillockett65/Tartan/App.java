@@ -49,7 +49,7 @@ public class App extends Application {
 
         scene.getStylesheets().add(App.class.getResource("application.css").toExternalForm());
 
-        stage.setTitle("Tartan Designer");
+        stage.setTitle("Tartan Designer 1.0");
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.resizableProperty().setValue(false);
         stage.setScene(scene);

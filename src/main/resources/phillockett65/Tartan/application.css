@@ -5,7 +5,10 @@
 }
 .label, .check-box, .radio-button{
     -fx-font-size: 14px;
+    -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
+}
+.check-box:selected, .radio-button:selected{
     -fx-text-fill: #e8e8e8;
 }
 
@@ -24,6 +27,7 @@
     -fx-text-fill: black;
     -fx-background-color: #e8e8e8;
 }
+
 .text-field:readonly{
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -41,6 +45,18 @@
 .text-area{
     -fx-text-fill: #e8e8e8;
 }
+.slider .track {
+    -fx-background-color: linear-gradient(to right, #404040, #B0B0B0);
+    -fx-pref-height: 20;
+    -fx-background-radius: 10;
+}
+
+.slider .thumb {
+    -fx-background-color: radial-gradient(center 50% 25%, radius 100%, #e8a8a8, #9B4642);
+    -fx-pref-height: 20;
+    -fx-pref-width: 20;
+}
+
 .content{
     -fx-background-color: #080808;
 	-fx-border-color: yellow;
