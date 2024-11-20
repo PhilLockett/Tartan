@@ -316,6 +316,12 @@ public class ColourSelect extends GridPane {
                 }
             }
         }
+
+        // Clean up the edges of the ring.
+        gc.setStroke(Color.WHITE);
+        gc.setLineWidth(2.0);
+        gc.strokeOval(xCentre-radius, yCentre-radius, radius*2, radius*2);
+        gc.strokeOval(xCentre-radius2, yCentre-radius2, radius2*2, radius2*2);
     }
 
 
@@ -604,12 +610,12 @@ public class ColourSelect extends GridPane {
         drawRing();
 
         fillGrid();
+        updateRGB();
      }
  
     public void init() {
         // System.out.println("ColourSelect() init()");
 
-        updateRGB();
     }
  
  }
