@@ -48,6 +48,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import phillockett65.Tartan.ColourSelect.ColourEvent;
 
 
 public class PrimaryController {

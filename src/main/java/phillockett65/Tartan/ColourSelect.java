@@ -26,6 +26,9 @@ package phillockett65.Tartan;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
+import javafx.event.EventTarget;
+import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
@@ -618,4 +621,59 @@ public class ColourSelect extends GridPane {
 
     }
  
- }
+
+
+    /**
+     * ColourSelect Event class.
+     */
+    public static class ColourEvent extends Event {
+
+        private static final long serialVersionUID = 202411141956L;
+
+        /**
+         * The only valid EventTypes for the SelectEvent.
+         */
+        public static final EventType<ColourEvent> COLOUR =
+            new EventType<>(Event.ANY, "COLOUR");
+        public static final EventType<ColourEvent> ANY = COLOUR;
+        public static final EventType<ColourEvent> COLOUR_CHANGE =
+            new EventType<>(ColourEvent.ANY, "COLOUR_CHANGE");
+
+        private final Color colour;
+
+        public Color getColour() { return colour; }
+
+        /**
+         * Creates a new {@code ColourEvent} with an event type of {@code ANY}.
+         * The source and target of the event is set to {@code NULL_SOURCE_TARGET}.
+         */
+        public ColourEvent() { super(ANY); colour = Color.BLACK; }
+
+
+        /**
+         * Construct a new {@code ColourEvent} with the specified event type and 
+         * selected colour.
+         * The source and target of the event are set to {@code NULL_SOURCE_TARGET}.
+         *
+         * @param eventType this event represents.
+         * @param colour    selected.
+         */
+        public ColourEvent(EventType<? extends Event> eventType, Color colour) {
+            super(eventType);
+            this.colour = colour;
+        }
+
+        @Override
+        public ColourEvent copyFor(Object newSource, EventTarget newTarget) {
+            return (ColourEvent) super.copyFor(newSource, newTarget);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public EventType<? extends ColourEvent> getEventType() {
+            return (EventType<? extends ColourEvent>) super.getEventType();
+        }
+
+    }
+
+}
