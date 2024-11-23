@@ -382,6 +382,10 @@ public class ColourSelect extends GridPane {
         return slider;
     }
 
+    private void setSliderStyleClass(Slider field, String styleClass) {
+        if (!field.getStyleClass().contains(styleClass))
+            field.getStyleClass().add(styleClass);
+    }
 
     /**
      * Fill the Grid layout, including the sliders with Listener code.
@@ -440,6 +444,7 @@ public class ColourSelect extends GridPane {
         this.add(redLabel, 0, row);
 
         redSlider = buildSlider(MAX);
+        setSliderStyleClass(redSlider, "red-slider");
         redSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
                 // System.out.println("Red: " + new_val.doubleValue());
@@ -454,6 +459,7 @@ public class ColourSelect extends GridPane {
         this.add(greenLabel, 0, row);
 
         greenSlider = buildSlider(MIN);
+        setSliderStyleClass(greenSlider, "green-slider");
         greenSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
                 // System.out.println("Green: " + new_val.doubleValue());
@@ -468,6 +474,7 @@ public class ColourSelect extends GridPane {
         this.add(blueLabel, 0, row);
 
         blueSlider = buildSlider(MIN);
+        setSliderStyleClass(blueSlider, "blue-slider");
         blueSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
                 // System.out.println("Blue: " + new_val.doubleValue());

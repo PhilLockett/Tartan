@@ -57,6 +57,18 @@
     -fx-pref-width: 20;
 }
 
+.red-slider .track{
+    -fx-background-color: linear-gradient(to right, #400000, #D00000);
+}
+
+.green-slider .track{
+    -fx-background-color: linear-gradient(to right, #004000, #00D000);
+}
+
+.blue-slider .track{
+    -fx-background-color: linear-gradient(to right, #000040, #0000D0);
+}
+
 .content{
     -fx-background-color: #080808;
 	-fx-border-color: yellow;
