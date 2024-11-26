@@ -135,7 +135,7 @@ public class PrimaryController {
      */
     private void fixUISettings() {
         if (model.isDuplicate()) {
-            rowCountSpinner.getValueFactory().setValue(columnCountSpinner.getValue());
+            rowCountSpinner.getValueFactory().setValue(model.getColumnCount());
             rowCountSpinner.setDisable(true);
             sample.syncDuplicateThreads();
         } else {
@@ -617,12 +617,12 @@ public class PrimaryController {
         });
 
         threadSizeSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
-            // System.out.println("ringRadiusSpinner.Listener(" + newValue + "))");
+            // System.out.println("threadSizeSpinner.Listener(" + newValue + "))");
             sample.syncThreadSize();
         });
 
         borderThicknessSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
-            // System.out.println("ringThicknessSpinner.Listener(" + newValue + "))");
+            // System.out.println("borderThicknessSpinner.Listener(" + newValue + "))");
             sample.syncThreadSize();
         });
 
