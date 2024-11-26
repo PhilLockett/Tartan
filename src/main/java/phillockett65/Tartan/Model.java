@@ -106,8 +106,8 @@ public class Model {
         clearSwatches();
         setSelectedColour(1);
         
-        initHorizontalCount(114);
-        initVerticalCount(114);
+        initColumnCount(114);
+        initRowCount(114);
         initThreadSize(6.0);
         setBorderColour(Color.BLACK);
         initBorderThickness(1.0);
@@ -144,8 +144,8 @@ public class Model {
         for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i)
             data.setSwatch(i, getSwatchColour(i), getSwatchName(i));
 
-        data.setHorizontalCount(getHorizontalCount());
-        data.setVerticalCount(getVerticalCount());
+        data.setHorizontalCount(getColumnCount());
+        data.setVerticalCount(getRowCount());
         data.setThreadSize(getThreadSize());
         data.setBorderColour(getBorderColour());
         data.setBorderThickness(getBorderThickness());
@@ -170,11 +170,11 @@ public class Model {
         if (data == null)
             return false;
 
-        initRowCount(data.getRowCount());
+        initRowList(data.getRowCount());
         for (int i = 0; i < rowList.size(); ++i)
             setRowColourIndex(i, data.getRowColour(i));
 
-        initColCount(data.getColCount());
+        initColumnList(data.getColCount());
         for (int i = 0; i < colList.size(); ++i)
             setColColourIndex(i, data.getColColour(i));
 
@@ -182,8 +182,8 @@ public class Model {
         for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i)
             setSwatch(i, data.getSwatchColour(i), data.getSwatchName(i));
 
-        initHorizontalCount(data.getHorizontalCount());
-        initVerticalCount(data.getVerticalCount());
+        initColumnCount(data.getHorizontalCount());
+        initRowCount(data.getVerticalCount());
         initThreadSize(data.getThreadSize());
         setBorderColour(data.getBorderColour());
         initBorderThickness(data.getBorderThickness());
@@ -208,20 +208,20 @@ public class Model {
     public Group getGroup() { return group; }
 
     public int getRowCount() { return rowList.size(); }
-    public int getColCount() { return colList.size(); }
+    public int getColumnCount() { return colList.size(); }
 
-    public void initRowCount(int size) {
+    private void initRowList(int size) {
         rowList.clear();
         for (int i = 0; i < size; ++i)
             rowList.add(0);
     }
-    public void initColCount(int size) {
+    private void initColumnList(int size) {
         colList.clear();
         for (int i = 0; i < size; ++i)
             colList.add(0);
     }
 
-    private void setRowCount(int size) {
+    public void setRowCount(int size) {
         final int count = getRowCount();
         if (size < count) {
             rowList.remove(size, count);
@@ -231,8 +231,8 @@ public class Model {
         }
     }
 
-    private void setColCount(int size) {
-        final int count = getColCount();
+    public void setColumnCount(int size) {
+        final int count = getColumnCount();
         if (size < count) {
             colList.remove(size, count);
         } else {
@@ -256,8 +256,8 @@ public class Model {
      * Initialize "Sample" panel.
      */
     private void initializeSample() {
-        initRowCount(Default.INIT_THREAD_COUNT.getInt());
-        initColCount(Default.INIT_THREAD_COUNT.getInt());
+        initRowList(Default.INIT_THREAD_COUNT.getInt());
+        initColumnList(Default.INIT_THREAD_COUNT.getInt());
     }
 
 
@@ -417,11 +417,11 @@ public class Model {
      * Support code for "Layout" panel.
      */
 
-    private SpinnerValueFactory<Integer> horizontalCountSVF;
+    private SpinnerValueFactory<Integer> columnCountSVF;
 
-    private SpinnerValueFactory<Integer> verticalCountSVF;
+    private SpinnerValueFactory<Integer> rowCountSVF;
 
-    private boolean duplicate = false;
+    private boolean duplicate = true;
 
     private SpinnerValueFactory<Integer> threadCountSVF;
 
@@ -431,24 +431,20 @@ public class Model {
 
     private SpinnerValueFactory<Double> borderThicknessSVF;
 
-    public SpinnerValueFactory<Integer> getHorizontalCountSVF() { return horizontalCountSVF; }
-    public SpinnerValueFactory<Integer> getVerticalCountSVF() { return verticalCountSVF; }
+    public SpinnerValueFactory<Integer> getColumnCountSVF() { return columnCountSVF; }
+    public SpinnerValueFactory<Integer> getRowCountSVF() { return rowCountSVF; }
     public SpinnerValueFactory<Integer> getThreadCountSVF() { return threadCountSVF; }
     public SpinnerValueFactory<Double> getThreadSizeSVF() { return threadSizeSVF; }
     public SpinnerValueFactory<Double> getBorderThicknessSVF() { return borderThicknessSVF; }
 
-    public int getHorizontalCount() { return getColCount(); }
-    public int getVerticalCount() { return getRowCount(); }
     public boolean isDuplicate() { return duplicate; }
     public int getThreadCount() { return threadCountSVF.getValue(); }
     public double getThreadSize() { return threadSizeSVF.getValue(); }
     public Color getBorderColour() { return borderColour; }
     public double getBorderThickness() { return borderThicknessSVF.getValue(); }
 
-    public void initHorizontalCount(int value) { horizontalCountSVF.setValue(value); }
-    public void initVerticalCount(int value) { verticalCountSVF.setValue(value); }
-    public void setHorizontalCount(int value) { setColCount(value); }
-    public void setVerticalCount(int value) { setRowCount(value); }
+    private void initColumnCount(int value) { columnCountSVF.setValue(value); }
+    private void initRowCount(int value) { rowCountSVF.setValue(value); }
     public void setDuplicate(boolean state) { duplicate = state; }
     public void initThreadSize(double value) { threadSizeSVF.setValue(value); }
     public void setBorderColour(Color colour) { borderColour = colour; }
@@ -459,8 +455,8 @@ public class Model {
      * Initialize "Layout" panel.
      */
     private void initializeLayout() {
-        horizontalCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Default.WIDTH.getInt(), Default.INIT_THREAD_COUNT.getInt());
-        verticalCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Default.HEIGHT.getInt(), Default.INIT_THREAD_COUNT.getInt());
+        columnCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Default.WIDTH.getInt(), Default.INIT_THREAD_COUNT.getInt());
+        rowCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Default.HEIGHT.getInt(), Default.INIT_THREAD_COUNT.getInt());
         threadCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 8, 1);
         threadSizeSVF = new SpinnerValueFactory.DoubleSpinnerValueFactory(2.0, 40.0, 30.0, 1.0);
         borderThicknessSVF = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 10.0, 1.0, 0.1);
@@ -525,8 +521,8 @@ public class Model {
         final double size2 = size * 2;
         final double size4 = size * 4;
         
-        final double xMax = getHorizontalCount() * size2;
-        final double yMax = getVerticalCount() * size2;
+        final double xMax = getColumnCount() * size2;
+        final double yMax = getRowCount() * size2;
         canvas = new Canvas(xMax, yMax);
 
         gc = canvas.getGraphicsContext2D();
@@ -536,9 +532,8 @@ public class Model {
 
         double xPos = 0;
         double yPos = 0;
-        final int hCount = getHorizontalCount();
         final int rCount = rowList.size();
-        int count = hCount / 2;
+        int count = getColumnCount() / 2;
         for (int i = 0; i < (rCount * 2); ++i) {
             final Color colour = getRowColour(i % rCount);
             
@@ -555,9 +550,8 @@ public class Model {
             yPos += size;
         }
 
-        final int vCount = getVerticalCount();
         final int cCount = colList.size();
-        count = vCount / 2;
+        count = getRowCount() / 2;
         xPos = 0;
         yPos = 0;
         for (int i = 0; i < (cCount * 2); ++i) {

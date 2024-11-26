@@ -186,7 +186,7 @@ public class Sample extends Stage {
             stitch.setHeight(size);
             stitch.setX(0D);
             stitch.setY(yPos);
-            stitch.setVisible(index < model.getVerticalCount());
+            stitch.setVisible(index < model.getRowCount());
 
             int c = index % 4;
             c = (4 - c) % 4;
@@ -213,7 +213,7 @@ public class Sample extends Stage {
             stitch.setHeight(Default.BORDER_WIDTH.getFloat() + size);
             stitch.setX(xPos);
             stitch.setY(0D);
-            stitch.setVisible(index < model.getHorizontalCount());
+            stitch.setVisible(index < model.getColumnCount());
 
             int r = index % 4;
             r = (6 - r) % 4;
@@ -294,7 +294,7 @@ public class Sample extends Stage {
             final int c = xPosToCol(x);
             final int r = yPosToRow(y);
 
-            if ((r < model.getRowCount()) && (c < model.getColCount())) {
+            if ((r < model.getRowCount()) && (c < model.getColumnCount())) {
                 scene.setCursor(Cursor.CROSSHAIR);
 
                 return;
@@ -324,7 +324,7 @@ public class Sample extends Stage {
                 final int c = xPosToCol(x);
                 final int r = yPosToRow(y);
 
-                if ((r < model.getRowCount()) && (c < model.getColCount())) {
+                if ((r < model.getRowCount()) && (c < model.getColumnCount())) {
 
                     final int s = r + c;
                     if (s % 4 < 2) {
@@ -343,18 +343,18 @@ public class Sample extends Stage {
      * Called on initialization to set up the blank loom.
      */
     private void drawBlankLoom() {
-        final int VCOUNT = model.getVerticalCount();
+        final int RCOUNT = model.getRowCount();
         final int ROWS = Default.HEIGHT.getInt();
-        for (int r = 0; r < ROWS; ++r) {
-            Thread row = new Thread(r, model.getRowColourIndex(r % VCOUNT));
-            rowList.add(row);
+        for (int row = 0; row < ROWS; ++row) {
+            Thread thread = new Thread(row, model.getRowColourIndex(row % RCOUNT));
+            rowList.add(thread);
         }
 
-        final int HCOUNT = model.getHorizontalCount();
+        final int CCOUNT = model.getColumnCount();
         final int COLS = Default.WIDTH.getInt();
-        for (int c = 0; c < COLS; ++c) {
-            Thread col = new Thread(c, model.getColColourIndex(c % HCOUNT));
-            colList.add(col);
+        for (int col = 0; col < COLS; ++col) {
+            Thread thread = new Thread(col, model.getColColourIndex(col % CCOUNT));
+            colList.add(thread);
         }
 
         syncBorderColour();
@@ -368,7 +368,7 @@ public class Sample extends Stage {
         for (int i = 0; i < model.getRowCount(); ++i)
             rowList.get(i).setColour(model.getRowColourIndex(i));
 
-        for (int i = 0; i < model.getColCount(); ++i)
+        for (int i = 0; i < model.getColumnCount(); ++i)
             colList.get(i).setColour(model.getColColourIndex(i));
     }
 
@@ -385,7 +385,7 @@ public class Sample extends Stage {
      */
     private void setRowColour(int row, int colour) {
         final int count = model.getThreadCount();
-        final int repeat = model.getHorizontalCount();
+        final int repeat = model.getColumnCount();
 
         colourRows(row, colour, count, repeat);
 
@@ -418,7 +418,7 @@ public class Sample extends Stage {
      */
     private void setColColour(int col, int colour) {
         final int count = model.getThreadCount();
-        final int repeat = model.getVerticalCount();
+        final int repeat = model.getRowCount();
 
         colourColumns(col, colour, count, repeat);
 
@@ -490,16 +490,16 @@ public class Sample extends Stage {
     }
 
     /**
-     * Synchronise to the vertical repeat count.
+     * Synchronise to the row repeat count.
      */
-    public void syncVerticalCount() {
-        final int COUNT = model.getVerticalCount();
+    public void syncRowCount() {
+        final int COUNT = model.getRowCount();
         final int ROWS = Default.HEIGHT.getInt();
         int index = 0;
         boolean visible = true;
 
-        for (int r = 0; r < ROWS; ++r) {
-            Thread stitch = rowList.get(r);
+        for (int row = 0; row < ROWS; ++row) {
+            Thread stitch = rowList.get(row);
             stitch.setColour(model.getRowColourIndex(index));
             stitch.setVisible(visible);
             if (++index >= COUNT) {
@@ -510,16 +510,16 @@ public class Sample extends Stage {
     }
 
     /**
-     * Synchronise to the horizontal repeat count.
+     * Synchronise to the column repeat count.
      */
-    public void syncHorizontalCount() {
-        final int COUNT = model.getHorizontalCount();
+    public void syncColumnCount() {
+        final int COUNT = model.getColumnCount();
         final int COLS = Default.WIDTH.getInt();
         int index = 0;
         boolean visible = true;
 
-        for (int c = 0; c < COLS; ++c) {
-            Thread stitch = colList.get(c);
+        for (int col = 0; col < COLS; ++col) {
+            Thread stitch = colList.get(col);
             stitch.setColour(model.getColColourIndex(index));
             stitch.setVisible(visible);
             if (++index >= COUNT) {
@@ -530,20 +530,20 @@ public class Sample extends Stage {
     }
 
     /**
-     * Convienience method to synchronise to both the vertical and horizontal 
-     * repeat count.
+     * Convienience method to synchronise to both the row and column repeat 
+     * counts.
      */
     public void syncCount() {
-        syncVerticalCount();
-        syncHorizontalCount();
+        syncRowCount();
+        syncColumnCount();
     }
 
     /**
-     * Synchronise to duplicate the vertical threads horizontally.
-     * Assumes that the Vertical count has been set to the Horizontal count.
+     * Synchronize to duplicate the column threads for the rows.
+     * Assumes that the row count has been set to the column count.
      */
     public void syncDuplicateThreads() {
-        final int COUNT = model.getHorizontalCount();
+        final int COUNT = model.getColumnCount();
 
         for (int c = 0; c < COUNT; ++c) {
             Thread stitch = rowList.get(c);

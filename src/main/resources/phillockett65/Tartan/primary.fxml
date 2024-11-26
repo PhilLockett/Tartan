@@ -119,10 +119,10 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label layoutX="83.0" layoutY="95.0" text="Horizontal Repeat Count" GridPane.columnIndex="1" />
-                        <Spinner fx:id="horizontalCountSpinner" layoutX="168.0" layoutY="91.0" />
-                        <Label layoutX="20.0" layoutY="27.0" text="Vertical Repeat Count" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Spinner fx:id="verticalCountSpinner" layoutX="168.0" layoutY="23.0" GridPane.rowIndex="1" />
+                        <Label layoutX="83.0" layoutY="95.0" text="Column Repeat Count" GridPane.columnIndex="1" />
+                        <Spinner fx:id="columnCountSpinner" layoutX="168.0" layoutY="91.0" />
+                        <Label layoutX="20.0" layoutY="27.0" text="Row Repeat Count" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Spinner fx:id="rowCountSpinner" layoutX="168.0" layoutY="23.0" GridPane.rowIndex="1" />
                         <Label layoutX="79.0" layoutY="71.0" text="Thread Repeat Count" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Spinner fx:id="threadCountSpinner" layoutX="231.0" layoutY="26.0" GridPane.rowIndex="4" />
                         <Label text="Thread Size" GridPane.columnIndex="1" GridPane.rowIndex="5" />
@@ -135,7 +135,7 @@
                               <Color />
                            </value>
                         </ColorPicker>
-                        <CheckBox fx:id="duplicateCheckbox" mnemonicParsing="false" onAction="#duplicateCheckboxOnAction" text="Duplicate Vertically and Horizontally" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="duplicateCheckbox" mnemonicParsing="false" onAction="#duplicateCheckboxOnAction" text="Duplicate the Column colours for the Rows" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </content>

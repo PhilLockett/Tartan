@@ -130,16 +130,16 @@ public class PrimaryController {
     }
 
     /**
-     * Adjusts the UI based on "duplicate the vertical threads horizontally" 
+     * Adjusts the UI based on "duplicate the column threads for the rows" 
      * selection.
      */
     private void fixUISettings() {
         if (model.isDuplicate()) {
-            verticalCountSpinner.getValueFactory().setValue(horizontalCountSpinner.getValue());
-            verticalCountSpinner.setDisable(true);
+            rowCountSpinner.getValueFactory().setValue(columnCountSpinner.getValue());
+            rowCountSpinner.setDisable(true);
             sample.syncDuplicateThreads();
         } else {
-            verticalCountSpinner.setDisable(false);
+            rowCountSpinner.setDisable(false);
         }
     }
 
@@ -553,10 +553,10 @@ public class PrimaryController {
      */
 
     @FXML
-    private Spinner<Integer> horizontalCountSpinner;
+    private Spinner<Integer> columnCountSpinner;
 
     @FXML
-    private Spinner<Integer> verticalCountSpinner;
+    private Spinner<Integer> rowCountSpinner;
 
     @FXML
     private CheckBox duplicateCheckbox;
@@ -589,31 +589,31 @@ public class PrimaryController {
      * Initialize "Layout" panel.
      */
     private void initializeLayout() {
-        horizontalCountSpinner.setValueFactory(model.getHorizontalCountSVF());
-        verticalCountSpinner.setValueFactory(model.getVerticalCountSVF());
+        columnCountSpinner.setValueFactory(model.getColumnCountSVF());
+        rowCountSpinner.setValueFactory(model.getRowCountSVF());
         duplicateCheckbox.setSelected(model.isDuplicate());
         threadCountSpinner.setValueFactory(model.getThreadCountSVF());
         threadSizeSpinner.setValueFactory(model.getThreadSizeSVF());
         borderThicknessSpinner.setValueFactory(model.getBorderThicknessSVF());
 
-        horizontalCountSpinner.setTooltip(new Tooltip("Set the horizontal thread repeat count"));
-        verticalCountSpinner.setTooltip(new Tooltip("Set the vertical thread repeat count"));
-        duplicateCheckbox.setTooltip(new Tooltip("Duplicate the vertical threads horizontally"));
+        columnCountSpinner.setTooltip(new Tooltip("Set the column repeat count"));
+        rowCountSpinner.setTooltip(new Tooltip("Set the row repeat count"));
+        duplicateCheckbox.setTooltip(new Tooltip("Duplicate the column threads for the rows"));
         threadCountSpinner.setTooltip(new Tooltip("Set the number of adjacent threads to colour"));
         threadSizeSpinner.setTooltip(new Tooltip("Set the thread size in pixels"));
         borderThicknessSpinner.setTooltip(new Tooltip("Set the thread border thickness in pixels"));
         borderColourPicker.setTooltip(new Tooltip("Select the thread border colour"));
 
-        horizontalCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
-            // System.out.println("horizontalCountSpinner.Listener(" + newValue + "))");
-            model.setHorizontalCount(newValue);
-            sample.syncHorizontalCount();
+        columnCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
+            // System.out.println("columnCountSpinner.Listener(" + newValue + "))");
+            model.setColumnCount(newValue.intValue());
+            sample.syncColumnCount();
         });
 
-        verticalCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
-            // System.out.println("verticalCountSpinner.Listener(" + newValue + "))");
-            model.setVerticalCount(newValue);
-            sample.syncVerticalCount();
+        rowCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
+            // System.out.println("rowCountSpinner.Listener(" + newValue + "))");
+            model.setRowCount(newValue.intValue());
+            sample.syncRowCount();
         });
 
         threadSizeSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
