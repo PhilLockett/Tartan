@@ -608,6 +608,9 @@ public class PrimaryController {
             // System.out.println("columnCountSpinner.Listener(" + newValue + "))");
             model.setColumnCount(newValue.intValue());
             sample.syncColumnCount();
+            if (model.isDuplicate()) {
+                rowCountSpinner.getValueFactory().setValue(newValue.intValue());
+            }
         });
 
         rowCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {

@@ -545,10 +545,12 @@ public class Sample extends Stage {
     public void syncDuplicateThreads() {
         final int COUNT = model.getColumnCount();
 
-        for (int c = 0; c < COUNT; ++c) {
-            Thread stitch = rowList.get(c);
-            stitch.setColour(model.getColColourIndex(c));
-            stitch.setVisible(true);
+        for (int column = 0; column < COUNT; ++column) {
+            Thread target = rowList.get(column);
+            final int colourIndex = model.getColColourIndex(column);
+            target.setColour(colourIndex);
+            target.setVisible(true);
+            model.setRowColourIndex(column, colourIndex);
         }
     }
 
