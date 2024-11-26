@@ -116,7 +116,7 @@ public class PrimaryController {
      * Synchronise all controls with the model. This should be the last step 
      * in the initialisation.
      */
-    public void syncUI() {
+    private void syncUI() {
 
         for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i)
             setSwatch(i, model.getSwatchColour(i), model.getSwatchName(i));
@@ -126,6 +126,21 @@ public class PrimaryController {
 
         borderColourPicker.setValue(model.getBorderColour());
 
+        fixUISettings();
+    }
+
+    /**
+     * Adjusts the UI based on "duplicate the vertical threads horizontally" 
+     * selection.
+     */
+    private void fixUISettings() {
+        if (model.isDuplicate()) {
+            verticalCountSpinner.getValueFactory().setValue(horizontalCountSpinner.getValue());
+            verticalCountSpinner.setDisable(true);
+            sample.syncDuplicateThreads();
+        } else {
+            verticalCountSpinner.setDisable(false);
+        }
     }
 
 
@@ -561,6 +576,7 @@ public class PrimaryController {
     @FXML
     void duplicateCheckboxOnAction(ActionEvent event) {
         model.setDuplicate(duplicateCheckbox.isSelected());
+        fixUISettings();
     }
 
     @FXML
@@ -582,7 +598,7 @@ public class PrimaryController {
 
         horizontalCountSpinner.setTooltip(new Tooltip("Set the horizontal thread repeat count"));
         verticalCountSpinner.setTooltip(new Tooltip("Set the vertical thread repeat count"));
-        duplicateCheckbox.setTooltip(new Tooltip("Duplicate threads vertically and horizontally"));
+        duplicateCheckbox.setTooltip(new Tooltip("Duplicate the vertical threads horizontally"));
         threadCountSpinner.setTooltip(new Tooltip("Set the number of adjacent threads to colour"));
         threadSizeSpinner.setTooltip(new Tooltip("Set the thread size in pixels"));
         borderThicknessSpinner.setTooltip(new Tooltip("Set the thread border thickness in pixels"));

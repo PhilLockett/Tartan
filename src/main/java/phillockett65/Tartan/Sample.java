@@ -537,5 +537,19 @@ public class Sample extends Stage {
         syncVerticalCount();
         syncHorizontalCount();
     }
-    
+
+    /**
+     * Synchronise to duplicate the vertical threads horizontally.
+     * Assumes that the Vertical count has been set to the Horizontal count.
+     */
+    public void syncDuplicateThreads() {
+        final int COUNT = model.getHorizontalCount();
+
+        for (int c = 0; c < COUNT; ++c) {
+            Thread stitch = rowList.get(c);
+            stitch.setColour(model.getColColourIndex(c));
+            stitch.setVisible(true);
+        }
+    }
+
 }
