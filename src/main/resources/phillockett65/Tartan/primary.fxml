@@ -127,6 +127,7 @@
                         <Spinner fx:id="rowCountSpinner" layoutX="168.0" layoutY="23.0" GridPane.rowIndex="1" />
                         <Label layoutX="20.0" layoutY="27.0" text="Row Repeat Count" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <CheckBox fx:id="duplicateCheckbox" mnemonicParsing="false" onAction="#duplicateCheckboxOnAction" text="Duplicate the Column colours for the Rows" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="showGuideCheckbox" mnemonicParsing="false" onAction="#showGuideCheckboxOnAction" text="Show Guide lines" GridPane.rowIndex="3" />
                         <Spinner fx:id="threadCountSpinner" layoutX="231.0" layoutY="26.0" GridPane.rowIndex="4" />
                         <Label layoutX="79.0" layoutY="71.0" text="Thread Repeat Count" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Spinner fx:id="threadSizeSpinner" GridPane.rowIndex="5" />

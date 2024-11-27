@@ -32,6 +32,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 
@@ -46,6 +47,7 @@ public class Sample extends Stage {
 
     private ObservableList<Thread> colList = FXCollections.observableArrayList();
     private ObservableList<Thread> rowList = FXCollections.observableArrayList();
+    private ObservableList<Line> guides = FXCollections.observableArrayList();
 
 
 
@@ -268,6 +270,7 @@ public class Sample extends Stage {
 
         scene = new Scene(model.getGroup(), WIDTH, HEIGHT, Color.WHITE);
         drawBlankLoom();
+        syncGuidePosition();
 
         this.setScene(scene);
         this.setX(0);
@@ -355,6 +358,15 @@ public class Sample extends Stage {
         for (int col = 0; col < COLS; ++col) {
             Thread thread = new Thread(col, model.getColColourIndex(col % CCOUNT));
             colList.add(thread);
+        }
+
+        ObservableList<Node> items =  model.getGroup().getChildren();
+        final int GUIDES = Default.TOTAL_GUIDE_COUNT.getInt();
+        for (int index = 0; index < GUIDES; ++index) {
+            Line guide = new Line(0.0, 0.0, 0.0, 0.0);
+            guide.setStroke(Color.BLUE);
+            guides.add(guide);
+            items.add(guide);
         }
 
         syncBorderColour();
@@ -487,6 +499,8 @@ public class Sample extends Stage {
             stitch.syncColSize();
             stitch.syncBorderThickness();
         }
+
+        syncGuidePosition();
     }
 
     /**
@@ -507,6 +521,8 @@ public class Sample extends Stage {
                 index = 0;
             }
         }
+
+        syncGuidePosition();
     }
 
     /**
@@ -527,6 +543,8 @@ public class Sample extends Stage {
                 index = 0;
             }
         }
+
+        syncGuidePosition();
     }
 
     /**
@@ -551,6 +569,54 @@ public class Sample extends Stage {
             target.setColour(colourIndex);
             target.setVisible(true);
             model.setRowColourIndex(column, colourIndex);
+        }
+    }
+
+    /**
+     * Synchronise the positions of the guide lines to the thread size and 
+     * thread counts.
+     */
+    private void syncGuidePosition() {
+        final double SIZE = model.getThreadSize();
+
+        final double CSIZE = SIZE * model.getColumnCount();
+        final double RSIZE = SIZE * model.getRowCount();
+
+        final double CSTEP = CSIZE / (Default.GUIDE_COUNT.getFloat() + 1);
+        final double RSTEP = RSIZE / (Default.GUIDE_COUNT.getFloat() + 1);
+
+        final double CLENGTH = OFFSET + RSIZE;
+        final double RLENGTH = OFFSET + CSIZE;
+
+        double xPos = OFFSET + CSTEP;
+        double yPos = OFFSET + RSTEP;
+        for (int i = 0; i < Default.GUIDE_COUNT.getInt(); ++i) {
+            Line guide = guides.get(i);
+
+            guide.setStartX(xPos);
+            guide.setStartY(OFFSET);
+            guide.setEndX(xPos);
+            guide.setEndY(CLENGTH);
+
+            guide = guides.get(i + Default.GUIDE_COUNT.getInt());
+
+            guide.setStartX(OFFSET);
+            guide.setStartY(yPos);
+            guide.setEndX(RLENGTH);
+            guide.setEndY(yPos);
+
+            xPos += CSTEP;
+            yPos += RSTEP;
+        }
+    }
+
+    /**
+     * Synchronize the displaying of the guide lines with the model.
+     */
+    public void syncGuideVisible() {
+        final boolean show = model.isShowGuide();
+        for (Line guide : guides) {
+            guide.setVisible(show);
         }
     }
 

@@ -124,6 +124,9 @@ public class PrimaryController {
         setSelectedColourRadioButton(model.getSelectedColour());
         colourSelect.setColour(model.getCurrentColour());
 
+        duplicateCheckbox.setSelected(model.isDuplicate());
+        showGuideCheckbox.setSelected(model.isShowGuide());
+
         borderColourPicker.setValue(model.getBorderColour());
 
         fixUISettings();
@@ -562,6 +565,9 @@ public class PrimaryController {
     private CheckBox duplicateCheckbox;
 
     @FXML
+    private CheckBox showGuideCheckbox;
+
+    @FXML
     private Spinner<Integer> threadCountSpinner;
 
     @FXML
@@ -577,6 +583,12 @@ public class PrimaryController {
     void duplicateCheckboxOnAction(ActionEvent event) {
         model.setDuplicate(duplicateCheckbox.isSelected());
         fixUISettings();
+    }
+
+    @FXML
+    void showGuideCheckboxOnAction(ActionEvent event) {
+        model.setShowGuide(showGuideCheckbox.isSelected());
+        sample.syncGuideVisible();
     }
 
     @FXML

@@ -40,6 +40,8 @@ public enum Default {
     MPC_WIDTH (1050F),
     MPC_HEIGHT (1050F),
     SWATCH_COUNT (8F),
+    GUIDE_COUNT (7F),
+    TOTAL_GUIDE_COUNT (14F),
     BORDER_WIDTH (30F),
     INIT_THREAD_COUNT (114F);
 

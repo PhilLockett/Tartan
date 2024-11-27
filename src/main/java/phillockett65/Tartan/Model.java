@@ -422,6 +422,7 @@ public class Model {
     private SpinnerValueFactory<Integer> rowCountSVF;
 
     private boolean duplicate = true;
+    private boolean showGuide = true;
 
     private SpinnerValueFactory<Integer> threadCountSVF;
 
@@ -438,6 +439,7 @@ public class Model {
     public SpinnerValueFactory<Double> getBorderThicknessSVF() { return borderThicknessSVF; }
 
     public boolean isDuplicate() { return duplicate; }
+    public boolean isShowGuide() { return showGuide; }
     public int getThreadCount() { return threadCountSVF.getValue(); }
     public double getThreadSize() { return threadSizeSVF.getValue(); }
     public Color getBorderColour() { return borderColour; }
@@ -446,6 +448,7 @@ public class Model {
     private void initColumnCount(int value) { columnCountSVF.setValue(value); }
     private void initRowCount(int value) { rowCountSVF.setValue(value); }
     public void setDuplicate(boolean state) { duplicate = state; }
+    public void setShowGuide(boolean state) { showGuide = state; }
     public void initThreadSize(double value) { threadSizeSVF.setValue(value); }
     public void setBorderColour(Color colour) { borderColour = colour; }
     public void initBorderThickness(double value) { borderThicknessSVF.setValue(value); }
