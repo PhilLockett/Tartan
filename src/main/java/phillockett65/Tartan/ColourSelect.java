@@ -648,7 +648,14 @@ public class ColourSelect extends GridPane {
 
         private final Color colour;
 
-        public Color getColour() { return colour; }
+        public Color getAlphaColour() { return colour; }
+        public double getRed() { return colour.getRed(); }
+        public double getGreen() { return colour.getGreen(); }
+        public double getBlue() { return colour.getBlue(); }
+        public double getOpacity() { return colour.getOpacity(); }
+        public Color getColour() {
+            return Color.color(getRed(), getGreen(), getBlue());
+        }
 
         /**
          * Creates a new {@code ColourEvent} with an event type of {@code ANY}.
