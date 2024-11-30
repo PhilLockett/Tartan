@@ -101,6 +101,7 @@ public class Sample extends Stage {
             final Color color = model.getSwatchColour(colour);
             stitch = new Rectangle();
             stitch.setFill(color);
+            stitch.setStroke(model.getBorderColour());
 
             items.add(stitch);
 
@@ -108,6 +109,7 @@ public class Sample extends Stage {
             for (int i = 0; i < count; ++i) {
                 Rectangle stitch = new Rectangle();
                 stitch.setFill(color);
+                stitch.setStroke(model.getBorderColour());
 
                 items.add(stitch);
                 stitchList.add(stitch);
@@ -141,18 +143,6 @@ public class Sample extends Stage {
                 stitch.setFill(color);
 
             return true;
-        }
-
-        /**
-         * Synchronise the colour of the thread border.
-         */
-        public void syncBorderColour() {
-            final Color colour = model.getBorderColour();
-
-            stitch.setStroke(colour);
-            for (Rectangle stitch : stitchList)
-                stitch.setStroke(colour);
-
         }
 
         /**
@@ -369,7 +359,7 @@ public class Sample extends Stage {
             items.add(guide);
         }
 
-        syncBorderColour();
+        syncGuideLineColour();
         syncThreadSize();
     }
 
@@ -471,18 +461,6 @@ public class Sample extends Stage {
         }
         for (Thread stitch : colList) {
             stitch.syncCurrentColour();
-        }
-    }
-
-    /**
-     * Synchronise to the stitch border colour.
-     */
-    public void syncBorderColour() {
-        for (Thread stitch : rowList) {
-            stitch.syncBorderColour();
-        }
-        for (Thread stitch : colList) {
-            stitch.syncBorderColour();
         }
     }
 
@@ -617,6 +595,16 @@ public class Sample extends Stage {
         final boolean show = model.isShowGuide();
         for (Line guide : guides) {
             guide.setVisible(show);
+        }
+    }
+
+    /**
+     * Synchronise to the guide line colour.
+     */
+    public void syncGuideLineColour() {
+        final Color colour = model.getGuideLineColour();
+        for (Line guide : guides) {
+            guide.setStroke(colour);
         }
     }
 

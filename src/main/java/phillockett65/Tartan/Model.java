@@ -106,11 +106,11 @@ public class Model {
         clearSwatches();
         setSelectedColour(1);
         
-        initColumnCount(114);
-        initRowCount(114);
-        initThreadSize(6.0);
-        setBorderColour(Color.BLACK);
-        initBorderThickness(1.0);
+        initColumnCount(Default.INIT_THREAD_COUNT.getInt());
+        initRowCount(Default.INIT_THREAD_COUNT.getInt());
+        initThreadSize(Default.INIT_THREAD_SIZE.getFloat());
+        setGuideLineColour(Color.BLUE);
+        initBorderThickness(Default.INIT_BORDER_TNICKNESS.getFloat());
     }
 
     public PrimaryController getController() { return controller; }
@@ -124,71 +124,24 @@ public class Model {
      */
 
     /**
-     * Instantiate a DataStore, populate it with data and save it to disc.
+     * Call the static DataStore1 method, to save the data to disc.
      * @return true if data successfully written to disc, false otherwise.
      */
     private boolean writeData() {
-        final String file = getSettingsFile();
-        DataStore data = new DataStore();
-
-        data.setRowCount(rowList.size());
-        for (int i = 0; i < rowList.size(); ++i)
-            data.setRowColour(i, getRowColourIndex(i));
-
-        data.setColCount(colList.size());
-        for (int i = 0; i < colList.size(); ++i)
-            data.setColColour(i, getColColourIndex(i));
-
-        data.setSelectedSwatch(getSelectedColour());
-        data.setSwatchCount(Default.SWATCH_COUNT.getInt());
-        for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i)
-            data.setSwatch(i, getSwatchColour(i), getSwatchName(i));
-
-        data.setHorizontalCount(getColumnCount());
-        data.setVerticalCount(getRowCount());
-        data.setThreadSize(getThreadSize());
-        data.setBorderColour(getBorderColour());
-        data.setBorderThickness(getBorderThickness());
-
-        if (!DataStore.writeData(data, file)) {
-            data.dump();
-
-            return false;
-        }
-
-        return true;
+        return DataStore1.writeData(this);
     }
 
+
     /**
-     * Get a DataStore populated with data previously stored to disc and update
-     * the model with the data.
-     * @return true if the model is successfully updated, false otherwise.
+     * Call the static DataStore1 method, to read the data from disc.
+     * @return true if data successfully read from disc, false otherwise.
      */
     private boolean readData() {
-        final String file = getSettingsFile();
-        DataStore data = DataStore.readData(file);
-        if (data == null)
-            return false;
-
-        initRowList(data.getRowCount());
-        for (int i = 0; i < rowList.size(); ++i)
-            setRowColourIndex(i, data.getRowColour(i));
-
-        initColumnList(data.getColCount());
-        for (int i = 0; i < colList.size(); ++i)
-            setColColourIndex(i, data.getColColour(i));
-
-        setSelectedColour(data.getSelectedSwatch());
-        for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i)
-            setSwatch(i, data.getSwatchColour(i), data.getSwatchName(i));
-
-        initColumnCount(data.getHorizontalCount());
-        initRowCount(data.getVerticalCount());
-        initThreadSize(data.getThreadSize());
-        setBorderColour(data.getBorderColour());
-        initBorderThickness(data.getBorderThickness());
-
-        return true;
+        if (DataStore1.readData(this) == true) {
+            return true;
+        }
+        
+        return false;
     }
 
 
@@ -210,12 +163,12 @@ public class Model {
     public int getRowCount() { return rowList.size(); }
     public int getColumnCount() { return colList.size(); }
 
-    private void initRowList(int size) {
+    public void initRowList(int size) {
         rowList.clear();
         for (int i = 0; i < size; ++i)
             rowList.add(0);
     }
-    private void initColumnList(int size) {
+    public void initColumnList(int size) {
         colList.clear();
         for (int i = 0; i < size; ++i)
             colList.add(0);
@@ -428,7 +381,7 @@ public class Model {
 
     private SpinnerValueFactory<Double> threadSizeSVF;
 
-    private Color borderColour;
+    private Color guideLineColour;
 
     private SpinnerValueFactory<Double> borderThicknessSVF;
 
@@ -442,15 +395,17 @@ public class Model {
     public boolean isShowGuide() { return showGuide; }
     public int getThreadCount() { return threadCountSVF.getValue(); }
     public double getThreadSize() { return threadSizeSVF.getValue(); }
-    public Color getBorderColour() { return borderColour; }
+    public Color getBorderColour() { return Color.BLACK; }
+    public Color getGuideLineColour() { return guideLineColour; }
     public double getBorderThickness() { return borderThicknessSVF.getValue(); }
 
     private void initColumnCount(int value) { columnCountSVF.setValue(value); }
     private void initRowCount(int value) { rowCountSVF.setValue(value); }
     public void setDuplicate(boolean state) { duplicate = state; }
     public void setShowGuide(boolean state) { showGuide = state; }
+    public void initThreadCount(int value) { threadCountSVF.setValue(value); }
     public void initThreadSize(double value) { threadSizeSVF.setValue(value); }
-    public void setBorderColour(Color colour) { borderColour = colour; }
+    public void setGuideLineColour(Color colour) { guideLineColour = colour; }
     public void initBorderThickness(double value) { borderThicknessSVF.setValue(value); }
 
 

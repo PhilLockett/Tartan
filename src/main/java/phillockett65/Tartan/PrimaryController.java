@@ -126,8 +126,10 @@ public class PrimaryController {
 
         duplicateCheckbox.setSelected(model.isDuplicate());
         showGuideCheckbox.setSelected(model.isShowGuide());
+        sample.syncGuideVisible();
+        sample.syncGuideLineColour();
 
-        borderColourPicker.setValue(model.getBorderColour());
+        guideLineColourPicker.setValue(model.getGuideLineColour());
 
         fixUISettings();
     }
@@ -568,13 +570,13 @@ public class PrimaryController {
     private CheckBox showGuideCheckbox;
 
     @FXML
+    private ColorPicker guideLineColourPicker;
+
+    @FXML
     private Spinner<Integer> threadCountSpinner;
 
     @FXML
     private Spinner<Double> threadSizeSpinner;
-
-    @FXML
-    private ColorPicker borderColourPicker;
 
     @FXML
     private Spinner<Double> borderThicknessSpinner;
@@ -592,9 +594,9 @@ public class PrimaryController {
     }
 
     @FXML
-    void borderColourPickerActionPerformed(ActionEvent event) {
-        model.setBorderColour(borderColourPicker.getValue());
-        sample.syncBorderColour();
+    void guideLineColourPickerActionPerformed(ActionEvent event) {
+        model.setGuideLineColour(guideLineColourPicker.getValue());
+        sample.syncGuideLineColour();
     }
 
     /**
@@ -614,7 +616,7 @@ public class PrimaryController {
         threadCountSpinner.setTooltip(new Tooltip("Set the number of adjacent threads to colour"));
         threadSizeSpinner.setTooltip(new Tooltip("Set the thread size in pixels"));
         borderThicknessSpinner.setTooltip(new Tooltip("Set the thread border thickness in pixels"));
-        borderColourPicker.setTooltip(new Tooltip("Select the thread border colour"));
+        guideLineColourPicker.setTooltip(new Tooltip("Select the colour for guide lines"));
 
         columnCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("columnCountSpinner.Listener(" + newValue + "))");

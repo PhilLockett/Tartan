@@ -43,7 +43,9 @@ public enum Default {
     GUIDE_COUNT (7F),
     TOTAL_GUIDE_COUNT (14F),
     BORDER_WIDTH (30F),
-    INIT_THREAD_COUNT (114F);
+    INIT_THREAD_SIZE (6F),
+    INIT_THREAD_COUNT (114F),
+    INIT_BORDER_TNICKNESS (1.0F);
 
     private final int	iValue;
     private final float	rValue;
