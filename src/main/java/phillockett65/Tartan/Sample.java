@@ -276,6 +276,19 @@ public class Sample extends Stage {
         return 3;
     }
 
+    private boolean isRow(double x, double y) {
+        final int sum = (int)(x + y) - (2 * OFFSET);
+        final double size = model.getThreadSize();
+        final int div = (int)(size * 4);
+        final int comp = (int)(size * 2);
+
+        if (sum % div < comp) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Initializes the stage and adds handlers to the scene.
      */
@@ -329,13 +342,10 @@ public class Sample extends Stage {
             } else if (zone == 2) {
                 setColColour(xPosToCol(x), colour);
             } else {
-                final int c = xPosToCol(x);
-                final int r = yPosToRow(y);
-                final int s = r + c;
-                if (s % 4 < 2) {
-                    setRowColour(r, colour);
+                if (isRow(x, y)) {
+                    setRowColour(yPosToRow(y), colour);
                 } else {
-                    setColColour(c, colour);
+                    setColColour(xPosToCol(x), colour);
                 }
             }
 
