@@ -442,7 +442,7 @@ public class Sample extends Stage {
      */
     private void setRowColour(int row, int colour) {
         final int count = model.getThreadCount();
-        final int repeat = model.getColumnCount();
+        final int repeat = model.getRowCount();
 
         colourRows(row, colour, count, repeat);
 
@@ -458,7 +458,7 @@ public class Sample extends Stage {
      */
     private void setColColour(int col, int colour) {
         final int count = model.getThreadCount();
-        final int repeat = model.getRowCount();
+        final int repeat = model.getColumnCount();
 
         colourColumns(col, colour, count, repeat);
 
