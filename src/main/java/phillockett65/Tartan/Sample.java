@@ -249,6 +249,33 @@ public class Sample extends Stage {
         this.show();
     }
 
+    private int getZone(double x, double y) {
+        x -= OFFSET;
+        y -= OFFSET;
+
+        if ((x < 0) && (y < 0)) {
+            return 0;
+        }
+
+        if (x >= model.getSwatchWidth()) {
+            return 0;
+        }
+
+        if (y >= model.getSwatchHeight()) {
+            return 0;
+        }
+
+        if (x < 0) {
+            return 1;
+        }
+
+        if (y < 0) {
+            return 2;
+        }
+
+        return 3;
+    }
+
     /**
      * Initializes the stage and adds handlers to the scene.
      */
@@ -277,23 +304,13 @@ public class Sample extends Stage {
         scene.setOnMouseMoved(event -> {
             final double x = event.getSceneX();
             final double y = event.getSceneY();
+            final int zone = getZone(x, y);
 
-            if ((x < OFFSET) && (y < OFFSET)) {
+            if (zone == 0) {
                 scene.setCursor(Cursor.DEFAULT);
-
-                return;
-            }
-
-            final int c = xPosToCol(x);
-            final int r = yPosToRow(y);
-
-            if ((r < model.getRowCount()) && (c < model.getColumnCount())) {
+            } else {
                 scene.setCursor(Cursor.CROSSHAIR);
-
-                return;
             }
-
-            scene.setCursor(Cursor.DEFAULT);
         });
 
         scene.setOnMouseExited(event -> {
@@ -303,31 +320,25 @@ public class Sample extends Stage {
         scene.setOnMouseClicked(event -> {
             final double x = event.getSceneX();
             final double y = event.getSceneY();
+            final int zone = getZone(x, y);
             final int colour = model.getSelectedColour();
 
-            if (x < OFFSET) {
-                if (y >= OFFSET)
-                    setRowColour(yPosToRow(y), colour);
-
-            } else if (y < OFFSET) {
+            if (zone == 0) {
+            } else if (zone == 1) {
+                setRowColour(yPosToRow(y), colour);
+            } else if (zone == 2) {
                 setColColour(xPosToCol(x), colour);
-
             } else {
-                
                 final int c = xPosToCol(x);
                 final int r = yPosToRow(y);
-
-                if ((r < model.getRowCount()) && (c < model.getColumnCount())) {
-
-                    final int s = r + c;
-                    if (s % 4 < 2) {
-                        setRowColour(r, colour);
-                    } else {
-                        setColColour(c, colour);
-                    }
+                final int s = r + c;
+                if (s % 4 < 2) {
+                    setRowColour(r, colour);
+                } else {
+                    setColColour(c, colour);
                 }
-
             }
+
         });
 
     }

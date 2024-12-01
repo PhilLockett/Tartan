@@ -408,6 +408,18 @@ public class Model {
     public void setGuideLineColour(Color colour) { guideLineColour = colour; }
     public void initBorderThickness(double value) { borderThicknessSVF.setValue(value); }
 
+    /**
+     * Get the width of the swatch in pixels.
+     * @return the width of the swatch in pixels.
+     */
+    public double getSwatchWidth() { return getThreadSize() * getColumnCount(); }
+
+    /**
+     * Get the height of the swatch in pixels.
+     * @return the height of the swatch in pixels.
+     */
+    public double getSwatchHeight() { return getThreadSize() * getRowCount(); }
+
 
     /**
      * Initialize "Layout" panel.
