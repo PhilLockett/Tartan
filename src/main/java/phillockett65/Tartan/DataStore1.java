@@ -176,7 +176,7 @@ public class DataStore1 extends DataStoreBase {
 
         DataStore1 store = new DataStore1();
         store.pull(model);
-        store.dump();
+        // store.dump();
 
         ObjectOutputStream objectOutputStream;
         try {
@@ -212,7 +212,7 @@ public class DataStore1 extends DataStoreBase {
             if (SVUID == 1) {
                 store = (DataStore1)base;
                 success = store.push(model);
-                store.dump();
+                // store.dump();
             }
 
         } catch (IOException e) {
