@@ -401,22 +401,6 @@ public class Sample extends Stage {
      * Support code for the mouse click handler.
      */
 
-    /**
-     * Set the row (and repeat rows) to the selected swatch colour.
-     * @param row to set the colour of.
-     * @param colour index to set the row to.
-     */
-    private void setRowColour(int row, int colour) {
-        final int count = model.getThreadCount();
-        final int repeat = model.getColumnCount();
-
-        colourRows(row, colour, count, repeat);
-
-        if (model.isDuplicate()) {
-            colourColumns(row, colour, count, repeat);
-        }
-    }
-
     private void colourRows(int row, int colour, int count, int repeat) {
         for (int c = 0; c < count; ++c) {
             model.setRowColourIndex(row, colour);
@@ -434,22 +418,6 @@ public class Sample extends Stage {
         }
     }
 
-    /**
-     * Set the column (and repeat columns) to the selected swatch colour.
-     * @param col to set the colour of.
-     * @param colour index to set the column to.
-     */
-    private void setColColour(int col, int colour) {
-        final int count = model.getThreadCount();
-        final int repeat = model.getRowCount();
-
-        colourColumns(col, colour, count, repeat);
-
-        if (model.isDuplicate()) {
-            colourRows(col, colour, count, repeat);
-        }
-    }
-
     private void colourColumns(int col, int colour, int count, int repeat) {
         for (int c = 0; c < count; ++c) {
             model.setColColourIndex(col, colour);
@@ -464,6 +432,38 @@ public class Sample extends Stage {
 
             if (++col >= repeat)
                 break;
+        }
+    }
+
+    /**
+     * Set the row (and repeat rows) to the selected swatch colour.
+     * @param row to set the colour of.
+     * @param colour index to set the row to.
+     */
+    private void setRowColour(int row, int colour) {
+        final int count = model.getThreadCount();
+        final int repeat = model.getColumnCount();
+
+        colourRows(row, colour, count, repeat);
+
+        if (model.isDuplicate()) {
+            colourColumns(row, colour, count, repeat);
+        }
+    }
+
+    /**
+     * Set the column (and repeat columns) to the selected swatch colour.
+     * @param col to set the colour of.
+     * @param colour index to set the column to.
+     */
+    private void setColColour(int col, int colour) {
+        final int count = model.getThreadCount();
+        final int repeat = model.getRowCount();
+
+        colourColumns(col, colour, count, repeat);
+
+        if (model.isDuplicate()) {
+            colourRows(col, colour, count, repeat);
         }
     }
 
