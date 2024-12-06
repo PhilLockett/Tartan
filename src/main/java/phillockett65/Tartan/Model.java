@@ -33,7 +33,6 @@ import javax.imageio.ImageIO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -70,7 +69,6 @@ public class Model {
      */
     public Model(PrimaryController mainController) {
         controller = mainController;
-        group = new Group();
     }
 
     /**
@@ -140,7 +138,7 @@ public class Model {
         if (DataStore1.readData(this) == true) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -150,15 +148,9 @@ public class Model {
      * Support code for "Sample" panel.
      */
 
-    private Group group;
     private ObservableList<Integer> rowList = FXCollections.observableArrayList();
     private ObservableList<Integer> colList = FXCollections.observableArrayList();
 
-
-    /**
-     * @return the Group used by the "Sample" panel.
-     */
-    public Group getGroup() { return group; }
 
     public int getRowCount() { return rowList.size(); }
     public int getColumnCount() { return colList.size(); }

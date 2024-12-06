@@ -28,6 +28,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -41,6 +42,7 @@ public class Sample extends Stage {
     private Model model;
 
     private Scene scene;
+    private Group group;
 
     private double dx;	// Difference between the size of the stage and the size of the scene.
     private double dy;
@@ -97,7 +99,7 @@ public class Sample extends Stage {
         public Thread(int index, int colour) {
             this.index = index;
             this.colour = colour;
-            ObservableList<Node> items =  model.getGroup().getChildren();
+            ObservableList<Node> items = group.getChildren();
 
             final Color color = model.getSwatchColour(colour);
             stitch = new Rectangle();
@@ -231,7 +233,6 @@ public class Sample extends Stage {
     /**
      * Constructor.
      * 
-     * @param mainController    - used to call the centralized controller.
      * @param mainModel         - used to call the centralized data model.
      * @param title             - string displayed as the heading of the Stage.
      */
@@ -244,6 +245,7 @@ public class Sample extends Stage {
 
         model = mainModel;
         defaultColour = model.getBorderColour();
+        group = new Group();
 
         this.setTitle(title);
         initializeCardSample();
@@ -300,7 +302,7 @@ public class Sample extends Stage {
         final double HEIGHT = Default.MPC_HEIGHT.getFloat();
         // System.out.println("initializeCardSample(" + WIDTH + ", " + HEIGHT + ")");
 
-        scene = new Scene(model.getGroup(), WIDTH, HEIGHT, Color.WHITE);
+        scene = new Scene(group, WIDTH, HEIGHT, Color.SILVER);
         drawBlankLoom();
         syncGuidePosition();
 
@@ -373,7 +375,7 @@ public class Sample extends Stage {
             colList.add(thread);
         }
 
-        ObservableList<Node> items =  model.getGroup().getChildren();
+        ObservableList<Node> items =  group.getChildren();
         final int GUIDES = Default.TOTAL_GUIDE_COUNT.getInt();
         for (int index = 0; index < GUIDES; ++index) {
             Line guide = new Line(0.0, 0.0, 0.0, 0.0);
