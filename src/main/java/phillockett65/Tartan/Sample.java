@@ -49,6 +49,7 @@ public class Sample extends Stage {
     private ObservableList<Thread> rowList = FXCollections.observableArrayList();
     private ObservableList<Line> guides = FXCollections.observableArrayList();
 
+    private final Color defaultColour;
 
 
     /************************************************************************
@@ -101,7 +102,7 @@ public class Sample extends Stage {
             final Color color = model.getSwatchColour(colour);
             stitch = new Rectangle();
             stitch.setFill(color);
-            stitch.setStroke(model.getBorderColour());
+            stitch.setStroke(defaultColour);
 
             items.add(stitch);
 
@@ -109,7 +110,7 @@ public class Sample extends Stage {
             for (int i = 0; i < count; ++i) {
                 Rectangle stitch = new Rectangle();
                 stitch.setFill(color);
-                stitch.setStroke(model.getBorderColour());
+                stitch.setStroke(defaultColour);
 
                 items.add(stitch);
                 stitchList.add(stitch);
@@ -242,6 +243,7 @@ public class Sample extends Stage {
         // initStyle(StageStyle.TRANSPARENT);
 
         model = mainModel;
+        defaultColour = model.getBorderColour();
 
         this.setTitle(title);
         initializeCardSample();
@@ -405,9 +407,9 @@ public class Sample extends Stage {
         for (int c = 0; c < count; ++c) {
             model.setRowColourIndex(row, colour);
 
-            for (int i = 0; i < Default.WIDTH.getInt(); i += repeat) {
+            for (int i = 0; i < Default.HEIGHT.getInt(); i += repeat) {
                 final int index = i + row;
-                if (index >= Default.WIDTH.getInt())
+                if (index >= Default.HEIGHT.getInt())
                     break;
                 
                 rowList.get(index).setColour(colour);
@@ -422,9 +424,9 @@ public class Sample extends Stage {
         for (int c = 0; c < count; ++c) {
             model.setColColourIndex(col, colour);
 
-            for (int i = 0; i < Default.HEIGHT.getInt(); i += repeat) {
+            for (int i = 0; i < Default.WIDTH.getInt(); i += repeat) {
                 final int index = i + col;
-                if (index >= Default.HEIGHT.getInt())
+                if (index >= Default.WIDTH.getInt())
                     break;
                 
                 colList.get(index).setColour(colour);
