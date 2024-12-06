@@ -108,7 +108,7 @@ public class Model {
         initRowCount(Default.INIT_THREAD_COUNT.getInt());
         initThreadSize(Default.INIT_THREAD_SIZE.getFloat());
         setGuideLineColour(Color.BLUE);
-        initBorderThickness(Default.INIT_BORDER_TNICKNESS.getFloat());
+        initBorderThickness(Default.INIT_BORDER_THICKNESS.getFloat());
     }
 
     public PrimaryController getController() { return controller; }
