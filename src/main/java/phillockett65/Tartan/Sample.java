@@ -58,7 +58,7 @@ public class Sample extends Stage {
      * General support code.
      */
 
-    private static int OFFSET = 30;
+    private static double OFFSET = Default.BORDER_WIDTH.getFloat();
 
     private double colToXPos(int col) {
         final double size = model.getThreadSize();
@@ -177,13 +177,13 @@ public class Sample extends Stage {
             final double size2 = size * 2;
             final double yPos = rowToYPos(index);
 
-            stitch.setWidth(Default.BORDER_WIDTH.getFloat() + size);
+            int c = index % 4;
+            stitch.setWidth(OFFSET + ((c == 1) ? size : 0));
             stitch.setHeight(size);
             stitch.setX(0D);
             stitch.setY(yPos);
             stitch.setVisible(index < model.getRowCount());
 
-            int c = index % 4;
             c = (4 - c) % 4;
             for (Rectangle stitch : stitchList) {
                 stitch.setWidth(size2);
@@ -204,13 +204,13 @@ public class Sample extends Stage {
             final double size2 = size * 2;
             final double xPos = colToXPos(index);
 
+            int r = index % 4;
             stitch.setWidth(size);
-            stitch.setHeight(Default.BORDER_WIDTH.getFloat() + size);
+            stitch.setHeight(OFFSET + ((r == 3) ? size : 0));
             stitch.setX(xPos);
             stitch.setY(0D);
             stitch.setVisible(index < model.getColumnCount());
 
-            int r = index % 4;
             r = (6 - r) % 4;
             for (Rectangle stitch : stitchList) {
                 stitch.setWidth(size);
@@ -281,7 +281,7 @@ public class Sample extends Stage {
     }
 
     private boolean isRow(double x, double y) {
-        final int sum = (int)(x + y) - (2 * OFFSET);
+        final int sum = (int)(x + y - (2 * OFFSET));
         final double size = model.getThreadSize();
         final int div = (int)(size * 4);
         final int comp = (int)(size * 2);
