@@ -606,18 +606,18 @@ public class PrimaryController {
     private void initializeLayout() {
         columnCountSpinner.setValueFactory(model.getColumnCountSVF());
         rowCountSpinner.setValueFactory(model.getRowCountSVF());
-        duplicateCheckbox.setSelected(model.isDuplicate());
         threadCountSpinner.setValueFactory(model.getThreadCountSVF());
         threadSizeSpinner.setValueFactory(model.getThreadSizeSVF());
         borderThicknessSpinner.setValueFactory(model.getBorderThicknessSVF());
 
         columnCountSpinner.setTooltip(new Tooltip("Set the column repeat count"));
         rowCountSpinner.setTooltip(new Tooltip("Set the row repeat count"));
-        duplicateCheckbox.setTooltip(new Tooltip("Duplicate the column threads for the rows"));
-        threadCountSpinner.setTooltip(new Tooltip("Set the number of adjacent threads to colour"));
+        duplicateCheckbox.setTooltip(new Tooltip("Duplicate the column threads for the rows (or vice versa)"));
+        showGuideCheckbox.setTooltip(new Tooltip("Display guide lines"));
+        guideLineColourPicker.setTooltip(new Tooltip("Select the colour for guide lines and thread highlight"));
+        threadCountSpinner.setTooltip(new Tooltip("Set the number of adjacent threads to the selected colour"));
         threadSizeSpinner.setTooltip(new Tooltip("Set the thread size in pixels"));
-        borderThicknessSpinner.setTooltip(new Tooltip("Set the thread border thickness in pixels"));
-        guideLineColourPicker.setTooltip(new Tooltip("Select the colour for guide lines"));
+        borderThicknessSpinner.setTooltip(new Tooltip("Set the thread border thickness in 0.1 pixels"));
 
         columnCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("columnCountSpinner.Listener(" + newValue + "))");
