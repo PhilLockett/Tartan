@@ -731,13 +731,21 @@ public class Sample extends Stage {
      */
     public void syncDuplicateThreads() {
         final int COUNT = model.getColumnCount();
+        final int COLS = Default.WIDTH.getInt();
 
         for (int column = 0; column < COUNT; ++column) {
-            Thread target = rowList.get(column);
             final int colourIndex = model.getColColourIndex(column);
-            target.setColour(colourIndex);
-            target.setVisible(true);
             model.setRowColourIndex(column, colourIndex);
+            rowList.get(column).setVisible(true);
+
+            // Set the row (and repeat rows) to the matching column colour.
+            for (int i = 0; i < COLS; i += COUNT) {
+                final int index = i + column;
+                if (index >= COLS)
+                    break;
+                
+                rowList.get(index).setColourIndex(colourIndex);
+            }
         }
     }
 
