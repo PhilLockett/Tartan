@@ -32,7 +32,8 @@ The following command clones the code:
 	git clone https://github.com/PhilLockett/Tartan.git
 
 ## Running
-Once cloned, change to `Tartan` directory and execute the following command:
+Once cloned, change to the `Tartan` directory and execute the following 
+command:
 
 	mvn clean javafx:run
 
@@ -74,7 +75,7 @@ The thickness of the thread border can be adjusted using the "Thread Border
 Thickness" control, if needed.
 
 #### Pull-Down Menu
-The Pull-Down Menu allows tartan designs to be loaded to and saved from the 
+The Pull-Down Menu allows tartan designs to be loaded from and saved to the 
 `Tartan/swatches` directory.
 
 ### "Sample" Window
