@@ -32,7 +32,8 @@ The following command clones the code:
 	git clone https://github.com/PhilLockett/Tartan.git
 
 ## Running
-Once cloned change to `Tartan` directory and execute the following command:
+Once cloned, change to `Tartan` directory and execute the following command:
+
 	mvn clean javafx:run
 
 ## User Guide
@@ -46,7 +47,7 @@ Each colour swatch can be labelled using the adjoining text field.
 
 #### Layout
 The pattern layout can be controlled in a number of ways.
-"Tartan" uses pattern that repeats after an specific number of threads.
+"Tartan" uses a pattern that repeats after an specific number of threads.
 "Column Repeat Count" defines that number of vertical threads.
 Typically the pattern is the same for the vertical and horizontal threads and 
 the "Duplicate the Column colours for the Rows" check box performs this 
@@ -56,8 +57,8 @@ horizontal threads independently.
 This also allows the number of horizontal threads (before repeating) to be set 
 independently.
 
-Guide lines are shown, dividing the "Sample" window into eight parts vertically 
-and horizontally.
+Guide lines are shown, dividing the "Sample" window into eight equal parts 
+vertically and horizontally.
 The "Show Guide Lines" check box controls whether theses are displayed or not.
 The colour of the guide lines **AND** the colour of thread highlights can be 
 changed using the colour selector labelled "Guide Line Colour".
@@ -65,6 +66,7 @@ changed using the colour selector labelled "Guide Line Colour".
 Typically multiple adjacent treads have the same colour.
 "Thread Repeat Count" colours up to eight adjacent threads using the currently 
 selected colour.
+
 The size of the threads can be increased using the "Thread Size" control, to 
 make life easier during the design phase, however this will effect the 
 generated graphic when saved.
