@@ -140,7 +140,8 @@ public class PrimaryController {
      */
     private void fixUISettings() {
         if (model.isDuplicate()) {
-            rowCountSpinner.getValueFactory().setValue(model.getColumnCount());
+            model.setRowCount(model.getColumnCount());
+            rowCountSpinner.getValueFactory().setValue(model.getRowCount());
             rowCountSpinner.setDisable(true);
             sample.syncDuplicateThreads();
         } else {
