@@ -755,6 +755,7 @@ public class Sample extends Stage {
      */
     private void syncGuidePosition() {
         final double SIZE = model.getThreadSize();
+        final double STARTPOS = OFFSET + (SIZE / 2);
 
         final double CSIZE = SIZE * model.getColumnCount();
         final double RSIZE = SIZE * model.getRowCount();
@@ -765,8 +766,8 @@ public class Sample extends Stage {
         final double CLENGTH = OFFSET + RSIZE;
         final double RLENGTH = OFFSET + CSIZE;
 
-        double xPos = OFFSET + CSTEP;
-        double yPos = OFFSET + RSTEP;
+        double xPos = STARTPOS + CSTEP;
+        double yPos = STARTPOS + RSTEP;
         for (int i = 0; i < Default.GUIDE_COUNT.getInt(); ++i) {
             Line guide = guides.get(i);
 
