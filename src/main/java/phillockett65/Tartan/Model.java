@@ -103,11 +103,17 @@ public class Model {
     public void defaultSettings() {
         clearSwatches();
         setSelectedColour(1);
-        
+        setSwatch(0, Color.WHITE, "Blank");
+        setSwatch(1, Color.LIGHTCYAN, "Highlight");
+        setSwatch(2, Color.BLACK, "Lowlight");
+        setSwatch(3, Color.RED, "Major 1");
+        setSwatch(4, Color.GREEN, "Major 2");
+        setSwatch(5, Color.BLUE, "Major 3");
+
         initColumnCount(Default.INIT_THREAD_COUNT.getInt());
         initRowCount(Default.INIT_THREAD_COUNT.getInt());
         initThreadSize(Default.INIT_THREAD_SIZE.getFloat());
-        setGuideLineColour(Color.BLUE);
+        setGuideLineColour(Color.RED);
         initBorderThickness(Default.INIT_BORDER_THICKNESS.getFloat());
     }
 
