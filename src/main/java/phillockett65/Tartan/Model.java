@@ -21,6 +21,7 @@
 /*
  * Model is the class that captures the dynamic shared data plus some 
  * supporting constants and provides access via getters and setters.
+ * It is implemented as a basic (non thread safe) Singleton.
  */
 package phillockett65.Tartan;
 
@@ -47,6 +48,7 @@ public class Model {
     private final static String SWATCHES = "swatches";
     private final static String IMAGEFILE = "tartan.png";
 
+    private static Model model = new Model();
 
 
     /************************************************************************
@@ -64,20 +66,27 @@ public class Model {
     private Sample sample;
 
     /**
-     * Responsible for constructing the Model and any local objects. Called by 
-     * the controller.
+     * Private default constructor - part of the Singleton Design Pattern.
+     * Called at initialization only, constructs the single private instance.
      */
-    public Model(PrimaryController mainController) {
-        controller = mainController;
+    private Model() {
     }
+
+    /**
+     * Singleton implementation.
+     * @return the only instance of the model.
+     */
+    public static Model getInstance() { return model; }
 
     /**
      * Called by the controller after the constructor to initialise any 
      * objects after the controls have been initialised.
      */
-    public void initialize() {
+    public void initialize(PrimaryController mainController) {
         // System.out.println("Model initialized.");
- 
+
+        controller = mainController;
+
         initializeColourPalette();
         initializeLayout();
         initializeSample();
@@ -132,7 +141,7 @@ public class Model {
      * @return true if data successfully written to disc, false otherwise.
      */
     private boolean writeData() {
-        return DataStore1.writeData(this);
+        return DataStore1.writeData();
     }
 
 
@@ -141,7 +150,7 @@ public class Model {
      * @return true if data successfully read from disc, false otherwise.
      */
     private boolean readData() {
-        if (DataStore1.readData(this) == true) {
+        if (DataStore1.readData() == true) {
             return true;
         }
 

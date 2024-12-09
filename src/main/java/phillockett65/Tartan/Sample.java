@@ -283,18 +283,16 @@ public class Sample extends Stage {
 
     /**
      * Constructor.
-     * 
-     * @param mainModel         - used to call the centralized data model.
-     * @param title             - string displayed as the heading of the Stage.
+     * @param title - string displayed as the heading of the Stage.
      */
-    public Sample(Model mainModel, String title) {
+    public Sample(String title) {
 		// System.out.println("CardSample constructed: " + title);
 
         // resizableProperty().setValue(false);
         setOnCloseRequest(e -> Platform.exit());
         // initStyle(StageStyle.TRANSPARENT);
 
-        model = mainModel;
+        model = Model.getInstance();
         defaultColour = model.getBorderColour();
         group = new Group();
 

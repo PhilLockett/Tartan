@@ -168,11 +168,11 @@ public class DataStore1 extends DataStoreBase {
     /**
      * Static method that instantiates a DataStore, populates it from the 
      * model and writes it to disc.
-     * @param model contains the data.
      * @return true if data successfully written to disc, false otherwise.
      */
-    public static boolean writeData(Model model) {
+    public static boolean writeData() {
         boolean success = false;
+        Model model = Model.getInstance();
 
         DataStore1 store = new DataStore1();
         store.pull(model);
@@ -195,11 +195,11 @@ public class DataStore1 extends DataStoreBase {
     /**
      * Static method that instantiates a DataStore, populates it from disc 
      * and writes it to the model.
-     * @param model contains the data.
      * @return true if data successfully read from disc, false otherwise.
      */
-    public static boolean readData(Model model) {
+    public static boolean readData() {
         boolean success = false;
+        Model model = Model.getInstance();
 
         ObjectInputStream objectInputStream;
         try {

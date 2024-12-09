@@ -51,11 +51,10 @@ public class LoadController {
     }
 
     /**
-     * Called by PrimaryController after the stage has been set. Provided with
-     * model reference and completes the initialization.
+     * Called by PrimaryController after the stage has been set. 
      */
-    public void init(Model model) {
-        this.model = model;
+    public void init() {
+        model = Model.getInstance();
         // model.setLoadWindowLaunched(true);
 
         initializeLoadPanel();

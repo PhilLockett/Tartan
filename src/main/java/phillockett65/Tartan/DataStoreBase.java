@@ -31,33 +31,5 @@ public class DataStoreBase implements Serializable {
 
     public DataStoreBase() { }
 
-    public void dump() { }
-
-
-
-    /************************************************************************
-     * Support code for static public interface.
-     */
-
-    /**
-     * Static method that receives a populated DataStoreBase and writes it to disc.
-     * @param store contains the data.
-     * @param settingsFile path String of the settings data file.
-     * @return false to indicate unsuccessful.
-     */
-    public static boolean writeData(DataStoreBase store, String settingsFile) {
-        return false;
-    }
-
-    /**
-     * Static method that instantiates a DataStoreBase, populates it from disc 
-     * and returns it.
-     * @param settingsFile path of the settings data file.
-     * @return null to indicate unsuccessful.
-     */
-    public static DataStoreBase readData(String settingsFile) {
-        return null;
-    }
-
 }
 

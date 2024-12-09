@@ -71,7 +71,7 @@ public class PrimaryController {
      */
     public PrimaryController() {
         // System.out.println("PrimaryController constructed.");
-        model = new Model(this);
+        model = Model.getInstance();
     }
 
     /**
@@ -80,7 +80,7 @@ public class PrimaryController {
      */
     @FXML public void initialize() {
         // System.out.println("PrimaryController initialized.");
-        model.initialize();
+        model.initialize(this);
 
         initializeColourPalette();
         initializeLayout();
@@ -97,7 +97,7 @@ public class PrimaryController {
      */
     public void init(Stage stage) {
         // System.out.println("PrimaryController init.");
-        sample = new Sample(model, "Sample");
+        sample = new Sample("Sample");
 
         model.init(stage, sample);
         sample.init();
@@ -240,7 +240,7 @@ public class PrimaryController {
             loadStage.setOnCloseRequest(e -> Platform.exit());
 
             loadController = fxmlLoader.getController();
-            loadController.init(model);
+            loadController.init();
             loadController.syncUI();
 
             loadStage.show();
@@ -306,7 +306,7 @@ public class PrimaryController {
             saveAsStage.setOnCloseRequest(e -> Platform.exit());
 
             saveAsController = fxmlLoader.getController();
-            saveAsController.init(model);
+            saveAsController.init();
             saveAsController.syncUI();
 
             saveAsStage.show();
