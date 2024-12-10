@@ -77,6 +77,8 @@ Thickness" control, if needed.
 #### Pull-Down Menu
 The Pull-Down Menu allows tartan designs to be loaded from and saved to the 
 `Tartan/swatches` directory.
+Each tartan design is saved in it's own subdirectory as a settings file and 
+includes a .png image file showing the design repeated in a 2 by 2 layout.
 
 ### "Sample" Window
 Across the top edge and down the left side of the "Sample" window are extended 
@@ -91,6 +93,7 @@ This code has the following points of interest:
 
   * Tartan is a Maven project that uses JavaFX.
   * Tartan is structured as an MVC project (FXML being the Video component).
+  * The Model is implemented as a basic (non thread safe) Singleton.
   * Multi stage initialization minimizes the need for null checks. 
   * Data persistence is provided by the Serializable DataStore object.
   * The GUI is implemented in FXML using SceneBuilder.

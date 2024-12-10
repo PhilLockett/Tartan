@@ -47,8 +47,6 @@ public class App extends Application {
         Scene scene = new Scene(root);
         controller = fxmlLoader.getController();
 
-        scene.getStylesheets().add(App.class.getResource("application.css").toExternalForm());
-
         stage.setTitle("Tartan Designer 1.0");
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.resizableProperty().setValue(false);

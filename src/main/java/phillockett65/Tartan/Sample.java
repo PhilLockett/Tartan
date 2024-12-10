@@ -47,7 +47,6 @@ public class Sample extends Stage {
 
     private Model model;
 
-    private Scene scene;
     private Group group;
     private Canvas canvas;
     private GraphicsContext gc;
@@ -341,7 +340,7 @@ public class Sample extends Stage {
         final double HEIGHT = Default.MPC_HEIGHT.getFloat();
         // System.out.println("initializeCardSample(" + WIDTH + ", " + HEIGHT + ")");
 
-        scene = new Scene(group, WIDTH, HEIGHT, Color.SILVER);
+        Scene scene = new Scene(group, WIDTH, HEIGHT, Color.SILVER);
 
         canvas = new Canvas(WIDTH-OFFSET, HEIGHT-OFFSET);
         canvas.setLayoutX(OFFSET);

@@ -630,9 +630,10 @@ public class ColourSelect extends GridPane {
  
 
 
-    /**
-     * ColourSelect Event class.
+    /************************************************************************
+     * Support code for the ColourSelect Event class.
      */
+
     public static class ColourEvent extends Event {
 
         private static final long serialVersionUID = 202411141956L;
