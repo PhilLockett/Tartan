@@ -27,12 +27,22 @@ package phillockett65.Tartan;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -60,23 +70,96 @@ public class Sample extends Stage {
 
     private final Color defaultColour;
 
+    private int lastZone = 0;
+    private int lastPos = 0;
+
+    private double x = 0.0;
+    private double y = 0.0;
+
+    // private boolean result = false;
+
 
     /************************************************************************
      * General support code.
      */
 
     private static double OFFSET = Default.BORDER_WIDTH.getFloat();
+    private static double TOPBARSIZE = Default.TOP_BAR_HEIGHT.getFloat();
 
+    /**
+     * Calculate the column from the mouse x pos in the scene.
+     * Accounts for the thread selector size.
+     * @param x pos of the mouse in the scene.
+     * @return the column number (0 to getColumnCount()-1)
+     */
     private int xPosToCol(double x) {
         final double size = model.getThreadSize();
         return (int)((x - OFFSET) / size);
     }
 
+    /**
+     * Calculate the row from the mouse y pos in the scene.
+     * Accounts for the thread selector size and the top-bar size.
+     * @param y pos of the mouse in the scene.
+     * @return the row number (0 to getRowCount()-1)
+     */
     private int yPosToRow(double y) {
         final double size = model.getThreadSize();
-        return (int)((y - OFFSET) / size);
+        return (int)((y - (OFFSET + TOPBARSIZE)) / size);
     }
 
+    /**
+     * Calculate the zone from the mouse x & y pos in the scene.
+     * Accounts for the thread selector size and the top-bar size.
+     * @param x pos of the mouse in the scene.
+     * @param y pos of the mouse in the scene.
+     * @return ROW_ZONE if the pos is in the row thread selector, 
+     * COLUMN_ZONE if the pos is in the column thread selector or
+     * NONE_ZONE otherwise.
+     */
+    private int getZone(double x, double y) {
+        // In the top-bar?
+        y -= TOPBARSIZE;
+        if (y < 0) {
+            return NONE_ZONE;
+        }
+
+        // Adjust for the thread selection border size (and the canvas origin).
+        x -= OFFSET;
+        y -= OFFSET;
+
+        // In the top-left corner of background, but not on thread selector?
+        if ((x < 0) && (y < 0)) {
+            return NONE_ZONE;
+        }
+
+        // On the far side of either thread selector?
+        if (x >= model.getSwatchWidth()) {
+            return NONE_ZONE;
+        }
+        if (y >= model.getSwatchHeight()) {
+            return NONE_ZONE;
+        }
+
+        // On the row thread selector?
+        if (x < 0) {
+            return ROW_ZONE;
+        }
+
+        // On the column thread selector?
+        if (y < 0) {
+            return COLUMN_ZONE;
+        }
+
+        // Must be in the tartan swatch, so ignore.
+        return NONE_ZONE;
+    }
+
+
+
+    /************************************************************************
+     * Support code for the Thread sub-class.
+     */
 
     /**
      * Class to represent a single thread as a sequence of rectangles.
@@ -189,7 +272,6 @@ public class Sample extends Stage {
         }
 
 
-
         private void drawRow() {
             final double size = model.getThreadSize();
             final double size2 = size * 2;
@@ -280,56 +362,76 @@ public class Sample extends Stage {
      * Support code for the Initialization of the Sample.
      */
 
+
     /**
-     * Constructor.
-     * @param title - string displayed as the heading of the Stage.
+     * Builds the top-bar as a HBox and includes the cancel button the mouse 
+     * press and drag handlers.
+     * @return the HBox that represents the top-bar.
      */
-    public Sample(String title) {
-		// System.out.println("CardSample constructed: " + title);
+    private HBox buildTopBar() {
+        HBox topBar = new HBox();
+        topBar.getStyleClass().add("top-bar");
+        topBar.setAlignment(Pos.CENTER);
+        topBar.setPrefHeight(Default.TOP_BAR_HEIGHT.getFloat());
 
-        // resizableProperty().setValue(false);
-        setOnCloseRequest(e -> Platform.exit());
-        // initStyle(StageStyle.TRANSPARENT);
+        // Make window dragable.
+        topBar.setOnMousePressed(mouseEvent -> {
+            x = mouseEvent.getSceneX();
+            y = mouseEvent.getSceneY();
+        });
 
-        model = Model.getInstance();
-        defaultColour = model.getBorderColour();
+        topBar.setOnMouseDragged(mouseEvent -> {
+            this.setX(mouseEvent.getScreenX() - x);
+            this.setY(mouseEvent.getScreenY() - y);
+        });
+
+        Image image = new Image(getClass().getResourceAsStream("icon32.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(28);
+        imageView.setFitWidth(28);
+        imageView.setPickOnBounds(true);
+        imageView.setPreserveRatio(true);
+
+        Label heading = new Label(" " + this.getTitle());
+        Region region = new Region();
+
+        Pane cancel = Model.buildCancelButton();
+        cancel.setOnMouseClicked(event -> model.close());
+
+        topBar.getChildren().add(imageView);
+        topBar.getChildren().add(heading);
+        topBar.getChildren().add(region);
+        topBar.getChildren().add(cancel);
+        
+        HBox.setHgrow(region, Priority.ALWAYS);
+
+        return topBar;
+    }
+
+    /**
+     * Builds the tartan swatch display as a Group.
+     * @return the Group that displays the tartan swatch.
+     */
+    private Group buildTartanDisplay(double width, double height) {
         group = new Group();
 
-        this.setTitle(title);
-        initializeCardSample();
+        // Use a silver background.
+        Rectangle background = new Rectangle(width, height, Color.SILVER);
 
-        this.show();
+        canvas = new Canvas(width-OFFSET, height-OFFSET);
+        canvas.setLayoutX(OFFSET);
+        canvas.setLayoutY(OFFSET);
+
+        group.getChildren().add(background);
+        group.getChildren().add(canvas);
+
+        // Grab the graphics context while we are here.
+        gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.GRAY);
+        gc.fillRect(0, 0, width-OFFSET, height-OFFSET);
+
+        return group;
     }
-
-    private int getZone(double x, double y) {
-        x -= OFFSET;
-        y -= OFFSET;
-
-        if ((x < 0) && (y < 0)) {
-            return NONE_ZONE;
-        }
-
-        if (x >= model.getSwatchWidth()) {
-            return NONE_ZONE;
-        }
-
-        if (y >= model.getSwatchHeight()) {
-            return NONE_ZONE;
-        }
-
-        if (x < 0) {
-            return ROW_ZONE;
-        }
-
-        if (y < 0) {
-            return COLUMN_ZONE;
-        }
-
-        return NONE_ZONE;
-    }
-
-    int lastZone = 0;
-    int lastPos = 0;
 
     /**
      * Initializes the stage and adds handlers to the scene.
@@ -340,19 +442,16 @@ public class Sample extends Stage {
         final double HEIGHT = Default.MPC_HEIGHT.getFloat();
         // System.out.println("initializeCardSample(" + WIDTH + ", " + HEIGHT + ")");
 
-        Scene scene = new Scene(group, WIDTH, HEIGHT, Color.SILVER);
+        VBox root = new VBox();
+        root.setPrefSize(WIDTH, HEIGHT);
 
-        canvas = new Canvas(WIDTH-OFFSET, HEIGHT-OFFSET);
-        canvas.setLayoutX(OFFSET);
-        canvas.setLayoutY(OFFSET);
-        group.getChildren().add(canvas);
-
-        gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.GRAY);
-        gc.fillRect(0, 0, WIDTH-OFFSET, HEIGHT-OFFSET);
+        root.getChildren().add(buildTopBar());
+        root.getChildren().add(buildTartanDisplay(WIDTH, HEIGHT));
 
         drawBlankLoom();
-        syncGuidePosition();
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
         this.setScene(scene);
         this.setX(0);
@@ -477,8 +576,32 @@ public class Sample extends Stage {
         }
 
         syncGuideLineColour();
+        syncGuideLinePositions();
         syncThreadSize();
     }
+
+    /**
+     * Constructor.
+     * @param title - string displayed as the heading of the Stage.
+     */
+    public Sample(String title) {
+        super();
+		// System.out.println("CardSample constructed: " + title);
+
+        model = Model.getInstance();
+        defaultColour = model.getBorderColour();
+
+        this.setTitle(title);
+        this.resizableProperty().setValue(false);
+        setOnCloseRequest(e -> Platform.exit());
+        this.initStyle(StageStyle.UNDECORATED);
+
+        this.setTitle(title);
+        initializeCardSample();
+
+        this.show();
+    }
+
 
     /**
      * Initialization after the model has been initialised.
@@ -666,7 +789,7 @@ public class Sample extends Stage {
             stitch.syncColSize();
         }
 
-        syncGuidePosition();
+        syncGuideLinePositions();
     }
 
     /**
@@ -688,7 +811,7 @@ public class Sample extends Stage {
             }
         }
 
-        syncGuidePosition();
+        syncGuideLinePositions();
     }
 
     /**
@@ -710,7 +833,7 @@ public class Sample extends Stage {
             }
         }
 
-        syncGuidePosition();
+        syncGuideLinePositions();
     }
 
     /**
@@ -750,7 +873,7 @@ public class Sample extends Stage {
      * Synchronise the positions of the guide lines to the thread size and 
      * thread counts.
      */
-    private void syncGuidePosition() {
+    private void syncGuideLinePositions() {
         final double SIZE = model.getThreadSize();
         final double STARTPOS = OFFSET + (SIZE / 2);
 

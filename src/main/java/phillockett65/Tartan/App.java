@@ -25,10 +25,13 @@ package phillockett65.Tartan;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -47,9 +50,13 @@ public class App extends Application {
         Scene scene = new Scene(root);
         controller = fxmlLoader.getController();
 
+        ObservableList<Image> icons = stage.getIcons();
+        icons.add(new Image(getClass().getResourceAsStream("icon32.png")));
+
         stage.setTitle("Tartan Designer 1.0");
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.resizableProperty().setValue(false);
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
 
         stage.show();

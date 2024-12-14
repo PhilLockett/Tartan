@@ -39,7 +39,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.Stage;
 
 public class Model {
@@ -55,6 +58,40 @@ public class Model {
      * General support code.
      */
     
+
+    private static final String TOPBARICON = "top-bar-icon";
+ 
+    /**
+     * Builds the cancel button as a Pane.
+     * Does not include the mouse click handler.
+     * @return the Pane that represents the cancel button.
+     */
+    public static Pane buildCancelButton() {
+        final double iconSize = 32.0;
+        final double cancelPadding = 0.3;
+
+        Pane cancel = new Pane();
+        cancel.setPrefWidth(iconSize);
+        cancel.setPrefHeight(iconSize);
+        cancel.getStyleClass().add(TOPBARICON);
+
+        double a = iconSize * cancelPadding;
+        double b = iconSize - a;
+        Line line1 = new Line(a, a, b, b);
+        line1.setStroke(Color.WHITE);
+        line1.setStrokeWidth(4.0);
+        line1.setStrokeLineCap(StrokeLineCap.ROUND);
+
+        Line line2 = new Line(a, b, b, a);
+        line2.setStroke(Color.WHITE);
+        line2.setStrokeWidth(4.0);
+        line2.setStrokeLineCap(StrokeLineCap.ROUND);
+
+        cancel.getChildren().addAll(line1, line2);
+
+        return cancel;
+    }
+
 
 
     /************************************************************************
@@ -90,6 +127,8 @@ public class Model {
         initializeColourPalette();
         initializeLayout();
         initializeSample();
+        initializeLoadPanel();
+        initializeSavePanel();
         initializeStatusLine();
 
         defaultSettings();
@@ -130,6 +169,10 @@ public class Model {
     public Stage getStage() { return stage; }
     public Sample getSample() { return sample; }
 
+    public void close() {
+        sample.close();
+        stage.close();
+    }
 
 
     /************************************************************************
@@ -221,16 +264,13 @@ public class Model {
     }
 
 
+
     /************************************************************************
      * Support code for "Load" panel.
      */
 
+    private LoadControl loadControl;
     private ObservableList<String> tartanList = FXCollections.observableArrayList();
-
-    private boolean loadWindowLaunched = false;
-
-    public boolean isLoadWindowLaunched() { return loadWindowLaunched; }
-    public void setLoadWindowLaunched(boolean state) { loadWindowLaunched = state; }
 
     /**
      * Builds a list of tartans using the names of directories in the base 
@@ -263,11 +303,20 @@ public class Model {
         return tartanList;
     }
 
+    public boolean launchFileLoader() {
+        if (loadControl.showControl()) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Called by the controller to initialize the load controller.
      */
     public void initializeLoadPanel() {
         // System.out.println("Load Controller initialized.");
+        loadControl = new LoadControl("Load Tartan");
     }
 
 
@@ -275,17 +324,22 @@ public class Model {
      * Support code for "Save" panel.
      */
 
-    private boolean saveWindowLaunched = false;
+    private SaveAsControl saveAsControl;
 
-    public boolean isSaveAsWindowLaunched() { return saveWindowLaunched; }
-    public void setSaveAsWindowLaunched(boolean state) { saveWindowLaunched = state; }
+    public boolean launchSaveAs() {
+        if (saveAsControl.showControl()) {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Called by the controller to initialize the Save controller.
      */
     public void initializeSavePanel() {
         // System.out.println("Save Controller initialized.");
-
+        saveAsControl = new SaveAsControl("Save Tartan");
     }
 
 

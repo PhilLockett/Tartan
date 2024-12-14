@@ -37,6 +37,8 @@ public enum Default {
     MIN_HEIGHT (20F),
     MAX_HEIGHT (2000F),
 
+    TOP_BAR_HEIGHT (32F),
+
     MPC_WIDTH (1050F),
     MPC_HEIGHT (1050F),
     SWATCH_COUNT (8F),

@@ -1,10 +1,32 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 
 .root{
-    -fx-background-color: #303030;
+    -main-back-col: #303030;
+    -main-fore-col: #e8e8e8;
+    -fx-background-color: -main-back-col;
+    -fx-border-color: silver;
 }
+
+.top-bar, .menu-bar{
+    -fx-background-color: linear-gradient(to bottom, #505050, #303030);
+}
+
+.top-bar-icon{
+    -fx-stroke: white;
+}
+
+.top-bar-icon:hover{
+    -fx-background-color: red;
+}
+
+.top-bar, .heading{
+    -fx-font-size: 15;
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+}
+
 .label, .check-box, .radio-button{
-    -fx-font-size: 14px;
+    -fx-font-size: 14;
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
 }
@@ -13,10 +35,11 @@
 }
 
 .titled-pane{
-    -fx-text-fill: black;
+    -fx-text-fill: -main-fore-col;
 }
 .title{
-    -fx-background-color: linear-gradient(to bottom, #ffffff, #c8c8c8);
+    -fx-background-color: -main-back-col;
+    -fx-font-size: 14.5;
     -fx-font-weight: bold;
 }
 
@@ -93,8 +116,23 @@
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
 }
-.context-menu, .menu-bar{
+.context-menu{
     -fx-background-color: linear-gradient(to bottom, #BB6662, #7B2622);
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+}
+
+.context-menu, .menu-item:focused{
+    -fx-background-color: #9B4642;
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+}
+.menu-bar{
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: bold;
+}
+.menu-button:hover, .menu-button:showing, .menu-item:hover{
+    -fx-background-color: #7B2622;
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
 }
@@ -124,5 +162,14 @@
 }
 .column-header, .filler{
     -fx-background-color: #9B4642;
+    -fx-font-weight: bold;
+}
+
+.list-view{
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-accent: #9B4642;
+}
+.list-cell{
     -fx-font-weight: bold;
 }

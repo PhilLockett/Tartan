@@ -24,15 +24,10 @@
  */
 package phillockett65.Tartan;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
@@ -44,6 +39,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -82,6 +80,7 @@ public class PrimaryController {
         // System.out.println("PrimaryController initialized.");
         model.initialize(this);
 
+        initializeTopBar();
         initializeColourPalette();
         initializeLayout();
         initializeStatusLine();
@@ -152,6 +151,41 @@ public class PrimaryController {
 
 
     /************************************************************************
+     * Support code for "Top Bar" panel.
+     */
+
+    private double x = 0.0;
+    private double y = 0.0;
+
+    @FXML
+    private HBox topBar;
+
+    @FXML
+    void topBarOnMousePressed(MouseEvent event) {
+        x = event.getSceneX();
+        y = event.getSceneY();
+    }
+
+    @FXML
+    void topBarOnMouseDragged(MouseEvent event) {
+        model.getStage().setX(event.getScreenX() - x);
+        model.getStage().setY(event.getScreenY() - y);
+    }
+ 
+
+    /**
+     * Initialize "Top Bar" panel.
+     */
+    private void initializeTopBar() {
+        Pane cancel = Model.buildCancelButton();
+        cancel.setOnMouseClicked(event -> model.close());
+
+        topBar.getChildren().add(cancel);
+    }
+
+
+
+    /************************************************************************
      * Support code for "Tartan Designer" Menu structure.
      */
 
@@ -208,65 +242,16 @@ public class PrimaryController {
      * Support code for "Load" panel. 
      */
 
-    private LoadController loadController;
-    private Stage loadStage;
-
     private boolean launchLoadWindow() {
-        // System.out.println("launchLoadWindow() " + model.isLoadWindowLaunched());
-        if (model.isLoadWindowLaunched())
-            return false;
-
-        model.setLoadWindowLaunched(true);
-
-        if (loadController != null) {
-            loadController.syncUI();
-            loadStage.show();
+        if (model.launchFileLoader()) {
+            setStatusMessage("Loaded " + model.loadTartan());
+            syncUI();
+            sample.syncCount();
 
             return true;
         }
 
-
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("load.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(App.class.getResource("application.css").toExternalForm());
-
-            loadStage = new Stage();
-            loadStage.setTitle("Load Tartan");
-            loadStage.resizableProperty().setValue(false);
-            loadStage.setScene(scene);
-            loadStage.setOnCloseRequest(e -> Platform.exit());
-
-            loadController = fxmlLoader.getController();
-            loadController.init();
-            loadController.syncUI();
-
-            loadStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean closeLoadWindow(String prompt) {
-        // System.out.println("closeLoadWindow() " + model.isLoadWindowLaunched());
-        if (!model.isLoadWindowLaunched())
-            return false;
-
-        model.setLoadWindowLaunched(false);
-        loadStage.hide();
-        if (prompt != null) {
-            syncUI();
-            sample.syncCount();
-            setStatusMessage("Loaded " + prompt);
-        }
-
-        return true;
+        return false;
     }
 
 
@@ -275,61 +260,14 @@ public class PrimaryController {
      * Support code for "Save As" panel. 
      */
 
-    private SaveAsController saveAsController;
-    private Stage saveAsStage;
-
     private boolean launchSaveAsWindow() {
-        // System.out.println("launchSaveAsWindow() " + model.isSaveAsWindowLaunched());
-        if (model.isSaveAsWindowLaunched())
-            return false;
-
-        model.setSaveAsWindowLaunched(true);
-
-        if (saveAsController != null) {
-            saveAsStage.show();
+        if (model.launchSaveAs()) {
+            setStatusMessage("Saved to " + model.saveTartan());
 
             return true;
         }
 
-
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("saveAs.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(App.class.getResource("application.css").toExternalForm());
-
-            saveAsStage = new Stage();
-            saveAsStage.setTitle("Save Tartan");
-            saveAsStage.resizableProperty().setValue(false);
-            saveAsStage.setScene(scene);
-            saveAsStage.setOnCloseRequest(e -> Platform.exit());
-
-            saveAsController = fxmlLoader.getController();
-            saveAsController.init();
-            saveAsController.syncUI();
-
-            saveAsStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean closeSaveAsWindow(String prompt) {
-        // System.out.println("closeSaveAsWindow() " + model.isSaveAsWindowLaunched());
-        if (!model.isSaveAsWindowLaunched())
-            return false;
-
-        model.setSaveAsWindowLaunched(false);
-        saveAsStage.hide();
-        if (prompt != null)
-            setStatusMessage("Saved to: " + prompt);
-
-        return true;
+        return false;
     }
 
 
