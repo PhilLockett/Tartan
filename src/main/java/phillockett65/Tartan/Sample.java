@@ -357,6 +357,101 @@ public class Sample extends Stage {
     }
 
 
+    /************************************************************************
+     * Support code for the handlers. 
+     */
+
+     /**
+     * Initializes the Mouse handlers for the Sample scene.
+     */
+    private void initializeSampleMouseHandlers(Scene scene) {
+
+        scene.setOnMouseMoved(event -> {
+            final double x = event.getSceneX();
+            final double y = event.getSceneY();
+
+            final int zone = getZone(x, y);
+
+            // Clean up previous highlights.
+            if (zone != lastZone) {
+                if (lastZone != NONE_ZONE) {
+                    if (model.isDuplicate()) {
+                        clearRows();
+                        clearColumns();
+                    } else if (lastZone == ROW_ZONE) {
+                        clearRows();
+                    } else {
+                        clearColumns();
+                    }
+                }
+            }
+
+            // Is there work to do?
+            int pos = 0;
+            if (zone == ROW_ZONE) {
+                pos = yPosToRow(y);
+            } else if (zone == COLUMN_ZONE) {
+                pos = xPosToCol(x);
+            } else {
+                lastZone = zone;
+
+                return; // No highlights required so abort..
+            }
+
+            // Draw highlights.
+            if (zone != lastZone) {
+                lastZone = zone;
+                if (zone != NONE_ZONE) {
+                    if (model.isDuplicate()) {
+                        highlightThreads(BOTH_ZONE, pos, true, model.getThreadCount());
+                    } else {
+                        highlightThreads(zone, pos, true, model.getThreadCount());
+                    }
+                }
+            } else if (lastPos != pos) {
+                if (zone != NONE_ZONE) {
+                    if (model.isDuplicate()) {
+                        highlightThreads(BOTH_ZONE, lastPos, false, model.getThreadCount());
+                        highlightThreads(BOTH_ZONE, pos, true, model.getThreadCount());
+                    } else {
+                        highlightThreads(zone, lastPos, false, model.getThreadCount());
+                        highlightThreads(zone, pos, true, model.getThreadCount());
+                    }
+                }
+            }
+
+            lastPos = pos;
+        });
+
+        scene.setOnMouseExited(event -> {
+            if (model.isDuplicate()) {
+                clearRows();
+                clearColumns();
+            } else if (lastZone == ROW_ZONE) {
+                clearRows();
+            } else {
+                clearColumns();
+            }
+            lastZone = NONE_ZONE;
+        });
+
+        scene.setOnMouseClicked(event -> {
+            final double x = event.getSceneX();
+            final double y = event.getSceneY();
+            final int zone = getZone(x, y);
+            final int colour = model.getSelectedColour();
+
+            if (zone == ROW_ZONE) {
+                setRowColour(yPosToRow(y), colour);
+            } else if (zone == COLUMN_ZONE) {
+                setColColour(xPosToCol(x), colour);
+            }
+
+        });
+
+    }
+
+
 
     /************************************************************************
      * Support code for the Initialization of the Sample.
@@ -465,88 +560,7 @@ public class Sample extends Stage {
         this.setMaxWidth(Default.MAX_WIDTH.getFloat() + dx);
         this.setMaxHeight(Default.MAX_HEIGHT.getFloat() + dy);
 
-        scene.setOnMouseMoved(event -> {
-            final double x = event.getSceneX();
-            final double y = event.getSceneY();
-
-            final int zone = getZone(x, y);
-
-            // Clean up.
-            if (zone != lastZone) {
-                if (lastZone != NONE_ZONE) {
-                    if (model.isDuplicate()) {
-                        clearRows();
-                        clearColumns();
-                    } else if (lastZone == ROW_ZONE) {
-                        clearRows();
-                    } else {
-                        clearColumns();
-                    }
-                }
-            }
-
-            // Is there work to do?
-            int pos = 0;
-            if (zone == ROW_ZONE) {
-                pos = yPosToRow(y);
-            } else if (zone == COLUMN_ZONE) {
-                pos = xPosToCol(x);
-            } else {
-                lastZone = zone;
-
-                return; // Inactivity zone.
-            }
-
-            if (zone != lastZone) {
-                lastZone = zone;
-                if (zone != NONE_ZONE) {
-                    if (model.isDuplicate()) {
-                        highlightThreads(BOTH_ZONE, pos, true, model.getThreadCount());
-                    } else {
-                        highlightThreads(zone, pos, true, model.getThreadCount());
-                    }
-                }
-            } else if (lastPos != pos) {
-                if (zone != NONE_ZONE) {
-                    if (model.isDuplicate()) {
-                        highlightThreads(BOTH_ZONE, lastPos, false, model.getThreadCount());
-                        highlightThreads(BOTH_ZONE, pos, true, model.getThreadCount());
-                    } else {
-                        highlightThreads(zone, lastPos, false, model.getThreadCount());
-                        highlightThreads(zone, pos, true, model.getThreadCount());
-                    }
-                }
-            }
-
-            lastPos = pos;
-        });
-
-        scene.setOnMouseExited(event -> {
-            if (model.isDuplicate()) {
-                clearRows();
-                clearColumns();
-            } else if (lastZone == ROW_ZONE) {
-                clearRows();
-            } else {
-                clearColumns();
-            }
-            lastZone = NONE_ZONE;
-        });
-
-        scene.setOnMouseClicked(event -> {
-            final double x = event.getSceneX();
-            final double y = event.getSceneY();
-            final int zone = getZone(x, y);
-            final int colour = model.getSelectedColour();
-
-            if (zone == ROW_ZONE) {
-                setRowColour(yPosToRow(y), colour);
-            } else if (zone == COLUMN_ZONE) {
-                setColColour(xPosToCol(x), colour);
-            }
-
-        });
-
+        initializeSampleMouseHandlers(scene);
     }
 
     /**
@@ -874,11 +888,9 @@ public class Sample extends Stage {
      * thread counts.
      */
     private void syncGuideLinePositions() {
-        final double SIZE = model.getThreadSize();
-        final double STARTPOS = OFFSET + (SIZE / 2);
 
-        final double CSIZE = SIZE * model.getColumnCount();
-        final double RSIZE = SIZE * model.getRowCount();
+        final double CSIZE = model.getSwatchWidth();
+        final double RSIZE = model.getSwatchHeight();
 
         final double CSTEP = CSIZE / (Default.GUIDE_COUNT.getFloat() + 1);
         final double RSTEP = RSIZE / (Default.GUIDE_COUNT.getFloat() + 1);
@@ -886,6 +898,7 @@ public class Sample extends Stage {
         final double CLENGTH = OFFSET + RSIZE;
         final double RLENGTH = OFFSET + CSIZE;
 
+        final double STARTPOS = OFFSET + (model.getThreadSize() / 2);
         double xPos = STARTPOS + CSTEP;
         double yPos = STARTPOS + RSTEP;
         for (int i = 0; i < Default.GUIDE_COUNT.getInt(); ++i) {
