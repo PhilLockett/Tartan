@@ -867,19 +867,12 @@ public class Sample extends Stage {
         final int COUNT = model.getColumnCount();
         final int COLS = Default.WIDTH.getInt();
 
-        for (int column = 0; column < COUNT; ++column) {
+        for (int column = 0; column < COLS; ++column) {
             final int colourIndex = model.getColColourIndex(column);
-            model.setRowColourIndex(column, colourIndex);
-            rowList.get(column).setVisible(true);
 
-            // Set the row (and repeat rows) to the matching column colour.
-            for (int i = 0; i < COLS; i += COUNT) {
-                final int index = i + column;
-                if (index >= COLS)
-                    break;
-                
-                rowList.get(index).setColourIndex(colourIndex);
-            }
+            model.setRowColourIndex(column, colourIndex);
+            rowList.get(column).setColourIndex(colourIndex);
+            rowList.get(column).setVisible(column < COUNT);
         }
     }
 
