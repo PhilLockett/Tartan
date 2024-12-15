@@ -361,6 +361,160 @@ public class Sample extends Stage {
      * Support code for the handlers. 
      */
 
+    private void setRowColourIndex(int index, int colourIndex) {
+        model.setRowColourIndex(index, colourIndex);
+        rowList.get(index).setColourIndex(colourIndex);
+    }
+
+    private void setColColourIndex(int index, int colourIndex) {
+        model.setColColourIndex(index, colourIndex);
+        colList.get(index).setColourIndex(colourIndex);
+    }
+
+    private void duplicateRows() {
+        final int ACTIVE = model.getRowCount();
+        final int Max = Default.HEIGHT.getInt();
+        for (int index = ACTIVE; index < Max; ++index) {
+            final int colourIndex = model.getRowColourIndex(index);
+
+            rowList.get(index).setColourIndex(colourIndex);
+        }
+    }
+
+    private void duplicateCols() {
+        final int ACTIVE = model.getColumnCount();
+        final int Max = Default.WIDTH.getInt();
+        for (int index = ACTIVE; index < Max; ++index) {
+            final int colourIndex = model.getColColourIndex(index);
+
+            colList.get(index).setColourIndex(colourIndex);
+        }
+    }
+
+    private void rotateUp() {
+        final int ACTIVE = model.getRowCount();
+
+        final int safeIndex = model.getRowColourIndex(0);
+        for (int index = 1; index < ACTIVE; ++index) {
+            final int colourIndex = model.getRowColourIndex(index);
+
+            setRowColourIndex(index-1, colourIndex);
+        }
+        setRowColourIndex(ACTIVE-1, safeIndex);
+
+        duplicateRows();
+    }
+
+    private void rotateDown() {
+        final int ACTIVE = model.getRowCount();
+
+        final int safeIndex = model.getRowColourIndex(ACTIVE-1);
+        for (int index = ACTIVE-1; index > 0 ; --index) {
+            final int colourIndex = model.getRowColourIndex(index-1);
+
+            setRowColourIndex(index, colourIndex);
+        }
+        setRowColourIndex(0, safeIndex);
+
+        duplicateRows();
+    }
+
+    private void rotateLeft() {
+        final int ACTIVE = model.getColumnCount();
+
+        final int safeIndex = model.getColColourIndex(0);
+        for (int index = 1; index < ACTIVE; ++index) {
+            final int colourIndex = model.getColColourIndex(index);
+
+            setColColourIndex(index-1, colourIndex);
+        }
+        setColColourIndex(ACTIVE-1, safeIndex);
+
+        duplicateCols();
+    }
+
+    private void rotateRight() {
+        final int ACTIVE = model.getColumnCount();
+
+        final int safeIndex = model.getColColourIndex(ACTIVE-1);
+        for (int index = ACTIVE-1; index > 0 ; --index) {
+            final int colourIndex = model.getColColourIndex(index-1);
+
+            setColColourIndex(index, colourIndex);
+        }
+        setColColourIndex(0, safeIndex);
+
+        duplicateCols();
+    }
+
+    private void delete() {
+    }
+
+    private void insert() {
+    }
+
+    private void release() {
+    }
+
+
+    /************************************************************************
+     * Support code for initialization of the Key and Mouse handlers.
+     */
+
+    /**
+     * Initializes the Key handlers for the Sample scene.
+     */
+    private void initializeSampleKeyHandlers(Scene scene) {
+
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+            case ALT:
+                delete();
+                break;
+
+            case CONTROL:
+                insert();
+                break;
+
+            case UP:
+                rotateUp();
+                if (model.isDuplicate()) {
+                    rotateLeft();
+                }
+                break;
+
+            case DOWN:
+                rotateDown();
+                if (model.isDuplicate()) {
+                    rotateRight();
+                }
+                break;
+
+            case LEFT:
+                rotateLeft();
+                if (model.isDuplicate()) {
+                    rotateUp();
+                }
+                break;
+
+            case RIGHT:
+                rotateRight();
+                if (model.isDuplicate()) {
+                    rotateDown();
+                }
+                break;
+
+            default:
+                break;
+            }
+        });
+
+        scene.setOnKeyReleased(event -> {
+            release();
+        });
+    }
+
+
      /**
      * Initializes the Mouse handlers for the Sample scene.
      */
@@ -457,6 +611,15 @@ public class Sample extends Stage {
      * Support code for the Initialization of the Sample.
      */
 
+    Label heading = new Label();
+    private void augmentHeading(String label) {
+        if ((label == null) || (label.isBlank()))
+            heading.setText(" " + this.getTitle());
+        else
+            heading.setText(" " + this.getTitle() + " - " + label);
+    }
+
+    private void setHeading() { augmentHeading(null); }
 
     /**
      * Builds the top-bar as a HBox and includes the cancel button the mouse 
@@ -487,7 +650,8 @@ public class Sample extends Stage {
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
 
-        Label heading = new Label(" " + this.getTitle());
+        // Label heading = new Label(" " + this.getTitle());
+        setHeading();
         Region region = new Region();
 
         Pane cancel = Model.buildCancelButton();
@@ -560,6 +724,7 @@ public class Sample extends Stage {
         this.setMaxWidth(Default.MAX_WIDTH.getFloat() + dx);
         this.setMaxHeight(Default.MAX_HEIGHT.getFloat() + dy);
 
+        initializeSampleKeyHandlers(scene);
         initializeSampleMouseHandlers(scene);
     }
 
