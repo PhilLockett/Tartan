@@ -244,16 +244,15 @@ public class Model {
         }
     }
 
-    public void setRowColour(int i) { rowList.set(i, colourSelected); }
-    public void setRowColourIndex(int i, int c) { rowList.set(i, c); }
-    public void setColColour(int i) { colList.set(i, colourSelected); }
-    public void setColColourIndex(int i, int c) { colList.set(i, c); }
-
-    public int getRowColourIndex(int i) { return rowList.get(i); }
-    public int getColColourIndex(int i) { return colList.get(i); }
-
-    public Color getRowColour(int i) { return getSwatchColour(rowList.get(i)); }
-    public Color getColColour(int i) { return getSwatchColour(colList.get(i)); }
+    public void setRowColourIndex(int i, int c) { if (i < getRowCount()) rowList.set(i, c); }
+    public void setRowColour(int i) { setRowColourIndex(i, colourSelected); }
+    public int getRowColourIndex(int i) { return rowList.get(i % getRowCount()); }
+    public Color getRowColour(int i) { return getSwatchColour(getRowColourIndex(i)); }
+    
+    public void setColColourIndex(int i, int c) { if (i < getColumnCount()) colList.set(i, c); }
+    public void setColColour(int i) { setColColourIndex(i, colourSelected); }
+    public int getColColourIndex(int i) { return colList.get(i % getColumnCount()); }
+    public Color getColColour(int i) { return getSwatchColour(getColColourIndex(i)); }
 
     /**
      * Initialize "Sample" panel.
