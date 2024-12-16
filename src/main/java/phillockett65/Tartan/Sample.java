@@ -228,6 +228,10 @@ public class Sample extends Stage {
          * @param index of the selected swatch.
          */
         public void setColourIndex(int index) {
+            if (index == colourIndex) {
+                return;
+            }
+
             colourIndex = index;
             stitch.setFill(model.getSwatchColour(colourIndex));
 
@@ -371,7 +375,7 @@ public class Sample extends Stage {
         colList.get(index).setColourIndex(colourIndex);
     }
 
-    private void duplicateRows() {
+    private void repeatRows() {
         final int ACTIVE = model.getRowCount();
         final int Max = Default.HEIGHT.getInt();
         for (int index = ACTIVE; index < Max; ++index) {
@@ -381,7 +385,7 @@ public class Sample extends Stage {
         }
     }
 
-    private void duplicateCols() {
+    private void repeatCols() {
         final int ACTIVE = model.getColumnCount();
         final int Max = Default.WIDTH.getInt();
         for (int index = ACTIVE; index < Max; ++index) {
@@ -402,7 +406,7 @@ public class Sample extends Stage {
         }
         setRowColourIndex(ACTIVE-1, safeIndex);
 
-        duplicateRows();
+        repeatRows();
     }
 
     private void rotateDown() {
@@ -416,7 +420,7 @@ public class Sample extends Stage {
         }
         setRowColourIndex(0, safeIndex);
 
-        duplicateRows();
+        repeatRows();
     }
 
     private void rotateLeft() {
@@ -430,7 +434,7 @@ public class Sample extends Stage {
         }
         setColColourIndex(ACTIVE-1, safeIndex);
 
-        duplicateCols();
+        repeatCols();
     }
 
     private void rotateRight() {
@@ -444,7 +448,7 @@ public class Sample extends Stage {
         }
         setColColourIndex(0, safeIndex);
 
-        duplicateCols();
+        repeatCols();
     }
 
     private void delete() {
@@ -527,65 +531,35 @@ public class Sample extends Stage {
             final int zone = getZone(x, y);
 
             // Clean up previous highlights.
-            if (zone != lastZone) {
-                if (lastZone != NONE_ZONE) {
-                    if (model.isDuplicate()) {
-                        clearRows();
-                        clearColumns();
-                    } else if (lastZone == ROW_ZONE) {
-                        clearRows();
-                    } else {
-                        clearColumns();
-                    }
-                }
+            if ((zone != lastZone) && (lastZone != NONE_ZONE)) {
+                final int targetZone = model.isDuplicate() ? BOTH_ZONE : lastZone;
+                clearHighlights(targetZone);
             }
 
             // Is there work to do?
-            int pos = 0;
-            if (zone == ROW_ZONE) {
-                pos = yPosToRow(y);
-            } else if (zone == COLUMN_ZONE) {
-                pos = xPosToCol(x);
-            } else {
-                lastZone = zone;
+            if (zone == NONE_ZONE) {
+                lastZone = NONE_ZONE;
 
-                return; // No highlights required so abort..
+                return; // No highlights required so abort.
             }
-
+            
             // Draw highlights.
+            final int pos = (zone == ROW_ZONE) ? yPosToRow(y) : xPosToCol(x);
+            final int targetZone = model.isDuplicate() ? BOTH_ZONE : zone;
             if (zone != lastZone) {
                 lastZone = zone;
-                if (zone != NONE_ZONE) {
-                    if (model.isDuplicate()) {
-                        highlightThreads(BOTH_ZONE, pos, true, model.getThreadCount());
-                    } else {
-                        highlightThreads(zone, pos, true, model.getThreadCount());
-                    }
-                }
+                highlightThreads(targetZone, pos, true);
             } else if (lastPos != pos) {
-                if (zone != NONE_ZONE) {
-                    if (model.isDuplicate()) {
-                        highlightThreads(BOTH_ZONE, lastPos, false, model.getThreadCount());
-                        highlightThreads(BOTH_ZONE, pos, true, model.getThreadCount());
-                    } else {
-                        highlightThreads(zone, lastPos, false, model.getThreadCount());
-                        highlightThreads(zone, pos, true, model.getThreadCount());
-                    }
-                }
+                highlightThreads(targetZone, lastPos, false);
+                highlightThreads(targetZone, pos, true);
             }
 
             lastPos = pos;
         });
 
         scene.setOnMouseExited(event -> {
-            if (model.isDuplicate()) {
-                clearRows();
-                clearColumns();
-            } else if (lastZone == ROW_ZONE) {
-                clearRows();
-            } else {
-                clearColumns();
-            }
+            final int targetZone = model.isDuplicate() ? BOTH_ZONE : lastZone;
+            clearHighlights(targetZone);
             lastZone = NONE_ZONE;
         });
 
@@ -593,14 +567,12 @@ public class Sample extends Stage {
             final double x = event.getSceneX();
             final double y = event.getSceneY();
             final int zone = getZone(x, y);
-            final int colour = model.getSelectedColour();
 
-            if (zone == ROW_ZONE) {
-                setRowColour(yPosToRow(y), colour);
-            } else if (zone == COLUMN_ZONE) {
-                setColColour(xPosToCol(x), colour);
+            if (zone != NONE_ZONE) {
+                final int pos = (zone == ROW_ZONE) ? yPosToRow(y) : xPosToCol(x);
+                final int targetZone = model.isDuplicate() ? BOTH_ZONE : zone;
+                setThreadColour(targetZone, pos);
             }
-
         });
 
     }
@@ -850,34 +822,22 @@ public class Sample extends Stage {
     }
 
     /**
-     * Set the row (and repeat rows) to the selected swatch colour.
-     * @param row to set the colour of.
-     * @param colour index to set the row to.
+     * Set the row and/or column (and repeats) to the selected swatch colour.
+     * @param zone to set the colour for.
+     * @param pos of row and/or column to set the colour of.
      */
-    private void setRowColour(int row, int colour) {
+    private void setThreadColour(int zone, int pos) {
+        final int colour = model.getSelectedColour();
         final int count = model.getThreadCount();
-        final int repeat = model.getRowCount();
+        final int repeat = (zone == COLUMN_ZONE) ? model.getColumnCount() : model.getRowCount();
 
-        colourRows(row, colour, count, repeat);
-
-        if (model.isDuplicate()) {
-            colourColumns(row, colour, count, repeat);
-        }
-    }
-
-    /**
-     * Set the column (and repeat columns) to the selected swatch colour.
-     * @param column to set the colour of.
-     * @param colour index to set the column to.
-     */
-    private void setColColour(int column, int colour) {
-        final int count = model.getThreadCount();
-        final int repeat = model.getColumnCount();
-
-        colourColumns(column, colour, count, repeat);
-
-        if (model.isDuplicate()) {
-            colourRows(column, colour, count, repeat);
+        if (zone == BOTH_ZONE) {
+            colourRows(pos, colour, count, repeat);
+            colourColumns(pos, colour, count, repeat);
+        } else if (zone == ROW_ZONE) {
+            colourRows(pos, colour, count, repeat);
+        } else if (zone == COLUMN_ZONE) {
+            colourColumns(pos, colour, count, repeat);
         }
     }
 
@@ -899,34 +859,43 @@ public class Sample extends Stage {
         }
     }
 
-    private void highlightThreads(int zone, int pos, boolean highlight, int count) {
+    private void clearHighlights(int zone) {
+        if (zone == BOTH_ZONE) {
+            clearRows();
+            clearColumns();
+        } else if (zone == ROW_ZONE) {
+            clearRows();
+        } else if (zone == COLUMN_ZONE) {
+            clearColumns();
+        }
+    }
+
+    private void highlightThreads(int zone, int pos, boolean highlight) {
         final Color colour = highlight ? model.getGuideLineColour() : defaultColour;
+        final int count = model.getThreadCount();
+        final int repeat = (zone == COLUMN_ZONE) ? model.getColumnCount() : model.getRowCount();
 
         if (zone == BOTH_ZONE) {
-            final int repeat = model.getRowCount();
-            for (int c = count; c > 0; c--) {
+            for (int c = count; c > 0; c--, pos++) {
                 if (pos >= repeat)
                     break;
 
                 rowList.get(pos).setHighlight(highlight, colour);
-                colList.get(pos++).setHighlight(highlight, colour);
+                colList.get(pos).setHighlight(highlight, colour);
             }
         } else if (zone == ROW_ZONE) {
-            final int repeat = model.getRowCount();
-            for (int c = count; c > 0; c--) {
+            for (int c = count; c > 0; c--, pos++) {
                 if (pos >= repeat)
                     break;
 
-                rowList.get(pos++).setHighlight(highlight, colour);
+                rowList.get(pos).setHighlight(highlight, colour);
             }
-        } else
-        if (zone == COLUMN_ZONE) {
-            final int repeat = model.getColumnCount();
-            for (int c = count; c > 0; c--) {
+        } else if (zone == COLUMN_ZONE) {
+            for (int c = count; c > 0; c--, pos++) {
                 if (pos >= repeat)
                     break;
 
-                colList.get(pos++).setHighlight(highlight, colour);
+                colList.get(pos).setHighlight(highlight, colour);
             }
         }
     }
