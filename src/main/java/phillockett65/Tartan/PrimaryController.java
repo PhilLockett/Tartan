@@ -104,12 +104,6 @@ public class PrimaryController {
         setStatusMessage("Ready.");
     }
 
-    /**
-     * Save the current state to disc, called by the application on shut down.
-     */
-    // public void saveState() {
-    //     model.writeData();
-    // }
 
     /**
      * Synchronise all controls with the model. This should be the last step 
@@ -120,8 +114,11 @@ public class PrimaryController {
         for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i)
             setSwatch(i, model.getSwatchColour(i), model.getSwatchName(i));
 
-        setSelectedColourRadioButton(model.getSelectedColour());
-        colourSelect.setColour(model.getCurrentColour());
+        setSelectedColourRadioButton(model.getSelectedColourIndex());
+        colourSelect.setColour(model.getSelectedColour());
+
+        columnCountSpinner.getValueFactory().setValue(model.getColumnCount());
+        rowCountSpinner.getValueFactory().setValue(model.getRowCount());
 
         duplicateCheckbox.setSelected(model.isDuplicate());
         showGuideCheckbox.setSelected(model.isShowGuide());
@@ -373,7 +370,7 @@ public class PrimaryController {
     }
 
     public void handleColourEvent(ColourEvent event) {
-        final int index = model.getSelectedColour();
+        final int index = model.getSelectedColourIndex();
         final Color colour = event.getColour();
         model.setSwatchColour(index, colour);
         colourSwatches.get(index).setColor(colour);

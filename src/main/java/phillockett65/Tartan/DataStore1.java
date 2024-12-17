@@ -109,7 +109,7 @@ public class DataStore1 extends DataStoreBase {
             colList.add(model.getColColourIndex(i));
         }
 
-        selectedSwatch = model.getSelectedColour();
+        selectedSwatch = model.getSelectedColourIndex();
         for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i) {
             colourSwatches.add(new ColourSwatch(model.getSwatchColour(i), model.getSwatchName(i)));
         }

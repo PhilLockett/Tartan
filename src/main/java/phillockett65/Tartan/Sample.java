@@ -250,10 +250,10 @@ public class Sample extends Stage {
          * @return true if this thread needed to be updated, false otherwise.
          */
         public boolean syncCurrentColour() {
-            if (colourIndex != model.getSelectedColour())
+            if (colourIndex != model.getSelectedColourIndex())
                 return false;
 
-            final Color color = model.getCurrentColour();
+            final Color color = model.getSelectedColour();
 
             stitch.setFill(color);
 
@@ -823,7 +823,7 @@ public class Sample extends Stage {
      * @param pos of row and/or column to set the colour of.
      */
     private void setThreadColour(int zone, int pos) {
-        final int colour = model.getSelectedColour();
+        final int colour = model.getSelectedColourIndex();
         final int count = model.getThreadCount();
         final int repeat = (zone == COLUMN_ZONE) ? model.getColumnCount() : model.getRowCount();
 

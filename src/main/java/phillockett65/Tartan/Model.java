@@ -230,7 +230,7 @@ public class Model {
             rowList.remove(size, count);
         } else {
             for (int i = count; i < size; ++i)
-                rowList.add(getSelectedColour());
+                rowList.add(getSelectedColourIndex());
         }
     }
 
@@ -240,7 +240,7 @@ public class Model {
             colList.remove(size, count);
         } else {
             for (int i = count; i < size; ++i)
-                colList.add(getSelectedColour());
+                colList.add(getSelectedColourIndex());
         }
     }
 
@@ -349,7 +349,7 @@ public class Model {
     private int colourSelected;
 
     public void setSelectedColour(int index) { colourSelected = index; }
-    public int getSelectedColour() { return colourSelected; }
+    public int getSelectedColourIndex() { return colourSelected; }
 
     private class ColourSwatch  {
         public ColourSwatch() { clear(); }
@@ -362,7 +362,7 @@ public class Model {
 
     private ArrayList<ColourSwatch> colourSwatches = new ArrayList<ColourSwatch>();
 
-    public Color getCurrentColour() {
+    public Color getSelectedColour() {
         return colourSwatches.get(colourSelected).colour;
     }
 
