@@ -228,10 +228,6 @@ public class Sample extends Stage {
          * @param index of the selected swatch.
          */
         public void setColourIndex(int index) {
-            if (index == colourIndex) {
-                return;
-            }
-
             colourIndex = index;
             stitch.setFill(model.getSwatchColour(colourIndex));
 
