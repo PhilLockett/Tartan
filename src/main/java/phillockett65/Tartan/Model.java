@@ -550,9 +550,11 @@ public class Model {
         final double size = getThreadSize();
         final double size2 = size * 2;
         final double size4 = size * 4;
-        
-        final double xMax = getColumnCount() * size2;
-        final double yMax = getRowCount() * size2;
+
+        final int cCount = getColumnCount();
+        final int rCount = getRowCount();
+        final double xMax = cCount * size2;
+        final double yMax = rCount * size2;
         canvas = new Canvas(xMax, yMax);
 
         gc = canvas.getGraphicsContext2D();
@@ -562,8 +564,7 @@ public class Model {
 
         double xPos = 0;
         double yPos = 0;
-        final int rCount = rowList.size();
-        int count = getColumnCount() / 2;
+        int count = cCount / 2;
         for (int i = 0; i < (rCount * 2); ++i) {
             final Color colour = getRowColour(i % rCount);
             
@@ -580,8 +581,7 @@ public class Model {
             yPos += size;
         }
 
-        final int cCount = colList.size();
-        count = getRowCount() / 2;
+        count = rCount / 2;
         xPos = 0;
         yPos = 0;
         for (int i = 0; i < (cCount * 2); ++i) {
