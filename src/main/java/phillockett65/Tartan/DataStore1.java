@@ -76,7 +76,7 @@ public class DataStore1 extends DataStoreBase {
      * Support code for the Initialization, getters and setters of DataStore1.
      */
 
-    public DataStore1() {
+    private DataStore1() {
         super();
         rowList = new ArrayList<Integer>();
         colList = new ArrayList<Integer>();
@@ -99,20 +99,13 @@ public class DataStore1 extends DataStoreBase {
     public boolean pull(Model model) {
         boolean success = true;
 
-        final int rowCount = model.getRowCount();
-        for (int i = 0; i < rowCount; ++i) {
-            rowList.add(model.getRowColourIndex(i));
-        }
-
-        final int columnCount = model.getColumnCount();
-        for (int i = 0; i < columnCount; ++i) {
-            colList.add(model.getColColourIndex(i));
-        }
-
         selectedSwatch = model.getSelectedColourIndex();
         for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i) {
             colourSwatches.add(new ColourSwatch(model.getSwatchColour(i), model.getSwatchName(i)));
         }
+
+        rowList = model.getRowList();
+        colList = model.getColumnList();
 
         duplicate = model.isDuplicate();
         showGuide = model.isShowGuide();
@@ -133,21 +126,15 @@ public class DataStore1 extends DataStoreBase {
     public boolean push(Model model) {
         boolean success = true;
 
-        model.initRowList(rowList.size());
-        for (int i = 0; i < rowList.size(); ++i) {
-            model.setRowColourIndex(i, rowList.get(i));
-        }
-
-        model.initColumnList(colList.size());
-        for (int i = 0; i < colList.size(); ++i) {
-            model.setColColourIndex(i, colList.get(i));
-        }
-
-        model.setSelectedColour(selectedSwatch);
+        model.setSelectedColourIndex(selectedSwatch);
         int i = 0;
         for (ColourSwatch swatch : colourSwatches) {
             model.setSwatch(i++, swatch.getColour(), swatch.getName());
         }
+
+        // Set up the swatches before we use them in the rows and columns.
+        model.setRowList(rowList);
+        model.setColumnList(colList);
 
         model.setDuplicate(duplicate);
         model.setShowGuide(showGuide);

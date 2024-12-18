@@ -118,9 +118,6 @@ public class PrimaryController {
         setSelectedColourRadioButton(model.getSelectedColourIndex());
         colourSelect.setColour(model.getSelectedColour());
 
-        columnCountSpinner.getValueFactory().setValue(model.getColumnCount());
-        rowCountSpinner.getValueFactory().setValue(model.getRowCount());
-
         duplicateCheckbox.setSelected(model.isDuplicate());
         showGuideCheckbox.setSelected(model.isShowGuide());
         sample.syncGuideVisible();
@@ -136,14 +133,7 @@ public class PrimaryController {
      * selection.
      */
     private void fixUISettings() {
-        if (model.isDuplicate()) {
-            model.setRowCount(model.getColumnCount());
-            rowCountSpinner.getValueFactory().setValue(model.getRowCount());
-            rowCountSpinner.setDisable(true);
-            sample.syncDuplicateThreads();
-        } else {
-            rowCountSpinner.setDisable(false);
-        }
+        rowCountSpinner.setDisable(model.isDuplicate());
     }
 
 
@@ -211,8 +201,7 @@ public class PrimaryController {
 
     @FXML
     private void fileCloseOnAction() {
-        sample.close();
-        model.getStage().close();
+        model.close();
     }
 
     @FXML
@@ -244,7 +233,6 @@ public class PrimaryController {
         if (model.launchFileLoader()) {
             setStatusMessage("Loaded " + model.loadTartan());
             syncUI();
-            sample.syncCount();
 
             return true;
         }
@@ -358,7 +346,7 @@ public class PrimaryController {
         // System.out.println("selectedColourRadioButtonActionPerformed(" + field.getId() + ", " + field.getText() + ")");
 
         int index = idToInt(field.getId());
-        model.setSelectedColour(index);
+        model.setSelectedColourIndex(index);
         colourSelect.setColour(model.getSwatchColour(index));
     }
 
@@ -558,16 +546,11 @@ public class PrimaryController {
         columnCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("columnCountSpinner.Listener(" + newValue + "))");
             model.setColumnCount(newValue.intValue());
-            sample.syncColumnCount();
-            if (model.isDuplicate()) {
-                rowCountSpinner.getValueFactory().setValue(newValue.intValue());
-            }
         });
 
         rowCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("rowCountSpinner.Listener(" + newValue + "))");
             model.setRowCount(newValue.intValue());
-            sample.syncRowCount();
         });
 
         threadSizeSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {

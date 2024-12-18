@@ -28,7 +28,6 @@ package phillockett65.Tartan;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -152,7 +151,7 @@ public class Model {
      */
     public void defaultSettings() {
         clearSwatches();
-        setSelectedColour(1);
+        setSelectedColourIndex(1);
         setSwatch(0, Color.WHITE, "Blank");
         setSwatch(1, Color.LIGHTCYAN, "Highlight");
         setSwatch(2, Color.BLACK, "Lowlight");
@@ -208,60 +207,42 @@ public class Model {
      * Support code for "Sample" panel.
      */
 
-    private Vector<Integer> rowList = new Vector<Integer>(Default.HEIGHT.getInt());
-    private Vector<Integer> colList = new Vector<Integer>(Default.WIDTH.getInt());
-
-
-    public int getRowCount() { return rowList.size(); }
-    public int getColumnCount() { return colList.size(); }
-
-    public void initRowList(int size) {
-        rowList.clear();
-        for (int i = 0; i < size; ++i)
-            rowList.add(0);
+    public void setRowList(ArrayList<Integer> list) {
+        initRowCount(list.size());
+        sample.setRowList(list);
     }
-    public void initColumnList(int size) {
-        colList.clear();
-        for (int i = 0; i < size; ++i)
-            colList.add(0);
+    public void setColumnList(ArrayList<Integer> list) {
+        initColumnCount(list.size());
+        sample.setColumnList(list);
     }
+
+    public ArrayList<Integer> getRowList() { return sample.getRowList(); }
+    public ArrayList<Integer> getColumnList() { return sample.getColumnList(); }
 
     public void setRowCount(int size) {
-        final int count = getRowCount();
-        if (size < count) {
-            rowList.setSize(size);
-        } else {
-            for (int i = count; i < size; ++i)
-                rowList.add(getSelectedColourIndex());
-        }
+        sample.setRowCount(size);
     }
-
     public void setColumnCount(int size) {
-        final int count = getColumnCount();
-        if (size < count) {
-            colList.setSize(size);
-        } else {
-            for (int i = count; i < size; ++i)
-                colList.add(getSelectedColourIndex());
+        sample.setColumnCount(size);
+
+        if (isDuplicate()) {
+            initRowCount(size);
+            sample.setRowCount(size);
         }
     }
 
-    public void setRowColourIndex(int i, int c) { if (i < getRowCount()) rowList.set(i, c); }
-    public void setRowColour(int i) { setRowColourIndex(i, colourSelected); }
-    public int getRowColourIndex(int i) { return rowList.get(i % getRowCount()); }
-    public Color getRowColour(int i) { return getSwatchColour(getRowColourIndex(i)); }
-    
-    public void setColColourIndex(int i, int c) { if (i < getColumnCount()) colList.set(i, c); }
-    public void setColColour(int i) { setColColourIndex(i, colourSelected); }
-    public int getColColourIndex(int i) { return colList.get(i % getColumnCount()); }
-    public Color getColColour(int i) { return getSwatchColour(getColColourIndex(i)); }
+    public int getRowCount() { return rowCountSVF.getValue(); }
+    public int getColumnCount() { return columnCountSVF.getValue(); }
+
+    private int getRowColourIndex(int i) { return sample.getRowColourIndex(i % getRowCount()); }
+    private Color getRowColour(int i) { return getSwatchColour(getRowColourIndex(i)); }
+    private int getColColourIndex(int i) { return sample.getColColourIndex(i % getColumnCount()); }
+    private Color getColColour(int i) { return getSwatchColour(getColColourIndex(i)); }
 
     /**
      * Initialize "Sample" panel.
      */
     private void initializeSample() {
-        initRowList(Default.INIT_THREAD_COUNT.getInt());
-        initColumnList(Default.INIT_THREAD_COUNT.getInt());
     }
 
 
@@ -361,7 +342,15 @@ public class Model {
     private int colourSelected;
     private ArrayList<ColourSwatch> colourSwatches = new ArrayList<ColourSwatch>(Default.SWATCH_COUNT.getInt());
 
-    public void setSelectedColour(int index) { colourSelected = index; }
+    public boolean setSelectedColourIndex(int index) { 
+        if (index < colourSwatches.size()) {
+            colourSelected = index;
+
+            return true;
+        }
+
+        return false;
+    }
     public int getSelectedColourIndex() { return colourSelected; }
 
     public Color getSelectedColour() {
@@ -470,7 +459,14 @@ public class Model {
 
     private void initColumnCount(int value) { columnCountSVF.setValue(value); }
     private void initRowCount(int value) { rowCountSVF.setValue(value); }
-    public void setDuplicate(boolean state) { duplicate = state; }
+    public void setDuplicate(boolean state) {
+        duplicate = state;
+
+        if (duplicate) {
+            initRowCount(getColumnCount());
+            sample.syncDuplicateThreads();
+        }
+    }
     public void setShowGuide(boolean state) { showGuide = state; }
     public void initThreadCount(int value) { threadCountSVF.setValue(value); }
     public void initThreadSize(double value) { threadSizeSVF.setValue(value); }
@@ -575,7 +571,7 @@ public class Model {
         double yPos = 0;
         int count = cCount / 2;
         for (int i = 0; i < (rCount * 2); ++i) {
-            final Color colour = getRowColour(i % rCount);
+            final Color colour = getRowColour(i);
             
             int c = i % 4;
             c = (4 - c) % 4;
@@ -594,7 +590,7 @@ public class Model {
         xPos = 0;
         yPos = 0;
         for (int i = 0; i < (cCount * 2); ++i) {
-            final Color colour = getColColour(i % cCount);
+            final Color colour = getColColour(i);
             
             int r = i % 4;
             r = (6 - r) % 4;
