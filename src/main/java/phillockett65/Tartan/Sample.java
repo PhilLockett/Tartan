@@ -731,21 +731,19 @@ public class Sample extends Stage {
 
     /**
      * Constructor.
-     * @param title - string displayed as the heading of the Stage.
      */
-    public Sample(String title) {
+    public Sample() {
         super();
 		// System.out.println("CardSample constructed: " + title);
 
         model = Model.getInstance();
         defaultColour = model.getBorderColour();
 
-        this.setTitle(title);
+        this.setTitle("Sample");
         this.resizableProperty().setValue(false);
         setOnCloseRequest(e -> Platform.exit());
         this.initStyle(StageStyle.UNDECORATED);
 
-        this.setTitle(title);
         initializeCardSample();
 
         this.show();

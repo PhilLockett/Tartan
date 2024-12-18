@@ -139,11 +139,12 @@ public class Model {
      * Called by the controller after the stage has been set. Completes any 
      * initialization dependent on other components being initialized.
      */
-    public void init(Stage primaryStage, Sample primarySample) {
+    public void init(Stage primaryStage) {
         // System.out.println("Model init.");
 
         stage = primaryStage;
-        sample = primarySample;
+        sample = new Sample();
+        sample.init();
     }
 
     /**

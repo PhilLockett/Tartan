@@ -96,10 +96,10 @@ public class PrimaryController {
      */
     public void init(Stage stage) {
         // System.out.println("PrimaryController init.");
-        sample = new Sample("Sample");
+        
+        model.init(stage);
+        sample = model.getSample();
 
-        model.init(stage, sample);
-        sample.init();
         syncUI();
         setStatusMessage("Ready.");
     }
@@ -111,8 +111,9 @@ public class PrimaryController {
      */
     private void syncUI() {
 
-        for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i)
+        for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i) {
             setSwatch(i, model.getSwatchColour(i), model.getSwatchName(i));
+        }
 
         setSelectedColourRadioButton(model.getSelectedColourIndex());
         colourSelect.setColour(model.getSelectedColour());
