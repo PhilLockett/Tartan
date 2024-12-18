@@ -24,8 +24,9 @@
  */
 package phillockett65.Tartan;
 
+import java.util.Vector;
+
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -64,9 +65,9 @@ public class Sample extends Stage {
     private double dx;	// Difference between the size of the stage and the size of the scene.
     private double dy;
 
-    private ObservableList<Thread> colList = FXCollections.observableArrayList();
-    private ObservableList<Thread> rowList = FXCollections.observableArrayList();
-    private ObservableList<Line> guides = FXCollections.observableArrayList();
+    private Vector<Thread> rowList = new Vector<Thread>(Default.HEIGHT.getInt());
+    private Vector<Thread> colList = new Vector<Thread>(Default.WIDTH.getInt());
+    private Vector<Line> guides = new Vector<Line>(Default.TOTAL_GUIDE_COUNT.getInt());
 
     private final Color defaultColour;
 
@@ -76,7 +77,8 @@ public class Sample extends Stage {
     private double x = 0.0;
     private double y = 0.0;
 
-    // private boolean result = false;
+    private Label heading = new Label();
+
 
 
     /************************************************************************
@@ -447,6 +449,16 @@ public class Sample extends Stage {
         repeatCols();
     }
 
+
+    private void augmentHeading(String label) {
+        if ((label == null) || (label.isBlank()))
+            heading.setText(" " + this.getTitle());
+        else
+            heading.setText(" " + this.getTitle() + " - " + label);
+    }
+
+    private void setHeading() { augmentHeading(null); }
+
     private void delete() {
     }
 
@@ -578,16 +590,6 @@ public class Sample extends Stage {
     /************************************************************************
      * Support code for the Initialization of the Sample.
      */
-
-    Label heading = new Label();
-    private void augmentHeading(String label) {
-        if ((label == null) || (label.isBlank()))
-            heading.setText(" " + this.getTitle());
-        else
-            heading.setText(" " + this.getTitle() + " - " + label);
-    }
-
-    private void setHeading() { augmentHeading(null); }
 
     /**
      * Builds the top-bar as a HBox and includes the cancel button the mouse 

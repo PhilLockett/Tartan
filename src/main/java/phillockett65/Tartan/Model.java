@@ -28,6 +28,7 @@ package phillockett65.Tartan;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -206,8 +207,8 @@ public class Model {
      * Support code for "Sample" panel.
      */
 
-    private ObservableList<Integer> rowList = FXCollections.observableArrayList();
-    private ObservableList<Integer> colList = FXCollections.observableArrayList();
+    private Vector<Integer> rowList = new Vector<Integer>(Default.HEIGHT.getInt());
+    private Vector<Integer> colList = new Vector<Integer>(Default.WIDTH.getInt());
 
 
     public int getRowCount() { return rowList.size(); }
@@ -227,7 +228,7 @@ public class Model {
     public void setRowCount(int size) {
         final int count = getRowCount();
         if (size < count) {
-            rowList.remove(size, count);
+            rowList.setSize(size);
         } else {
             for (int i = count; i < size; ++i)
                 rowList.add(getSelectedColourIndex());
@@ -237,7 +238,7 @@ public class Model {
     public void setColumnCount(int size) {
         final int count = getColumnCount();
         if (size < count) {
-            colList.remove(size, count);
+            colList.setSize(size);
         } else {
             for (int i = count; i < size; ++i)
                 colList.add(getSelectedColourIndex());
@@ -346,66 +347,73 @@ public class Model {
      * Support code for "Colour Palette" panel.
      */
 
-    private int colourSelected;
-
-    public void setSelectedColour(int index) { colourSelected = index; }
-    public int getSelectedColourIndex() { return colourSelected; }
-
     private class ColourSwatch  {
         public ColourSwatch() { clear(); }
 
-        public void clear() { colour = Color.WHITE; name = null; }
+        public void clear() { colour = Color.WHITE; name = ""; }
 
         public Color colour;
         public String name;
     }
 
-    private ArrayList<ColourSwatch> colourSwatches = new ArrayList<ColourSwatch>();
+
+    private int colourSelected;
+    private ArrayList<ColourSwatch> colourSwatches = new ArrayList<ColourSwatch>(Default.SWATCH_COUNT.getInt());
+
+    public void setSelectedColour(int index) { colourSelected = index; }
+    public int getSelectedColourIndex() { return colourSelected; }
 
     public Color getSelectedColour() {
         return colourSwatches.get(colourSelected).colour;
     }
 
     public Color getSwatchColour(int index) {
-        return colourSwatches.get(index).colour;
+        if (index < colourSwatches.size()) {
+            return colourSwatches.get(index).colour;
+        }
+
+        return Color.WHITE;
     }
 
     public String getSwatchName(int index) {
-        return colourSwatches.get(index).name;
+        if (index < colourSwatches.size()) {
+            return colourSwatches.get(index).name;
+        }
+
+        return "";
     }
 
     public boolean setSwatch(int index, Color colour, String name) {
-        if (index >= Default.SWATCH_COUNT.getInt())
-            return false;
+        if (index < colourSwatches.size()) {
+            ColourSwatch swatch = colourSwatches.get(index);
 
-        ColourSwatch swatch = colourSwatches.get(index);
-        
-        swatch.colour = colour;
-        swatch.name = name;
+            swatch.colour = colour;
+            swatch.name = name;
+            
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
     public boolean setSwatchColour(int index, Color colour) {
-        if (index >= Default.SWATCH_COUNT.getInt())
-            return false;
+        if (index < colourSwatches.size()) {
+            colourSwatches.get(index).colour = colour;
 
-        ColourSwatch swatch = colourSwatches.get(index);
-        
-        swatch.colour = colour;
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
     public boolean setSwatchName(int index, String name) {
-        if (index >= Default.SWATCH_COUNT.getInt())
-            return false;
+        if (index >= Default.SWATCH_COUNT.getInt()) {
+            colourSwatches.get(index).name = name;
 
-        ColourSwatch swatch = colourSwatches.get(index);
-        
-        swatch.name = name;
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
 
@@ -419,9 +427,9 @@ public class Model {
      * Initialize "Colour Palette" panel.
      */
     private void initializeColourPalette() {
-        for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i)
+        for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i) {
             colourSwatches.add(new ColourSwatch());
-
+        }
     }
 
 
