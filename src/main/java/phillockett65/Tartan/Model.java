@@ -231,9 +231,6 @@ public class Model {
         }
     }
 
-    public int getRowCount() { return rowCountSVF.getValue(); }
-    public int getColumnCount() { return columnCountSVF.getValue(); }
-
     private int getRowColourIndex(int i) { return sample.getRowColourIndex(i % getRowCount()); }
     private Color getRowColour(int i) { return getSwatchColour(getRowColourIndex(i)); }
     private int getColColourIndex(int i) { return sample.getColColourIndex(i % getColumnCount()); }
@@ -456,6 +453,12 @@ public class Model {
     public Color getBorderColour() { return Color.BLACK; }
     public Color getGuideLineColour() { return guideLineColour; }
     public double getBorderThickness() { return borderThicknessSVF.getValue(); }
+
+    public int getColumnCount() { return columnCountSVF.getValue(); }
+    public int getRowCount() { return rowCountSVF.getValue(); }
+
+    public void incColumnCount(int value) { initColumnCount(getColumnCount() + value); }
+    public void incRowCount(int value) { initRowCount(getRowCount() + value); }
 
     private void initColumnCount(int value) { columnCountSVF.setValue(value); }
     private void initRowCount(int value) { rowCountSVF.setValue(value); }

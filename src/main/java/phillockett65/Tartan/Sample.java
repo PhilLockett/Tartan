@@ -57,6 +57,10 @@ public class Sample extends Stage {
     private final static int COLUMN_ZONE = 2;
     private final static int BOTH_ZONE = 3;
 
+    private final static int NONE_ACTIVE = 0;
+    private final static int DELETE_REQUEST = 1;
+    private final static int INSERT_REQUEST = 2;
+    
     private Model model;
 
     private Group group;
@@ -169,8 +173,8 @@ public class Sample extends Stage {
      */
     private class Thread {
         private boolean highlight;
-        private int index;
-        private boolean row;
+        private final int index;
+        private final boolean row;
         private int colourIndex;
         private Rectangle stitch;
 
@@ -469,14 +473,73 @@ public class Sample extends Stage {
 
     private void setHeading() { augmentHeading(null); }
 
-    private void delete() {
+
+    private Vector<Integer> requests = new Vector<Integer>();
+
+    private void addRequest(Integer request) {
+        if (requests.contains(request) == false) {
+            requests.add(request);
+        }
     }
 
-    private void insert() {
+    private void removeRequest(Integer request) {
+        requests.remove(request);
     }
 
-    private void release() {
+    private int getActive() {
+        if (requests.isEmpty() == true) {
+            return NONE_ACTIVE;
+        }
+        
+        return requests.firstElement();
     }
+
+    private void updateHeading() {
+        switch (getActive()) {
+        case DELETE_REQUEST:
+            augmentHeading("Use the mouse to highlight threads then click to delete them");
+            break;
+
+        case INSERT_REQUEST:
+            augmentHeading("Use the mouse to highlight the position then click to insert threads");
+            break;
+
+        default:
+            setHeading();
+            break;
+        }
+    }
+
+    private void deleteRequest() {
+        addRequest(DELETE_REQUEST);
+
+        final int active = getActive();
+        if (active == DELETE_REQUEST) {
+            updateHeading();
+        }
+    }
+
+    private void insertRequest() {
+        addRequest(INSERT_REQUEST);
+
+        final int active = getActive();
+        if (active == INSERT_REQUEST) {
+            updateHeading();
+        }
+    }
+
+    private void deleteRelease() {
+        removeRequest(DELETE_REQUEST);
+
+        updateHeading();
+    }
+
+    private void insertRelease() {
+        removeRequest(INSERT_REQUEST);
+
+        updateHeading();
+    }
+ 
 
 
     /************************************************************************
@@ -491,11 +554,11 @@ public class Sample extends Stage {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
             case ALT:
-                delete();
+                deleteRequest();
                 break;
 
             case CONTROL:
-                insert();
+                insertRequest();
                 break;
 
             case UP:
@@ -532,7 +595,18 @@ public class Sample extends Stage {
         });
 
         scene.setOnKeyReleased(event -> {
-            release();
+            switch (event.getCode()) {
+            case ALT:
+                deleteRelease();
+                break;
+
+            case CONTROL:
+                insertRelease();
+                break;
+    
+            default:
+                break;
+            }
         });
     }
 
@@ -545,13 +619,12 @@ public class Sample extends Stage {
         scene.setOnMouseMoved(event -> {
             final double x = event.getSceneX();
             final double y = event.getSceneY();
-
             final int zone = getZone(x, y);
 
             // Clean up previous highlights.
             if ((zone != lastZone) && (lastZone != NONE_ZONE)) {
-                final int targetZone = model.isDuplicate() ? BOTH_ZONE : lastZone;
-                clearHighlights(targetZone);
+                final int scope = model.isDuplicate() ? BOTH_ZONE : lastZone;
+                clearHighlights(scope);
             }
 
             // Is there work to do?
@@ -563,21 +636,21 @@ public class Sample extends Stage {
             
             // Draw highlights.
             final int pos = (zone == ROW_ZONE) ? yPosToRow(y) : xPosToCol(x);
-            final int targetZone = model.isDuplicate() ? BOTH_ZONE : zone;
+            final int scope = model.isDuplicate() ? BOTH_ZONE : zone;
             if (zone != lastZone) {
                 lastZone = zone;
-                highlightThreads(targetZone, pos, true);
+                highlightThreads(scope, pos, true);
             } else if (lastPos != pos) {
-                highlightThreads(targetZone, lastPos, false);
-                highlightThreads(targetZone, pos, true);
+                highlightThreads(scope, lastPos, false);
+                highlightThreads(scope, pos, true);
             }
 
             lastPos = pos;
         });
 
         scene.setOnMouseExited(event -> {
-            final int targetZone = model.isDuplicate() ? BOTH_ZONE : lastZone;
-            clearHighlights(targetZone);
+            final int scope = model.isDuplicate() ? BOTH_ZONE : lastZone;
+            clearHighlights(scope);
             lastZone = NONE_ZONE;
         });
 
@@ -588,13 +661,139 @@ public class Sample extends Stage {
 
             if (zone != NONE_ZONE) {
                 final int pos = (zone == ROW_ZONE) ? yPosToRow(y) : xPosToCol(x);
-                final int targetZone = model.isDuplicate() ? BOTH_ZONE : zone;
-                setThreadColour(targetZone, pos);
+                final int scope = model.isDuplicate() ? BOTH_ZONE : zone;
+                switch (getActive()) {
+                case DELETE_REQUEST:
+                    deleteThreads(scope, pos);
+                    break;
+
+                case INSERT_REQUEST:
+                    insertThreads(scope, pos);
+                    break;
+
+                default:
+                    setThreadColour(scope, pos);
+                    break;
+                }
             }
         });
 
     }
 
+    private void deleteRowThreads(int pos) {
+        final int COUNT = model.getThreadCount();
+        final int ACTIVE = model.getRowCount();
+
+        int source = pos + COUNT;
+        for (int index = pos; source < ACTIVE; ++index) {
+            final int colourIndex = rowList.get(source++).getColourIndex();
+            rowList.get(index).setColourIndex(colourIndex);
+        }
+
+        final int SIZE = ((pos + COUNT) > ACTIVE ? (ACTIVE-pos) : COUNT);
+        for (int index = (ACTIVE-SIZE); index < ACTIVE; ++index) {
+            rowList.get(index).setVisible(false);
+        }
+
+        model.incRowCount(-SIZE);
+        repeatRows();
+    }
+
+    private void deleteColumnThreads(int pos) {
+        final int COUNT = model.getThreadCount();
+        final int ACTIVE = model.getColumnCount();
+
+        int source = pos + COUNT;
+        for (int index = pos; source < ACTIVE; ++index) {
+            final int colourIndex = colList.get(source++).getColourIndex();
+            colList.get(index).setColourIndex(colourIndex);
+        }
+
+        final int SIZE = ((pos + COUNT) > ACTIVE ? (ACTIVE-pos) : COUNT);
+        for (int index = (ACTIVE-SIZE); index < ACTIVE; ++index) {
+            colList.get(index).setVisible(false);
+        }
+
+        model.incColumnCount(-SIZE);
+        repeatColumns();
+    }
+
+    private void insertRowThreads(int pos) {
+        final int COUNT = model.getThreadCount();
+        final int ACTIVE = model.getRowCount();
+        final int MAX = rowList.size();
+        final int SIZE = ((pos + COUNT) >= MAX ? (MAX-pos-1) : COUNT);
+
+        for (int index = ACTIVE; index < (ACTIVE+SIZE); ++index) {
+            rowList.get(index).setVisible(true);
+        }
+
+        int source = ACTIVE-1;
+        for (int index = ACTIVE+SIZE-1; source >= pos ; --index) {
+            final int colourIndex = rowList.get(source--).getColourIndex();
+            rowList.get(index).setColourIndex(colourIndex);
+        }
+
+        final int colourIndex = model.getSelectedColourIndex();
+        for (int index = pos; index < (pos+SIZE); ++index) {
+            rowList.get(index).setColourIndex(colourIndex);
+        }
+
+        model.incRowCount(SIZE);
+        repeatRows();
+    }
+
+    private void insertColumnThreads(int pos) {
+        final int COUNT = model.getThreadCount();
+        final int ACTIVE = model.getColumnCount();
+        final int MAX = colList.size();
+        final int SIZE = ((pos + COUNT) >= MAX ? (MAX-pos-1) : COUNT);
+
+        for (int index = ACTIVE; index < (ACTIVE+SIZE); ++index) {
+            colList.get(index).setVisible(true);
+        }
+
+        int source = ACTIVE-1;
+        for (int index = ACTIVE+SIZE-1; source >= pos ; --index) {
+            final int colourIndex = colList.get(source--).getColourIndex();
+            colList.get(index).setColourIndex(colourIndex);
+        }
+
+        final int colourIndex = model.getSelectedColourIndex();
+        for (int index = pos; index < (pos+SIZE); ++index) {
+            colList.get(index).setColourIndex(colourIndex);
+        }
+
+        model.incColumnCount(SIZE);
+        repeatColumns();
+    }
+
+    private void deleteThreads(int scope, int pos) {
+        if (scope == BOTH_ZONE) {
+            deleteRowThreads(pos);
+            deleteColumnThreads(pos);
+        } else if (scope == ROW_ZONE) {
+            deleteRowThreads(pos);
+        } else if (scope == COLUMN_ZONE) {
+            deleteColumnThreads(pos);
+        }
+
+        syncGuideLinePositions();
+    }
+
+    private void insertThreads(int scope, int pos) {
+        if (scope == BOTH_ZONE) {
+            insertRowThreads(pos);
+            insertColumnThreads(pos);
+        } else if (scope == ROW_ZONE) {
+            insertRowThreads(pos);
+        } else if (scope == COLUMN_ZONE) {
+            insertColumnThreads(pos);
+        }
+
+        syncGuideLinePositions();
+    }
+ 
 
 
     /************************************************************************
@@ -630,8 +829,7 @@ public class Sample extends Stage {
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
 
-        // Label heading = new Label(" " + this.getTitle());
-        setHeading();
+        updateHeading();
         Region region = new Region();
 
         Pane cancel = Model.buildCancelButton();
@@ -824,20 +1022,20 @@ public class Sample extends Stage {
 
     /**
      * Set the row and/or column (and repeats) to the selected swatch colour.
-     * @param zone to set the colour for.
+     * @param scope to set the colour for.
      * @param pos of row and/or column to set the colour of.
      */
-    private void setThreadColour(int zone, int pos) {
+    private void setThreadColour(int scope, int pos) {
         final int colourIndex = model.getSelectedColourIndex();
         final int count = model.getThreadCount();
-        final int repeat = (zone == COLUMN_ZONE) ? model.getColumnCount() : model.getRowCount();
+        final int repeat = (scope == COLUMN_ZONE) ? model.getColumnCount() : model.getRowCount();
 
-        if (zone == BOTH_ZONE) {
+        if (scope == BOTH_ZONE) {
             colourRows(pos, colourIndex, count, repeat);
             colourColumns(pos, colourIndex, count, repeat);
-        } else if (zone == ROW_ZONE) {
+        } else if (scope == ROW_ZONE) {
             colourRows(pos, colourIndex, count, repeat);
-        } else if (zone == COLUMN_ZONE) {
+        } else if (scope == COLUMN_ZONE) {
             colourColumns(pos, colourIndex, count, repeat);
         }
     }
@@ -860,23 +1058,23 @@ public class Sample extends Stage {
         }
     }
 
-    private void clearHighlights(int zone) {
-        if (zone == BOTH_ZONE) {
+    private void clearHighlights(int scope) {
+        if (scope == BOTH_ZONE) {
             clearRows();
             clearColumns();
-        } else if (zone == ROW_ZONE) {
+        } else if (scope == ROW_ZONE) {
             clearRows();
-        } else if (zone == COLUMN_ZONE) {
+        } else if (scope == COLUMN_ZONE) {
             clearColumns();
         }
     }
 
-    private void highlightThreads(int zone, int pos, boolean highlight) {
+    private void highlightThreads(int scope, int pos, boolean highlight) {
         final Color colour = highlight ? model.getGuideLineColour() : defaultColour;
         final int count = model.getThreadCount();
-        final int repeat = (zone == COLUMN_ZONE) ? model.getColumnCount() : model.getRowCount();
+        final int repeat = (scope == COLUMN_ZONE) ? model.getColumnCount() : model.getRowCount();
 
-        if (zone == BOTH_ZONE) {
+        if (scope == BOTH_ZONE) {
             for (int c = count; c > 0; c--, pos++) {
                 if (pos >= repeat)
                     break;
@@ -884,14 +1082,14 @@ public class Sample extends Stage {
                 rowList.get(pos).setHighlight(highlight, colour);
                 colList.get(pos).setHighlight(highlight, colour);
             }
-        } else if (zone == ROW_ZONE) {
+        } else if (scope == ROW_ZONE) {
             for (int c = count; c > 0; c--, pos++) {
                 if (pos >= repeat)
                     break;
 
                 rowList.get(pos).setHighlight(highlight, colour);
             }
-        } else if (zone == COLUMN_ZONE) {
+        } else if (scope == COLUMN_ZONE) {
             for (int c = count; c > 0; c--, pos++) {
                 if (pos >= repeat)
                     break;
