@@ -493,8 +493,8 @@ public class Model {
      * Initialize "Layout" panel.
      */
     private void initializeLayout() {
-        columnCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Default.WIDTH.getInt(), Default.INIT_THREAD_COUNT.getInt());
-        rowCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Default.HEIGHT.getInt(), Default.INIT_THREAD_COUNT.getInt());
+        columnCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(Default.MIN_THREAD_COUNT.getInt(), Default.WIDTH.getInt(), Default.INIT_THREAD_COUNT.getInt());
+        rowCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(Default.MIN_THREAD_COUNT.getInt(), Default.HEIGHT.getInt(), Default.INIT_THREAD_COUNT.getInt());
         threadCountSVF = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 8, 1);
         threadSizeSVF = new SpinnerValueFactory.DoubleSpinnerValueFactory(2.0, 40.0, 30.0, 1.0);
         borderThicknessSVF = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 10.0, 1.0, 0.1);

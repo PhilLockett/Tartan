@@ -47,6 +47,7 @@ public enum Default {
     BORDER_WIDTH (30F),
     INIT_THREAD_SIZE (6F),
     INIT_THREAD_COUNT (114F),
+    MIN_THREAD_COUNT (20F),
     INIT_BORDER_THICKNESS (1.0F);
 
     private final int	iValue;
