@@ -718,7 +718,7 @@ public class Sample extends Stage {
     }
 
     public int getRowCount() { return rowList.getActive(); }
-    public int getColumnCount() { return rowList.getActive(); }
+    public int getColumnCount() { return colList.getActive(); }
 
 
 
