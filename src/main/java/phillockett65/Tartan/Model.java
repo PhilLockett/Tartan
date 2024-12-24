@@ -159,8 +159,8 @@ public class Model {
         setSwatch(4, Color.GREEN, "Major 2");
         setSwatch(5, Color.BLUE, "Major 3");
 
-        initColumnCount(Default.INIT_THREAD_COUNT.getInt());
-        initRowCount(Default.INIT_THREAD_COUNT.getInt());
+        setColumnCountSVF(Default.INIT_THREAD_COUNT.getInt());
+        setRowCountSVF(Default.INIT_THREAD_COUNT.getInt());
         initThreadSize(Default.INIT_THREAD_SIZE.getFloat());
         setGuideLineColour(Color.RED);
         initBorderThickness(Default.INIT_BORDER_THICKNESS.getFloat());
@@ -208,16 +208,22 @@ public class Model {
      */
 
     public void setRowList(ArrayList<Integer> list) {
-        initRowCount(list.size());
+        setRowCountSVF(list.size());
         sample.setRowList(list);
     }
     public void setColumnList(ArrayList<Integer> list) {
-        initColumnCount(list.size());
+        setColumnCountSVF(list.size());
         sample.setColumnList(list);
     }
 
     public ArrayList<Integer> getRowList() { return sample.getRowList(); }
     public ArrayList<Integer> getColumnList() { return sample.getColumnList(); }
+
+    public int getColumnCount() { return sample.getColumnCount(); }
+    public int getRowCount() { return sample.getRowCount(); }
+
+    private int getRowColourIndex(int i) { return sample.getRowColourIndex(i % getRowCount()); }
+    private int getColColourIndex(int i) { return sample.getColColourIndex(i % getColumnCount()); }
 
     public void setRowCount(int size) {
         sample.setRowCount(size);
@@ -226,15 +232,11 @@ public class Model {
         sample.setColumnCount(size);
 
         if (isDuplicate()) {
-            initRowCount(size);
-            sample.setRowCount(size);
+            setRowCountSVF(size);
+            // Let SVF handler do the sample row count update.
         }
     }
 
-    private int getRowColourIndex(int i) { return sample.getRowColourIndex(i % getRowCount()); }
-    private Color getRowColour(int i) { return getSwatchColour(getRowColourIndex(i)); }
-    private int getColColourIndex(int i) { return sample.getColColourIndex(i % getColumnCount()); }
-    private Color getColColour(int i) { return getSwatchColour(getColColourIndex(i)); }
 
     /**
      * Initialize "Sample" panel.
@@ -454,20 +456,18 @@ public class Model {
     public Color getGuideLineColour() { return guideLineColour; }
     public double getBorderThickness() { return borderThicknessSVF.getValue(); }
 
-    public int getColumnCount() { return columnCountSVF.getValue(); }
-    public int getRowCount() { return rowCountSVF.getValue(); }
+    private void setColumnCountSVF(int value) { columnCountSVF.setValue(value); }
+    private void setRowCountSVF(int value) { rowCountSVF.setValue(value); }
 
-    public void incColumnCount(int value) { initColumnCount(getColumnCount() + value); }
-    public void incRowCount(int value) { initRowCount(getRowCount() + value); }
+    public void syncColumnCountSVF() { setColumnCountSVF(getColumnCount()); }
+    public void syncRowCountSVF() { setRowCountSVF(getRowCount()); }
 
-    private void initColumnCount(int value) { columnCountSVF.setValue(value); }
-    private void initRowCount(int value) { rowCountSVF.setValue(value); }
     public void setDuplicate(boolean state) {
         duplicate = state;
 
         if (duplicate) {
-            initRowCount(getColumnCount());
             sample.syncDuplicateThreads();
+            setRowCountSVF(getColumnCount());
         }
     }
     public void setShowGuide(boolean state) { showGuide = state; }
@@ -546,6 +546,9 @@ public class Model {
     public String getSettingsFile() {
         return getOutputPath() + "\\" + DATAFILE;
     }
+
+    private Color getRowColour(int i) { return getSwatchColour(getRowColourIndex(i)); }
+    private Color getColColour(int i) { return getSwatchColour(getColColourIndex(i)); }
 
     /**
      * Save the tartan design as an image.

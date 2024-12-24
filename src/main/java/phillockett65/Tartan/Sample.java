@@ -70,8 +70,9 @@ public class Sample extends Stage {
     private double dx;	// Difference between the size of the stage and the size of the scene.
     private double dy;
 
-    private Vector<Thread> rowList = new Vector<Thread>(Default.HEIGHT.getInt());
-    private Vector<Thread> colList = new Vector<Thread>(Default.WIDTH.getInt());
+    private Warp rowList = new Warp(true, Default.MIN_THREAD_COUNT.getInt(), Default.HEIGHT.getInt());
+    private Warp colList = new Warp(false, Default.MIN_THREAD_COUNT.getInt(), Default.WIDTH.getInt());
+
     private Vector<Line> guides = new Vector<Line>(Default.TOTAL_GUIDE_COUNT.getInt());
 
     private final Color defaultColour;
@@ -164,304 +165,46 @@ public class Sample extends Stage {
 
 
 
-    /************************************************************************
-     * Support code for the Thread sub-class.
-     */
-
-    /**
-     * Class to represent a single thread as a sequence of rectangles.
-     */
-    private class Thread {
-        private boolean highlight;
-        private final int index;
-        private final boolean row;
-        private int colourIndex;
-        private Rectangle stitch;
-
-        /**
-         * The Constructor is singularly responsible for adding the Rectangles
-         * to the Group.
-         * @param index of the row or column.
-         * @param row if true, column otherwise.
-         */
-        public Thread(int index, boolean row) {
-            highlight = false;
-
-            this.index = index;
-            this.row = row;
-            this.colourIndex = 0;
-            ObservableList<Node> items = group.getChildren();
-
-            final Color fillColour = model.getSwatchColour(colourIndex);
-            stitch = new Rectangle();
-            stitch.setFill(fillColour);
-            stitch.setStroke(defaultColour);
-
-            items.add(stitch);
-        }
-
-        public boolean isRow() { return row; }
-        public int getColourIndex() { return colourIndex; }
-        public boolean isVisible() { return stitch.isVisible(); }
-
-
-        /**
-         * Draw the thread using the current gc colours.
-         */
-        private void _draw() {
-            if (isRow())
-                drawRow();
-            else
-                drawCol();
-        }
-
-        /**
-         * Set the gc colours for the thread and then draw them.
-         * @param border colour to use.
-         */
-        private void draw(Color border) {
-            gc.setFill(model.getSwatchColour(colourIndex));
-            gc.setStroke(border);
-            _draw();
-        }
-
-        /**
-         * Set the gc colours for the thread and then draw them.
-         */
-        private void draw() {
-            final Color border = highlight ? model.getGuideLineColour() : defaultColour;
-            draw(border);
-        }
-
-        /**
-         * Set the colour of the thread to the given swatch colour.
-         * @param index of the selected swatch.
-         */
-        public void setColourIndex(int index) {
-            colourIndex = index;
-            stitch.setFill(model.getSwatchColour(colourIndex));
-
-            draw();
-        }
-
-        public void setHighlight(boolean state, Color border) {
-            if (state == highlight) {
-                return;
-            }
-
-            highlight = state;
-            stitch.setStroke(border);
-
-            draw(border);
-        }
-
-        /**
-         * Synchronise the colour of the thread to the updated swatch colour.
-         * @return true if this thread needed to be updated, false otherwise.
-         */
-        public boolean syncCurrentColour() {
-            if (colourIndex != model.getSelectedColourIndex())
-                return false;
-
-            final Color color = model.getSelectedColour();
-
-            stitch.setFill(color);
-
-            draw();
-
-            return true;
-        }
-
-
-        /**
-         * Set the visibilty of the lead thread.
-         * @param visible 
-         */
-        public void setVisible(boolean visible) {
-            stitch.setVisible(visible);
-        }
-
-
-        private void drawRow() {
-            final double size = model.getThreadSize();
-            final double size2 = size * 2;
-            final double size4 = size * 4;
-            final double yPos = index * size;
-            final int count = (int)(Default.WIDTH.getFloat() / 4);
-
-            int c = index % 4;
-            c = (4 - c) % 4;
-            double xPos = c * size;
-            for (int j = 0; j < count; ++j) {
-                gc.fillRect(xPos, yPos, size2, size);
-                gc.strokeRect(xPos, yPos, size2, size);
-
-                xPos += size4;
-            }
-        }
-
-        private void drawCol() {
-            final double size = model.getThreadSize();
-            final double size2 = size * 2;
-            final double size4 = size * 4;
-            final double xPos = index * size;
-            final int count = (int)(Default.HEIGHT.getFloat() / 4);
-
-            int r = index % 4;
-            r = (6 - r) % 4;
-            double yPos = r * size;
-            for (int j = 0; j < count; ++j) {
-                gc.fillRect(xPos, yPos, size, size2);
-                gc.strokeRect(xPos, yPos, size, size2);
-
-                yPos += size4;
-            }
-        }
-
-        /**
-         * Synchronise the thread size for a row. Sets the size and position of
-         * the Rectangles.
-         */
-        public void syncRowSize() {
-            final double size = model.getThreadSize();
-            final double yPos = (index * size);
-            final double thickness = model.getBorderThickness();
-
-            int c = index % 4;
-            stitch.setWidth(OFFSET + ((c == 1) ? size : 0));
-            stitch.setHeight(size);
-            stitch.setX(0D);
-            stitch.setY(OFFSET + yPos);
-            stitch.setVisible(index < model.getRowCount());
-            stitch.setStrokeWidth(thickness);
-
-            final Color fillColour = model.getSwatchColour(colourIndex);
-            gc.setFill(fillColour);
-
-            drawRow();
-        }
-
-        /**
-         * Synchronise the thread size for a column. Sets the size and position
-         * of the Rectangles.
-         */
-        public void syncColSize() {
-            final double size = model.getThreadSize();
-            final double xPos = (index * size);
-            final double thickness = model.getBorderThickness();
-
-            int r = index % 4;
-            stitch.setWidth(size);
-            stitch.setHeight(OFFSET + ((r == 3) ? size : 0));
-            stitch.setX(OFFSET + xPos);
-            stitch.setY(0D);
-            stitch.setVisible(index < model.getColumnCount());
-            stitch.setStrokeWidth(thickness);
-
-            final Color fillColour = model.getSwatchColour(colourIndex);
-            gc.setFill(fillColour);
-
-            drawCol();
-        }
-
-    }
-
 
     /************************************************************************
      * Support code for the handlers. 
      */
 
-    private void setRowColourIndex(int index, int colourIndex) {
-        rowList.get(index).setColourIndex(colourIndex);
-    }
-
-    private void setColColourIndex(int index, int colourIndex) {
-        colList.get(index).setColourIndex(colourIndex);
-    }
-
     public int getRowColourIndex(int index) {
-        return rowList.get(index).getColourIndex();
+        return rowList.getColourIndex(index);
     }
 
     public int getColColourIndex(int index) {
-        return colList.get(index).getColourIndex();
-    }
-
-    private void repeatRows() {
-        final int ACTIVE = model.getRowCount();
-        final int MAX = rowList.size();
-        for (int index = ACTIVE; index < MAX; ++index) {
-            final int colourIndex = getRowColourIndex(index % ACTIVE);
-
-            setRowColourIndex(index, colourIndex);
-        }
-    }
-
-    private void repeatColumns() {
-        final int ACTIVE = model.getColumnCount();
-        final int MAX = colList.size();
-        for (int index = ACTIVE; index < MAX; ++index) {
-            final int colourIndex = getColColourIndex(index % ACTIVE);
-
-            setColColourIndex(index, colourIndex);
-        }
+        return colList.getColourIndex(index);
     }
 
     private void rotateUp() {
-        final int ACTIVE = model.getRowCount();
-
-        final int safeIndex = getRowColourIndex(0);
-        for (int index = 1; index < ACTIVE; ++index) {
-            final int colourIndex = getRowColourIndex(index);
-
-            setRowColourIndex(index-1, colourIndex);
+        rowList.rotateIncrease();
+        if (model.isDuplicate()) {
+            colList.rotateIncrease();
         }
-        setRowColourIndex(ACTIVE-1, safeIndex);
-
-        repeatRows();
-    }
+}
 
     private void rotateDown() {
-        final int ACTIVE = model.getRowCount();
-
-        final int safeIndex = getRowColourIndex(ACTIVE-1);
-        for (int index = ACTIVE-1; index > 0 ; --index) {
-            final int colourIndex = getRowColourIndex(index-1);
-
-            setRowColourIndex(index, colourIndex);
+        rowList.rotateDecrease();
+        if (model.isDuplicate()) {
+            colList.rotateDecrease();
         }
-        setRowColourIndex(0, safeIndex);
-
-        repeatRows();
-    }
+}
 
     private void rotateLeft() {
-        final int ACTIVE = model.getColumnCount();
-
-        final int safeIndex = getColColourIndex(0);
-        for (int index = 1; index < ACTIVE; ++index) {
-            final int colourIndex = getColColourIndex(index);
-
-            setColColourIndex(index-1, colourIndex);
+        colList.rotateIncrease();
+        if (model.isDuplicate()) {
+            rowList.rotateIncrease();
         }
-        setColColourIndex(ACTIVE-1, safeIndex);
-
-        repeatColumns();
-    }
+}
 
     private void rotateRight() {
-        final int ACTIVE = model.getColumnCount();
-
-        final int safeIndex = getColColourIndex(ACTIVE-1);
-        for (int index = ACTIVE-1; index > 0 ; --index) {
-            final int colourIndex = getColColourIndex(index-1);
-
-            setColColourIndex(index, colourIndex);
+        colList.rotateDecrease();
+        if (model.isDuplicate()) {
+            rowList.rotateDecrease();
         }
-        setColColourIndex(0, safeIndex);
-
-        repeatColumns();
-    }
+}
 
 
     private void augmentHeading(String label) {
@@ -563,30 +306,18 @@ public class Sample extends Stage {
 
             case UP:
                 rotateUp();
-                if (model.isDuplicate()) {
-                    rotateLeft();
-                }
                 break;
 
             case DOWN:
                 rotateDown();
-                if (model.isDuplicate()) {
-                    rotateRight();
-                }
                 break;
 
             case LEFT:
                 rotateLeft();
-                if (model.isDuplicate()) {
-                    rotateUp();
-                }
                 break;
 
             case RIGHT:
                 rotateRight();
-                if (model.isDuplicate()) {
-                    rotateDown();
-                }
                 break;
 
             default:
@@ -680,102 +411,18 @@ public class Sample extends Stage {
 
     }
 
-    private void deleteRowThreads(int pos) {
-        final int COUNT = model.getThreadCount();
-        final int ACTIVE = model.getRowCount();
-
-        int source = pos + COUNT;
-        for (int index = pos; source < ACTIVE; ++index) {
-            final int colourIndex = rowList.get(source++).getColourIndex();
-            rowList.get(index).setColourIndex(colourIndex);
-        }
-
-        final int SIZE = ((pos + COUNT) > ACTIVE ? (ACTIVE-pos) : COUNT);
-        for (int index = (ACTIVE-SIZE); index < ACTIVE; ++index) {
-            rowList.get(index).setVisible(false);
-        }
-
-        model.incRowCount(-SIZE);
-        repeatRows();
-    }
-
-    private void deleteColumnThreads(int pos) {
-        final int COUNT = model.getThreadCount();
-        final int ACTIVE = model.getColumnCount();
-
-        int source = pos + COUNT;
-        for (int index = pos; source < ACTIVE; ++index) {
-            final int colourIndex = colList.get(source++).getColourIndex();
-            colList.get(index).setColourIndex(colourIndex);
-        }
-
-        final int SIZE = ((pos + COUNT) > ACTIVE ? (ACTIVE-pos) : COUNT);
-        for (int index = (ACTIVE-SIZE); index < ACTIVE; ++index) {
-            colList.get(index).setVisible(false);
-        }
-
-        model.incColumnCount(-SIZE);
-        repeatColumns();
-    }
-
-    private void insertRowThreads(int pos) {
-        final int COUNT = model.getThreadCount();
-        final int ACTIVE = model.getRowCount();
-        final int MAX = rowList.size();
-        final int SIZE = ((pos + COUNT) >= MAX ? (MAX-pos-1) : COUNT);
-
-        for (int index = ACTIVE; index < (ACTIVE+SIZE); ++index) {
-            rowList.get(index).setVisible(true);
-        }
-
-        int source = ACTIVE-1;
-        for (int index = ACTIVE+SIZE-1; source >= pos ; --index) {
-            final int colourIndex = rowList.get(source--).getColourIndex();
-            rowList.get(index).setColourIndex(colourIndex);
-        }
-
-        final int colourIndex = model.getSelectedColourIndex();
-        for (int index = pos; index < (pos+SIZE); ++index) {
-            rowList.get(index).setColourIndex(colourIndex);
-        }
-
-        model.incRowCount(SIZE);
-        repeatRows();
-    }
-
-    private void insertColumnThreads(int pos) {
-        final int COUNT = model.getThreadCount();
-        final int ACTIVE = model.getColumnCount();
-        final int MAX = colList.size();
-        final int SIZE = ((pos + COUNT) >= MAX ? (MAX-pos-1) : COUNT);
-
-        for (int index = ACTIVE; index < (ACTIVE+SIZE); ++index) {
-            colList.get(index).setVisible(true);
-        }
-
-        int source = ACTIVE-1;
-        for (int index = ACTIVE+SIZE-1; source >= pos ; --index) {
-            final int colourIndex = colList.get(source--).getColourIndex();
-            colList.get(index).setColourIndex(colourIndex);
-        }
-
-        final int colourIndex = model.getSelectedColourIndex();
-        for (int index = pos; index < (pos+SIZE); ++index) {
-            colList.get(index).setColourIndex(colourIndex);
-        }
-
-        model.incColumnCount(SIZE);
-        repeatColumns();
-    }
-
     private void deleteThreads(int scope, int pos) {
         if (scope == BOTH_ZONE) {
-            deleteRowThreads(pos);
-            deleteColumnThreads(pos);
+            rowList.deleteThreads(pos);
+            colList.deleteThreads(pos);
+            model.syncRowCountSVF();
+            model.syncColumnCountSVF();
         } else if (scope == ROW_ZONE) {
-            deleteRowThreads(pos);
+            rowList.deleteThreads(pos);
+            model.syncRowCountSVF();
         } else if (scope == COLUMN_ZONE) {
-            deleteColumnThreads(pos);
+            colList.deleteThreads(pos);
+            model.syncColumnCountSVF();
         }
 
         syncGuideLinePositions();
@@ -783,12 +430,16 @@ public class Sample extends Stage {
 
     private void insertThreads(int scope, int pos) {
         if (scope == BOTH_ZONE) {
-            insertRowThreads(pos);
-            insertColumnThreads(pos);
+            rowList.insertThreads(pos);
+            colList.insertThreads(pos);
+            model.syncRowCountSVF();
+            model.syncColumnCountSVF();
         } else if (scope == ROW_ZONE) {
-            insertRowThreads(pos);
+            rowList.insertThreads(pos);
+            model.syncRowCountSVF();
         } else if (scope == COLUMN_ZONE) {
-            insertColumnThreads(pos);
+            colList.insertThreads(pos);
+            model.syncColumnCountSVF();
         }
 
         syncGuideLinePositions();
@@ -910,17 +561,6 @@ public class Sample extends Stage {
      * Called on initialization to set up the blank loom.
      */
     private void drawBlankLoom() {
-        final int ROWS = Default.HEIGHT.getInt();
-        for (int row = 0; row < ROWS; ++row) {
-            Thread thread = new Thread(row, true);
-            rowList.add(thread);
-        }
-
-        final int COLS = Default.WIDTH.getInt();
-        for (int col = 0; col < COLS; ++col) {
-            Thread thread = new Thread(col, false);
-            colList.add(thread);
-        }
 
         final Color colour = model.getGuideLineColour();
         ObservableList<Node> items =  group.getChildren();
@@ -931,10 +571,6 @@ public class Sample extends Stage {
             guides.add(guide);
             items.add(guide);
         }
-
-        syncGuideLineColour();
-        syncGuideLinePositions();
-        syncThreadSize();
     }
 
     /**
@@ -962,6 +598,12 @@ public class Sample extends Stage {
      * Initialization after the model has been initialised.
      */
     public void init() {
+        rowList.init(group, gc);
+        colList.init(group, gc);
+
+        syncGuideLineColour();
+        syncGuideLinePositions();
+        syncThreadSize();
     }
 
 
@@ -971,72 +613,22 @@ public class Sample extends Stage {
      */
 
     /**
-     * Set the row (and repeat rows) to the selected swatch colour.
-     * @param row to set the colour of.
-     * @param colourIndex to set the row to.
-     * @param count of threads.
-     * @param repeat start point.
-     */
-    private void colourRows(int row, int colourIndex, int count, int repeat) {
-        final int MAX = rowList.size();
-        for (int thread = 0; thread < count; ++thread) {
-            setRowColourIndex(row, colourIndex);
-
-            for (int i = 0; i < MAX; i += repeat) {
-                final int index = i + row;
-                if (index >= MAX)
-                    break;
-
-                setRowColourIndex(index, colourIndex);
-            }
-
-            if (++row >= repeat)
-                break;
-        }
-    }
-
-    /**
-     * Set the column (and repeat columns) to the selected swatch colour.
-     * @param column to set the colour of.
-     * @param colourIndex to set the column to.
-     * @param count of threads.
-     * @param repeat start point.
-     */
-    private void colourColumns(int column, int colourIndex, int count, int repeat) {
-        final int MAX = colList.size();
-        for (int thread = 0; thread < count; ++thread) {
-            setColColourIndex(column, colourIndex);
-
-            for (int i = 0; i < MAX; i += repeat) {
-                final int index = i + column;
-                if (index >= MAX)
-                    break;
-
-                setColColourIndex(index, colourIndex);
-            }
-
-            if (++column >= repeat)
-                break;
-        }
-    }
-
-    /**
      * Set the row and/or column (and repeats) to the selected swatch colour.
      * @param scope to set the colour for.
      * @param pos of row and/or column to set the colour of.
      */
     private void setThreadColour(int scope, int pos) {
-        final int colourIndex = model.getSelectedColourIndex();
-        final int count = model.getThreadCount();
-        final int repeat = (scope == COLUMN_ZONE) ? model.getColumnCount() : model.getRowCount();
+        final int COLOURINDEX = model.getSelectedColourIndex();
+        final int COUNT = model.getThreadCount();
+        final int REPEAT = (scope == COLUMN_ZONE) ? getColumnCount() : getRowCount();
 
         if (scope == BOTH_ZONE) {
-            colourRows(pos, colourIndex, count, repeat);
-            colourColumns(pos, colourIndex, count, repeat);
+            rowList.colourThreads(pos, COLOURINDEX, COUNT, REPEAT);
+            colList.colourThreads(pos, COLOURINDEX, COUNT, REPEAT);
         } else if (scope == ROW_ZONE) {
-            colourRows(pos, colourIndex, count, repeat);
+            rowList.colourThreads(pos, COLOURINDEX, COUNT, REPEAT);
         } else if (scope == COLUMN_ZONE) {
-            colourColumns(pos, colourIndex, count, repeat);
+            colList.colourThreads(pos, COLOURINDEX, COUNT, REPEAT);
         }
     }
 
@@ -1046,55 +638,43 @@ public class Sample extends Stage {
      * Support code for the mouse move handler.
      */
 
-    private void clearRows() {
-        for (Thread thread : rowList) {
-            thread.setHighlight(false, defaultColour);
-        }
-    }
-
-    private void clearColumns() {
-        for (Thread thread : colList) {
-            thread.setHighlight(false, defaultColour);
-        }
-    }
-
     private void clearHighlights(int scope) {
         if (scope == BOTH_ZONE) {
-            clearRows();
-            clearColumns();
+            rowList.clearThreads();
+            colList.clearThreads();
         } else if (scope == ROW_ZONE) {
-            clearRows();
+            rowList.clearThreads();
         } else if (scope == COLUMN_ZONE) {
-            clearColumns();
+            colList.clearThreads();
         }
     }
 
     private void highlightThreads(int scope, int pos, boolean highlight) {
-        final Color colour = highlight ? model.getGuideLineColour() : defaultColour;
-        final int count = model.getThreadCount();
-        final int repeat = (scope == COLUMN_ZONE) ? model.getColumnCount() : model.getRowCount();
+        final Color COLOUR = highlight ? model.getGuideLineColour() : defaultColour;
+        final int COUNT = model.getThreadCount();
+        final int REPEAT = (scope == COLUMN_ZONE) ? getColumnCount() : getRowCount();
 
         if (scope == BOTH_ZONE) {
-            for (int c = count; c > 0; c--, pos++) {
-                if (pos >= repeat)
+            for (int c = COUNT; c > 0; c--, pos++) {
+                if (pos >= REPEAT)
                     break;
 
-                rowList.get(pos).setHighlight(highlight, colour);
-                colList.get(pos).setHighlight(highlight, colour);
+                rowList.highlightThread(pos, highlight, COLOUR);
+                colList.highlightThread(pos, highlight, COLOUR);
             }
         } else if (scope == ROW_ZONE) {
-            for (int c = count; c > 0; c--, pos++) {
-                if (pos >= repeat)
+            for (int c = COUNT; c > 0; c--, pos++) {
+                if (pos >= REPEAT)
                     break;
 
-                rowList.get(pos).setHighlight(highlight, colour);
+                rowList.highlightThread(pos, highlight, COLOUR);
             }
         } else if (scope == COLUMN_ZONE) {
-            for (int c = count; c > 0; c--, pos++) {
-                if (pos >= repeat)
+            for (int c = COUNT; c > 0; c--, pos++) {
+                if (pos >= REPEAT)
                     break;
 
-                colList.get(pos).setHighlight(highlight, colour);
+                colList.highlightThread(pos, highlight, COLOUR);
             }
         }
     }
@@ -1106,86 +686,40 @@ public class Sample extends Stage {
      */
 
     public void setRowList(ArrayList<Integer> list) {
-        final int ACTIVE = list.size();
-        final int MAX = rowList.size();
-
-        for (int index = 0; index < MAX; ++index) {
-            final int colourIndex = list.get(index % ACTIVE);
-
-            Thread stitch = rowList.get(index);
-            stitch.setColourIndex(colourIndex);
-            stitch.setVisible(index < ACTIVE);
-        }
+        rowList.setList(list);
 
         syncGuideLinePositions();
     }
 
     public void setColumnList(ArrayList<Integer> list) {
-        final int ACTIVE = list.size();
-        final int MAX = colList.size();
-
-        for (int index = 0; index < MAX; ++index) {
-            final int colourIndex = list.get(index % ACTIVE);
-
-            Thread stitch = colList.get(index);
-            stitch.setColourIndex(colourIndex);
-            stitch.setVisible(index < ACTIVE);
-        }
+        colList.setList(list);
 
         syncGuideLinePositions();
     }
 
     public ArrayList<Integer> getRowList() {
-        ArrayList<Integer> list = new ArrayList<Integer>(model.getRowCount());
-
-        for (Thread stitch : rowList) {
-            if (!stitch.isVisible())
-                break;
-
-            list.add(stitch.getColourIndex());
-        }
-
-        return list;
+        return rowList.getList();
     }
 
     public ArrayList<Integer> getColumnList() {
-        ArrayList<Integer> list = new ArrayList<Integer>(model.getColumnCount());
-
-        for (Thread stitch : colList) {
-            if (!stitch.isVisible())
-                break;
-
-            list.add(stitch.getColourIndex());
-        }
-
-        return list;
+        return colList.getList();
     }
 
     public void setRowCount(int size) {
-        final int ACTIVE = size;
-        final int MAX = rowList.size();
+        rowList.setActive(size);
 
-        for (int index = 0; index < MAX; ++index) {
-            Thread stitch = rowList.get(index);
-            stitch.setVisible(index < ACTIVE);
-        }
-
-        repeatRows();
         syncGuideLinePositions();
     }
 
     public void setColumnCount(int size) {
-        final int ACTIVE = size;
-        final int MAX = colList.size();
+        colList.setActive(size);
 
-        for (int index = 0; index < MAX; ++index) {
-            Thread stitch = colList.get(index);
-            stitch.setVisible(index < ACTIVE);
-        }
-
-        repeatColumns();
         syncGuideLinePositions();
     }
+
+    public int getRowCount() { return rowList.getActive(); }
+    public int getColumnCount() { return rowList.getActive(); }
+
 
 
     /************************************************************************
@@ -1196,12 +730,8 @@ public class Sample extends Stage {
      * Synchronise to the current swatch colour.
      */
     public void syncColour() {
-        for (Thread stitch : rowList) {
-            stitch.syncCurrentColour();
-        }
-        for (Thread stitch : colList) {
-            stitch.syncCurrentColour();
-        }
+        rowList.syncColour();
+        colList.syncColour();
     }
 
     /**
@@ -1215,56 +745,21 @@ public class Sample extends Stage {
         gc.setStroke(defaultColour);
         gc.setLineWidth(model.getBorderThickness());
 
-        for (Thread stitch : rowList) {
-            stitch.syncRowSize();
-        }
-
-        for (Thread stitch : colList) {
-            stitch.syncColSize();
-        }
+        rowList.syncThreadSize();
+        colList.syncThreadSize();
 
         syncGuideLinePositions();
     }
 
-    /**
-     * Synchronise to the row repeat count.
-     */
-    private void syncRowCount() {
-        final int ACTIVE = model.getRowCount();
-        final int MAX = rowList.size();
-
-        for (int index = 0; index < MAX; ++index) {
-            Thread stitch = rowList.get(index);
-            stitch.setColourIndex(getRowColourIndex(index % ACTIVE));
-            stitch.setVisible(index < ACTIVE);
-        }
-
-        syncGuideLinePositions();
-    }
 
     /**
-     * Synchronise to the column repeat count.
-     */
-    private void syncColumnCount() {
-        final int ACTIVE = model.getColumnCount();
-        final int MAX = colList.size();
-
-        for (int index = 0; index < MAX; ++index) {
-            Thread stitch = colList.get(index);
-            stitch.setColourIndex(getColColourIndex(index % ACTIVE));
-            stitch.setVisible(index < ACTIVE);
-        }
-
-        syncGuideLinePositions();
-    }
-
-    /**
-     * Convenience method to synchronise to both the row and column repeat 
-     * counts.
+     * Synchronise to both the row and column repeat counts.
      */
     public void syncCount() {
-        syncRowCount();
-        syncColumnCount();
+        rowList.setActive(getRowCount());
+        colList.setActive(getColumnCount());
+
+        syncGuideLinePositions();
     }
 
     /**
@@ -1272,16 +767,14 @@ public class Sample extends Stage {
      * Assumes that the row count has been set to the column count.
      */
     public void syncDuplicateThreads() {
-        final int ACTIVE = model.getColumnCount();
-        final int MAX = colList.size();
+        final int ACTIVE = colList.getActive();
 
-        for (int column = 0; column < MAX; ++column) {
-            final int colourIndex = getColColourIndex(column % ACTIVE);
+        for (int index = 0; index < ACTIVE; ++index) {
+            final int colourIndex = colList.getColourIndex(index);
 
-            Thread stitch = rowList.get(column);
-            stitch.setColourIndex(colourIndex);
-            stitch.setVisible(column < ACTIVE);
+            rowList.setColourIndex(index, colourIndex);
         }
+        rowList.setActive(ACTIVE);
 
         syncGuideLinePositions();
     }
