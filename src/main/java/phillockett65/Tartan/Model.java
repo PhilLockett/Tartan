@@ -225,18 +225,6 @@ public class Model {
     private int getRowColourIndex(int i) { return sample.getRowColourIndex(i % getRowCount()); }
     private int getColColourIndex(int i) { return sample.getColColourIndex(i % getColumnCount()); }
 
-    public void setRowCount(int size) {
-        sample.setRowCount(size);
-    }
-    public void setColumnCount(int size) {
-        sample.setColumnCount(size);
-
-        if (isDuplicate()) {
-            setRowCountSVF(size);
-            // Let SVF handler do the sample row count update.
-        }
-    }
-
 
     /**
      * Initialize "Sample" panel.
@@ -462,31 +450,26 @@ public class Model {
     public void syncColumnCountSVF() { setColumnCountSVF(getColumnCount()); }
     public void syncRowCountSVF() { setRowCountSVF(getRowCount()); }
 
+    public void syncDuplicateSVF() {
+        if (duplicate) {
+            setRowCountSVF(getColumnCount());
+        }
+    }
+
     public void setDuplicate(boolean state) {
         duplicate = state;
 
         if (duplicate) {
-            sample.syncDuplicateThreads();
             setRowCountSVF(getColumnCount());
+            sample.syncDuplicateThreads();
         }
     }
+
     public void setShowGuide(boolean state) { showGuide = state; }
     public void initThreadCount(int value) { threadCountSVF.setValue(value); }
     public void initThreadSize(double value) { threadSizeSVF.setValue(value); }
     public void setGuideLineColour(Color colour) { guideLineColour = colour; }
     public void initBorderThickness(double value) { borderThicknessSVF.setValue(value); }
-
-    /**
-     * Get the width of the swatch in pixels.
-     * @return the width of the swatch in pixels.
-     */
-    public double getSwatchWidth() { return getThreadSize() * getColumnCount(); }
-
-    /**
-     * Get the height of the swatch in pixels.
-     * @return the height of the swatch in pixels.
-     */
-    public double getSwatchHeight() { return getThreadSize() * getRowCount(); }
 
 
     /**

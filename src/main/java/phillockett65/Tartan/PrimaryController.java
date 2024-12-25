@@ -118,14 +118,13 @@ public class PrimaryController {
         setSelectedColourRadioButton(model.getSelectedColourIndex());
         colourSelect.setColour(model.getSelectedColour());
 
+        rowCountSpinner.setDisable(model.isDuplicate());
         duplicateCheckbox.setSelected(model.isDuplicate());
         showGuideCheckbox.setSelected(model.isShowGuide());
         sample.syncGuideVisible();
         sample.syncGuideLineColour();
 
         guideLineColourPicker.setValue(model.getGuideLineColour());
-
-        fixUISettings();
     }
 
     /**
@@ -545,12 +544,14 @@ public class PrimaryController {
 
         columnCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("columnCountSpinner.Listener(" + newValue + "))");
-            model.setColumnCount(newValue.intValue());
+            sample.setColumnCount(newValue.intValue());
+
+            model.syncDuplicateSVF();
         });
 
         rowCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("rowCountSpinner.Listener(" + newValue + "))");
-            model.setRowCount(newValue.intValue());
+            sample.setRowCount(newValue.intValue());
         });
 
         threadSizeSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {

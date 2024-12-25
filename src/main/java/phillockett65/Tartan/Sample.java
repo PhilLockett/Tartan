@@ -117,6 +117,19 @@ public class Sample extends Stage {
     }
 
     /**
+     * Get the width of the swatch in pixels.
+     * @return the width of the swatch in pixels.
+     */
+    public double getSwatchWidth() { return model.getThreadSize() * getColumnCount(); }
+
+    /**
+     * Get the height of the swatch in pixels.
+     * @return the height of the swatch in pixels.
+     */
+    public double getSwatchHeight() { return model.getThreadSize() * getRowCount(); }
+
+
+    /**
      * Calculate the zone from the mouse x & y pos in the scene.
      * Accounts for the thread selector size and the top-bar size.
      * @param x pos of the mouse in the scene.
@@ -142,10 +155,10 @@ public class Sample extends Stage {
         }
 
         // On the far side of either thread selector?
-        if (x >= model.getSwatchWidth()) {
+        if (x >= getSwatchWidth()) {
             return NONE_ZONE;
         }
-        if (y >= model.getSwatchHeight()) {
+        if (y >= getSwatchHeight()) {
             return NONE_ZONE;
         }
 
@@ -785,8 +798,8 @@ public class Sample extends Stage {
      */
     private void syncGuideLinePositions() {
 
-        final double CSIZE = model.getSwatchWidth();
-        final double RSIZE = model.getSwatchHeight();
+        final double CSIZE = getSwatchWidth();
+        final double RSIZE = getSwatchHeight();
 
         final double CSTEP = CSIZE / (Default.GUIDE_COUNT.getFloat() + 1);
         final double RSTEP = RSIZE / (Default.GUIDE_COUNT.getFloat() + 1);
