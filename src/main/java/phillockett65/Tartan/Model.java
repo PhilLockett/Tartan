@@ -123,6 +123,7 @@ public class Model {
         // System.out.println("Model initialized.");
 
         controller = mainController;
+        sample = new Sample();
 
         initializeColourPalette();
         initializeLayout();
@@ -131,7 +132,6 @@ public class Model {
         initializeSavePanel();
         initializeStatusLine();
 
-        defaultSettings();
     }
 
     /**
@@ -142,8 +142,9 @@ public class Model {
         // System.out.println("Model init.");
 
         stage = primaryStage;
-        sample = new Sample();
         sample.init();
+
+        defaultSettings();
     }
 
     /**
@@ -161,9 +162,15 @@ public class Model {
 
         setColumnCountSVF(Default.INIT_THREAD_COUNT.getInt());
         setRowCountSVF(Default.INIT_THREAD_COUNT.getInt());
-        initThreadSize(Default.INIT_THREAD_SIZE.getFloat());
+        setDuplicate(true);
+        setShowGuide(true);
         setGuideLineColour(Color.RED);
+        initThreadCount(1);
+        initThreadSize(Default.INIT_THREAD_SIZE.getFloat());
         initBorderThickness(Default.INIT_BORDER_THICKNESS.getFloat());
+
+        sample.clear();
+        sample.syncThreadSize();
     }
 
     public PrimaryController getController() { return controller; }
@@ -376,6 +383,7 @@ public class Model {
     public boolean setSwatchColour(int index, Color colour) {
         if (index < colourSwatches.size()) {
             colourSwatches.get(index).colour = colour;
+            sample.syncColour();
 
             return true;
         }
@@ -465,10 +473,16 @@ public class Model {
         }
     }
 
-    public void setShowGuide(boolean state) { showGuide = state; }
+    public void setShowGuide(boolean state) {
+        showGuide = state;
+        sample.syncGuideVisible();
+    }
     public void initThreadCount(int value) { threadCountSVF.setValue(value); }
     public void initThreadSize(double value) { threadSizeSVF.setValue(value); }
-    public void setGuideLineColour(Color colour) { guideLineColour = colour; }
+    public void setGuideLineColour(Color colour) {
+        guideLineColour = colour;
+        sample.syncGuideLineColour();
+    }
     public void initBorderThickness(double value) { borderThicknessSVF.setValue(value); }
 
 

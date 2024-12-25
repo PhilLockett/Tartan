@@ -619,6 +619,10 @@ public class Sample extends Stage {
         syncThreadSize();
     }
 
+    public void clear() {
+        rowList.clear();
+        colList.clear();
+    }
 
 
     /************************************************************************
@@ -764,16 +768,6 @@ public class Sample extends Stage {
         syncGuideLinePositions();
     }
 
-
-    /**
-     * Synchronise to both the row and column repeat counts.
-     */
-    public void syncCount() {
-        rowList.setActive(getRowCount());
-        colList.setActive(getColumnCount());
-
-        syncGuideLinePositions();
-    }
 
     /**
      * Synchronize to duplicate the column threads for the rows.

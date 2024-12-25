@@ -79,6 +79,7 @@ public class PrimaryController {
     @FXML public void initialize() {
         // System.out.println("PrimaryController initialized.");
         model.initialize(this);
+        sample = model.getSample();
 
         initializeTopBar();
         initializeColourPalette();
@@ -98,7 +99,6 @@ public class PrimaryController {
         // System.out.println("PrimaryController init.");
         
         model.init(stage);
-        sample = model.getSample();
 
         syncUI();
         setStatusMessage("Ready.");
@@ -121,8 +121,6 @@ public class PrimaryController {
         rowCountSpinner.setDisable(model.isDuplicate());
         duplicateCheckbox.setSelected(model.isDuplicate());
         showGuideCheckbox.setSelected(model.isShowGuide());
-        sample.syncGuideVisible();
-        sample.syncGuideLineColour();
 
         guideLineColourPicker.setValue(model.getGuideLineColour());
     }
@@ -207,7 +205,6 @@ public class PrimaryController {
     private void editClearOnAction() {
         model.defaultSettings();
         syncUI();
-        sample.syncCount();
         setStatusMessage("Settings cleared");
 }
 
@@ -362,7 +359,6 @@ public class PrimaryController {
         final Color colour = event.getColour();
         model.setSwatchColour(index, colour);
         colourSwatches.get(index).setColor(colour);
-        sample.syncColour();
     }
 
     /**
@@ -514,13 +510,11 @@ public class PrimaryController {
     @FXML
     void showGuideCheckboxOnAction(ActionEvent event) {
         model.setShowGuide(showGuideCheckbox.isSelected());
-        sample.syncGuideVisible();
     }
 
     @FXML
     void guideLineColourPickerActionPerformed(ActionEvent event) {
         model.setGuideLineColour(guideLineColourPicker.getValue());
-        sample.syncGuideLineColour();
     }
 
     /**

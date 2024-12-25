@@ -108,6 +108,15 @@ public class Warp {
             stitch.setVisible(visible);
         }
 
+        public void clear() {
+            highlight = false;
+
+            colourIndex = 0;
+
+            final Color fillColour = model.getSwatchColour(0);
+            stitch.setFill(fillColour);
+        }
+
         /**
          * Draw the thread using the current gc colours.
          */
@@ -258,14 +267,15 @@ public class Warp {
             drawCol();
         }
 
-
     }
 
 
 
 
 
-
+    /************************************************************************
+     * Support code for the Warp class.
+     */
 
 
     /**
@@ -301,6 +311,11 @@ public class Warp {
     }
 
 
+    public void clear() {
+        for (Thread thread : list) {
+            thread.clear();
+        }
+    }
 
 
     /************************************************************************
