@@ -83,6 +83,8 @@ public class Sample extends Stage {
     private double x = 0.0;
     private double y = 0.0;
 
+    private VBox root;
+    private HBox topBar;
     private Label heading = new Label();
 
 
@@ -470,7 +472,7 @@ public class Sample extends Stage {
      * @return the HBox that represents the top-bar.
      */
     private HBox buildTopBar() {
-        HBox topBar = new HBox();
+        topBar = new HBox();
         topBar.getStyleClass().add("top-bar");
         topBar.setAlignment(Pos.CENTER);
         topBar.setPrefHeight(Default.TOP_BAR_HEIGHT.getFloat());
@@ -543,7 +545,7 @@ public class Sample extends Stage {
         final double HEIGHT = Default.MPC_HEIGHT.getFloat();
         // System.out.println("initializeCardSample(" + WIDTH + ", " + HEIGHT + ")");
 
-        VBox root = new VBox();
+        root = new VBox();
         root.setPrefSize(WIDTH, HEIGHT);
 
         root.getChildren().add(buildTopBar());
@@ -603,6 +605,8 @@ public class Sample extends Stage {
 
         initializeCardSample();
 
+        this.focusedProperty().addListener((obs, oldVal, newVal) -> 
+            setFocus(newVal));
         this.show();
     }
 
@@ -617,6 +621,25 @@ public class Sample extends Stage {
         syncGuideLineColour();
         syncGuideLinePositions();
         syncThreadSize();
+    }
+
+    private void styleFocus(Pane pane, String style, boolean state) {
+        if (state) {
+            pane.getStyleClass().remove(style);
+        } else {
+            if (!pane.getStyleClass().contains(style)) {
+                pane.getStyleClass().add(style);
+            }
+        }
+    }
+
+    /**
+     * Set the styles based on the focus state.
+     * @param state is true if we have focus, false otherwise.
+     */
+    private void setFocus(boolean state) {
+        styleFocus(root, "unfocussed-root", state);
+        styleFocus(topBar, "unfocussed-bar", state);
     }
 
     public void clear() {

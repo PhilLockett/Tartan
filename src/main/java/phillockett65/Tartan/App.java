@@ -53,11 +53,14 @@ public class App extends Application {
         ObservableList<Image> icons = stage.getIcons();
         icons.add(new Image(getClass().getResourceAsStream("icon32.png")));
 
-        stage.setTitle("Tartan Designer 1.0");
+        stage.setTitle("Tartan Designer 1.0.1");
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.resizableProperty().setValue(false);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
+
+        stage.focusedProperty().addListener((obs, oldVal, newVal) -> 
+            controller.setFocus(newVal));
 
         stage.show();
 

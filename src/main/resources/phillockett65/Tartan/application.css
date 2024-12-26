@@ -4,10 +4,19 @@
     -main-back-col: #303030;
     -main-fore-col: #e8e8e8;
     -fx-background-color: -main-back-col;
-    -fx-border-color: silver;
+    -fx-border-color: white;
+    -fx-border-width: 2;
 }
 
-.top-bar, .menu-bar{
+.top-bar{
+    -fx-background-color: linear-gradient(to bottom, #707070, #505050);
+}
+
+.unfocussed-root{
+    -fx-border-color: grey;
+}
+
+.unfocussed-bar{
     -fx-background-color: linear-gradient(to bottom, #505050, #303030);
 }
 
@@ -128,6 +137,7 @@
     -fx-font-weight: bold;
 }
 .menu-bar{
+    -fx-background-color: transparent;
     -fx-text-fill: #e8e8e8;
     -fx-font-weight: bold;
 }

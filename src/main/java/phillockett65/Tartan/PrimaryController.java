@@ -56,6 +56,9 @@ public class PrimaryController {
     private ColourSelect colourSelect;
 
     @FXML
+    private VBox root;
+
+    @FXML
     private VBox colourSelectSetUpHBox;
 
 
@@ -104,6 +107,24 @@ public class PrimaryController {
         setStatusMessage("Ready.");
     }
 
+    private void styleFocus(Pane pane, String style, boolean state) {
+        if (state) {
+            pane.getStyleClass().remove(style);
+        } else {
+            if (!pane.getStyleClass().contains(style)) {
+                pane.getStyleClass().add(style);
+            }
+        }
+    }
+
+    /**
+     * Set the styles based on the focus state.
+     * @param state is true if we have focus, false otherwise.
+     */
+    public void setFocus(boolean state) {
+        styleFocus(root, "unfocussed-root", state);
+        styleFocus(topBar, "unfocussed-bar", state);
+    }
 
     /**
      * Synchronise all controls with the model. This should be the last step 
@@ -206,14 +227,14 @@ public class PrimaryController {
         model.defaultSettings();
         syncUI();
         setStatusMessage("Settings cleared");
-}
+    }
 
 
     @FXML
     private void helpAboutOnAction() {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("About Tartan Designer");
-        alert.setHeaderText("Tartan Designer 1.0");
+        alert.setHeaderText(model.getTitle());
         alert.setContentText("Tartan Designer is an application for generating Tartan designs.");
 
         alert.showAndWait();

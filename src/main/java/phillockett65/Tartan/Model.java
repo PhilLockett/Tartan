@@ -176,6 +176,7 @@ public class Model {
     public PrimaryController getController() { return controller; }
     public Stage getStage() { return stage; }
     public Sample getSample() { return sample; }
+    public String getTitle() { return stage.getTitle(); }
 
     public void close() {
         sample.close();
