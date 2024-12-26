@@ -107,23 +107,13 @@ public class PrimaryController {
         setStatusMessage("Ready.");
     }
 
-    private void styleFocus(Pane pane, String style, boolean state) {
-        if (state) {
-            pane.getStyleClass().remove(style);
-        } else {
-            if (!pane.getStyleClass().contains(style)) {
-                pane.getStyleClass().add(style);
-            }
-        }
-    }
-
     /**
      * Set the styles based on the focus state.
      * @param state is true if we have focus, false otherwise.
      */
     public void setFocus(boolean state) {
-        styleFocus(root, "unfocussed-root", state);
-        styleFocus(topBar, "unfocussed-bar", state);
+        Model.styleFocus(root, "unfocussed-root", state);
+        Model.styleFocus(topBar, "unfocussed-bar", state);
     }
 
     /**

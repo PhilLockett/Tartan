@@ -92,6 +92,22 @@ public class Model {
         return cancel;
     }
 
+    /**
+     * Add or remove the unfocussed style from the given pane object.
+     * @param pane to add/remove unfocussed style.
+     * @param style named in .css to define unfocussed style.
+     * @param state is true if we have focus, false otherwise.
+     */
+    public static void styleFocus(Pane pane, String style, boolean state) {
+        if (state) {
+            pane.getStyleClass().remove(style);
+        } else {
+            if (!pane.getStyleClass().contains(style)) {
+                pane.getStyleClass().add(style);
+            }
+        }
+    }
+
 
 
     /************************************************************************
