@@ -53,7 +53,7 @@
 }
 
 .tooltip{
-    -fx-font-size: 14px;
+    -fx-font-size: 14;
     -fx-font-style: italic;
     -fx-font-weight: normal;
     -fx-text-fill: black;
