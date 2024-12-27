@@ -42,8 +42,8 @@ command:
 #### Colours
 'Tartan' is an application for designing Tartan patterns using colours from a 
 configurable "Colour Palette".
-Each colour swatch can be selected then changed using the "Selected Colour" 
-control.
+Each colour in the "Colour Palette" can be selected then changed using the 
+"Selected Colour" control.
 Each colour swatch can be labelled using the adjoining text field.
 
 #### Layout
@@ -54,13 +54,13 @@ Typically the pattern is the same for the vertical and horizontal threads and
 the "Duplicate the Column colours for the Rows" check box performs this 
 duplication automatically.
 However, if this is not desired, uncheck the box and set the vertical and 
-horizontal threads independently.
+horizontal thread colours independently.
 This also allows the number of horizontal threads (before repeating) to be set 
 independently.
 
-Guide lines are shown, dividing the "Sample" window into eight equal parts 
-vertically and horizontally.
-The "Show Guide Lines" check box controls whether theses are displayed or not.
+Guide lines divide the "Sample" window into eight equal parts vertically and 
+horizontally.
+The "Show Guide Lines" check box controls whether these are displayed or not.
 The colour of the guide lines **AND** the colour of thread highlights can be 
 changed using the colour selector labelled "Guide Line Colour".
 
@@ -87,6 +87,15 @@ Moving the mouse pointer over these areas will cause threads to be highlighted
 based on the current selections.
 Clicking on these areas will colour the highlighted threads using the currently 
 selected colour from the "Colour Palette".
+
+Additionally, threads can be inserted or deleted.
+With the focus on the "Sample" window, holding down the "alt" or "ctrl" key 
+will display a message in the "Sample" heading bar to indicate functional 
+options.
+With the "alt" key held down, clicking on the extended threads will delete the
+highlighted number of threads.
+With the "ctrl" key held down, clicking on the extended threads will insert the 
+highlighted number of threads.
 
 ## Points of interest
 This code has the following points of interest:
