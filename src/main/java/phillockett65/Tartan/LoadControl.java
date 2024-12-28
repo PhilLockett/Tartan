@@ -19,7 +19,7 @@
  */
 
 /*
- * LoadController is a class that is responsible for the controls of the 
+ * LoadControl is a class that is responsible for the controls of the 
  * load tartan window.
  */
 package phillockett65.Tartan;
@@ -206,7 +206,6 @@ public class LoadControl extends Stage {
      */
     private void init(String title) {
         model = Model.getInstance();
-        // model.setLoadWindowLaunched(true);
 
         this.setTitle(title);
         this.resizableProperty().setValue(false);

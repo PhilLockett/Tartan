@@ -28,8 +28,6 @@ import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -222,12 +220,7 @@ public class PrimaryController {
 
     @FXML
     private void helpAboutOnAction() {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("About Tartan Designer");
-        alert.setHeaderText(model.getTitle());
-        alert.setContentText("Tartan Designer is an application for generating Tartan designs.");
-
-        alert.showAndWait();
+        launchHelpWindow();
     }
 
 
@@ -261,6 +254,18 @@ public class PrimaryController {
         }
 
         return false;
+    }
+
+
+
+    /************************************************************************
+     * Support code for "Help" panel. 
+     */
+
+     private boolean launchHelpWindow() {
+        model.launchHelp();
+
+        return true;
     }
 
 

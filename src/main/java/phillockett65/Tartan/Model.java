@@ -159,6 +159,7 @@ public class Model {
 
         stage = primaryStage;
         sample.init();
+        initializeHelpPanel();
 
         defaultSettings();
     }
@@ -307,7 +308,7 @@ public class Model {
     /**
      * Called by the controller to initialize the load controller.
      */
-    public void initializeLoadPanel() {
+    private void initializeLoadPanel() {
         // System.out.println("Load Controller initialized.");
         loadControl = new LoadControl("Load Tartan");
     }
@@ -330,13 +331,36 @@ public class Model {
     /**
      * Called by the controller to initialize the Save controller.
      */
-    public void initializeSavePanel() {
+    private void initializeSavePanel() {
         // System.out.println("Save Controller initialized.");
         saveAsControl = new SaveAsControl("Save Tartan");
     }
 
 
     /************************************************************************
+     * Support code for "Help" panel.
+     */
+
+     private HelpControl helpControl;
+
+     public boolean launchHelp() {
+         if (helpControl.showControl()) {
+             return true;
+         }
+ 
+         return false;
+     }
+ 
+     /**
+      * Called by the controller to initialize the Save controller.
+      */
+      private void initializeHelpPanel() {
+         // System.out.println("Help Controller initialized.");
+         helpControl = new HelpControl(getTitle());
+     }
+ 
+ 
+     /************************************************************************
      * Support code for "Colour Palette" panel.
      */
 

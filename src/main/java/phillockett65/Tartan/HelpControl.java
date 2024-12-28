@@ -19,18 +19,15 @@
  */
 
 /*
- * SaveAsControl is a class that is responsible for the controls of the 
- * save tartan as window.
+ * HelpControl is a class that is responsible for displaying the User Guide.
  */
 package phillockett65.Tartan;
-
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,25 +36,25 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class SaveAsControl extends Stage {
+
+public class HelpControl extends Stage {
+
 
 
     /************************************************************************
-     * Support code for "Save As" pop-up. 
+     * Support code for "Help" pop-up. 
      */
-
-    private Model model;
 
     private Scene scene;
 
     private VBox root;
 
-    private TextField saveAsTextField;
-    private Button save;
     private Button cancel;
 
     private double x = 0.0;
@@ -68,8 +65,8 @@ public class SaveAsControl extends Stage {
 
 
     /************************************************************************
-      * Support code for the Initialization of the Controller.
-      */
+     * Support code for the Initialization of the Controller.
+     */
 
     /**
      * Builds the top-bar as a HBox and includes the cancel button the mouse 
@@ -128,31 +125,17 @@ public class SaveAsControl extends Stage {
         HBox options = new HBox();
 
         cancel = new Button("Cancel");
-        save = new Button("Save");
 
         cancel.setMnemonicParsing(false);
-        save.setMnemonicParsing(false);
     
         cancel.setOnAction(event -> {
             result = false;
             this.close();
         });
 
-        save.setOnAction(event -> {
-            result = true;
-            this.close();
-        });
-
-        cancel.setTooltip(new Tooltip("Cancel save"));
-        save.setTooltip(new Tooltip("Save tartan using the specified name"));
-
-        Region region = new Region();
+        cancel.setTooltip(new Tooltip("Cancel Help"));
 
         options.getChildren().add(cancel);
-        options.getChildren().add(region);
-        options.getChildren().add(save);
-
-        HBox.setHgrow(region, Priority.ALWAYS);
 
         return options;
     }
@@ -161,18 +144,14 @@ public class SaveAsControl extends Stage {
      * Builds the selected pairs display as a HBox.
      * @return the HBox that represents the selected pairs display.
      */
-    private TextField buildTextField() {
-        saveAsTextField = new TextField();
-        saveAsTextField.setPrefWidth(250);
+    private WebView buildWebView() {
+        WebView webView = new WebView();
+        webView.setPrefSize(500, 600);
 
-        saveAsTextField.setOnKeyTyped(event -> {
-            model.setName(saveAsTextField.getText());
-            save.setDisable(!model.isNamed());
-        });
+        WebEngine engine = webView.getEngine();
+        engine.load("file://" + getClass().getResource("guide.html").getFile());
 
-        saveAsTextField.setTooltip(new Tooltip("Enter the name the tartan is to be saved as"));
-
-        return saveAsTextField;
+        return webView;
     }
 
     /**
@@ -185,10 +164,7 @@ public class SaveAsControl extends Stage {
         panel.setSpacing(10);
         panel.setPadding(new Insets(10.0));
 
-        Label prompt = new Label("Enter the name of the tartan:");
-
-        panel.getChildren().add(prompt);
-        panel.getChildren().add(buildTextField());
+        panel.getChildren().add(buildWebView());
         panel.getChildren().add(buildOptions());
 
         return panel;
@@ -198,8 +174,6 @@ public class SaveAsControl extends Stage {
      * Initialize the control.
      */
     private void init(String title) {
-        model = Model.getInstance();
-
         this.setTitle(title);
         this.resizableProperty().setValue(false);
         this.initStyle(StageStyle.UNDECORATED);
@@ -226,15 +200,13 @@ public class SaveAsControl extends Stage {
      * Synchronise all controls with the model.
      */
     private void syncUI() {
-        saveAsTextField.setText(model.getName());
-        save.setDisable(!model.isNamed());
     }
 
 
     /**
      * Constructor.
      */
-    public SaveAsControl(String title) {
+    public HelpControl(String title) {
         super();
 
         init(title);
