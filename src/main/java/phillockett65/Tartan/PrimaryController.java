@@ -87,7 +87,7 @@ public class PrimaryController {
         initializeLayout();
         initializeStatusLine();
 
-        colourSelect = new ColourSelect();
+        colourSelect = new ColourSelect(false);
         colourSelectSetUpHBox.getChildren().addAll(colourSelect);
         colourSelectSetUpHBox.addEventFilter(ColourEvent.ANY, this::handleColourEvent);
     }

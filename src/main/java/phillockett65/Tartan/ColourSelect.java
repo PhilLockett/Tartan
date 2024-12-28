@@ -72,6 +72,8 @@ public class ColourSelect extends GridPane {
     private Line guide;
     private Circle swatch;
 
+    private final boolean opacity;
+
     private Slider brightnessSlider;
     private Slider saturationSlider;
     private Slider opacitySlider;
@@ -97,11 +99,11 @@ public class ColourSelect extends GridPane {
      * General support code.
      */
 
-    private double radiansToDegrees(double radians) {
+    private static double radiansToDegrees(double radians) {
         return (180.0 / pi) * radians;
     }
 
-    private double degreesToRadians(double degrees) {
+    private static double degreesToRadians(double degrees) {
         return (pi / 180.0) * degrees;
     }
 
@@ -118,7 +120,12 @@ public class ColourSelect extends GridPane {
 
     private void syncBrightnessSlider() { brightnessSlider.setValue(val * MAX); }
     private void syncSaturationSlider() { saturationSlider.setValue(sat * MAX); }
-    private void syncOpacitySlider() { opacitySlider.setValue(opa * MAX); }
+
+    private void syncOpacitySlider() {
+        if (opacity) {
+            opacitySlider.setValue(opa * MAX);
+        }
+    }
 
     private void syncRedSlider() { redSlider.setValue(red * MAX); }
     private void syncGreenSlider() { greenSlider.setValue(gre * MAX); }
@@ -191,7 +198,9 @@ public class ColourSelect extends GridPane {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getMyWidth(), getMyHeight());
 
-        drawChessBoard();
+        if (opacity) {
+            drawChessBoard();
+        }
 
         canvas.setOnMouseClicked(event -> {
             colourSwatch(event.getX(), event.getY());
@@ -425,18 +434,20 @@ public class ColourSelect extends GridPane {
         this.add(saturationSlider, 1, row);
 
         ++row;
-        Label opacityLabel = new Label("Opacity: ");
-        this.add(opacityLabel, 0, row);
-
-        opacitySlider = buildSlider(MAX);
-        opacitySlider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-                // System.out.println("Opacity: " + new_val.doubleValue());
-                opa = new_val.doubleValue() / MAX;
-                syncSwatch();
-            }
-        });
-        this.add(opacitySlider, 1, row);
+        if (opacity) {
+            Label opacityLabel = new Label("Opacity: ");
+            this.add(opacityLabel, 0, row);
+            
+            opacitySlider = buildSlider(MAX);
+            opacitySlider.valueProperty().addListener(new ChangeListener<Number>() {
+                public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+                    // System.out.println("Opacity: " + new_val.doubleValue());
+                    opa = new_val.doubleValue() / MAX;
+                    syncSwatch();
+                }
+            });
+            this.add(opacitySlider, 1, row);
+        }
 
         // Add the RGB sliders
         ++row;
@@ -600,11 +611,13 @@ public class ColourSelect extends GridPane {
 
     /**
      * Constructor.
+     * @param withAlpha true if opacity can be set, false otherwise.
      */
-    public ColourSelect() {
+    public ColourSelect(boolean withAlpha) {
         super();
         // System.out.println("ColourSelect() constructed.");
 
+        opacity = withAlpha;
         buildGrid();
 
         group = new Group();
