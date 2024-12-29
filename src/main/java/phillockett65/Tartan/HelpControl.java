@@ -141,8 +141,8 @@ public class HelpControl extends Stage {
     }
 
     /**
-     * Builds the selected pairs display as a HBox.
-     * @return the HBox that represents the selected pairs display.
+     * Builds a WebView and loads it with "guide.html".
+     * @return the WebView loaded with "guide.html".
      */
     private WebView buildWebView() {
         WebView webView = new WebView();
