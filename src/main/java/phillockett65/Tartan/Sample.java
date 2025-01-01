@@ -198,28 +198,28 @@ public class Sample extends Stage {
         if (model.isDuplicate()) {
             colList.rotateIncrease();
         }
-}
+    }
 
     private void rotateDown() {
         rowList.rotateDecrease();
         if (model.isDuplicate()) {
             colList.rotateDecrease();
         }
-}
+    }
 
     private void rotateLeft() {
         colList.rotateIncrease();
         if (model.isDuplicate()) {
             rowList.rotateIncrease();
         }
-}
+    }
 
     private void rotateRight() {
         colList.rotateDecrease();
         if (model.isDuplicate()) {
             rowList.rotateDecrease();
         }
-}
+    }
 
 
     private void augmentHeading(String label) {
@@ -232,34 +232,42 @@ public class Sample extends Stage {
     private void setHeading() { augmentHeading(null); }
 
 
-    private Vector<Integer> requests = new Vector<Integer>();
+    private class Queue {
+        private final Integer empty;
+        private Vector<Integer> list = new Vector<Integer>();
 
-    private void addRequest(Integer request) {
-        if (requests.contains(request) == false) {
-            requests.add(request);
+        public Queue(Integer value) {
+            empty = value;
+        }
+
+        public void add(Integer request) {
+            if (list.contains(request) == false) {
+                list.add(request);
+            }
+        }
+
+        public void remove(Integer request) {
+            list.remove(request);
+        }
+
+        public Integer getActive() {
+            if (list.isEmpty() == true) {
+                return empty;
+            }
+
+            return list.firstElement();
         }
     }
-
-    private void removeRequest(Integer request) {
-        requests.remove(request);
-    }
-
-    private int getActive() {
-        if (requests.isEmpty() == true) {
-            return NONE_ACTIVE;
-        }
-        
-        return requests.firstElement();
-    }
+    private Queue requests = new Queue(NONE_ACTIVE);
 
     private void updateHeading() {
-        switch (getActive()) {
+        switch (requests.getActive()) {
         case DELETE_REQUEST:
-            augmentHeading("Use the mouse to highlight threads then click to delete them");
+            augmentHeading("Use the mouse to highlight threads then click to DELETE them");
             break;
 
         case INSERT_REQUEST:
-            augmentHeading("Use the mouse to highlight the position then click to insert threads");
+            augmentHeading("Use the mouse to highlight the position then click to INSERT threads");
             break;
 
         default:
@@ -268,32 +276,17 @@ public class Sample extends Stage {
         }
     }
 
-    private void deleteRequest() {
-        addRequest(DELETE_REQUEST);
+    private void addRequest(int request) {
+        requests.add(request);
 
-        final int active = getActive();
-        if (active == DELETE_REQUEST) {
+        final int active = requests.getActive();
+        if (active == request) {
             updateHeading();
         }
     }
 
-    private void insertRequest() {
-        addRequest(INSERT_REQUEST);
-
-        final int active = getActive();
-        if (active == INSERT_REQUEST) {
-            updateHeading();
-        }
-    }
-
-    private void deleteRelease() {
-        removeRequest(DELETE_REQUEST);
-
-        updateHeading();
-    }
-
-    private void insertRelease() {
-        removeRequest(INSERT_REQUEST);
+    private void removeRequest(int request) {
+        requests.remove(request);
 
         updateHeading();
     }
@@ -312,11 +305,11 @@ public class Sample extends Stage {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
             case ALT:
-                deleteRequest();
+                addRequest(DELETE_REQUEST);
                 break;
 
             case CONTROL:
-                insertRequest();
+                addRequest(INSERT_REQUEST);
                 break;
 
             case UP:
@@ -343,11 +336,11 @@ public class Sample extends Stage {
         scene.setOnKeyReleased(event -> {
             switch (event.getCode()) {
             case ALT:
-                deleteRelease();
+                removeRequest(DELETE_REQUEST);
                 break;
 
             case CONTROL:
-                insertRelease();
+                removeRequest(INSERT_REQUEST);
                 break;
     
             default:
@@ -408,7 +401,7 @@ public class Sample extends Stage {
             if (zone != NONE_ZONE) {
                 final int pos = (zone == ROW_ZONE) ? yPosToRow(y) : xPosToCol(x);
                 final int scope = model.isDuplicate() ? BOTH_ZONE : zone;
-                switch (getActive()) {
+                switch (requests.getActive()) {
                 case DELETE_REQUEST:
                     deleteThreads(scope, pos);
                     break;
