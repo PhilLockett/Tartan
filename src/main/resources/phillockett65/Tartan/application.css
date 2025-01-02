@@ -157,6 +157,10 @@
     -fx-background-color: #e8e8e8;
 }
 
+.scroll-bar .thumb {
+    -fx-background-color: #9B4642;
+}
+
 .imageButton{
     -fx-background-color: null;
     -fx-text-fill: null;

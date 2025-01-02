@@ -197,12 +197,16 @@ public class HelpControl extends Stage {
             ),
         new H3Flow(new H3("Layout")),
         new PFlow(
-            new P("The pattern layout can be controlled in a number of ways. "),
-            new P("\"Tartan\" uses a pattern that repeats after an specific number of threads. "),
-            new P("\"Column Repeat Count\" defines that number of vertical threads. "),
-            new P("Typically the pattern is the same for the vertical and horizontal threads and the \"Duplicate the Column colours for the Rows\" check box performs this duplication automatically. "),
-            new P("However, if this is not desired, uncheck the box and set the vertical and horizontal thread colours independently. "),
-            new P("This also allows the number of horizontal threads (before repeating) to be set independently. ")
+            new P("\"Tartan\" is a pattern that repeats after a specific number of threads. "),
+            new P("This pattern layout can be controlled in a number of ways. "),
+            new P("Typically the pattern is the same for the vertical and horizontal threads and the \"Duplicate the Column colours for the Rows\" check box controls whether this duplication is automatically performed. "),
+            new P("If this duplication is not desired, uncheck the box and set the vertical and horizontal thread colours and thread counts (before repeating) independently. ")
+            ),
+        new PFlow(
+            new P("\"Column Repeat Count\" defines the number of vertical threads. ")
+            ),
+        new PFlow(
+            new P("If duplication is not being used, \"Row Repeat Count\" defines the number of horizonal threads. ")
             ),
         new PFlow(
             new P("Guide lines divide the \"Sample\" window into eight equal parts vertically and horizontally. "),
@@ -213,7 +217,7 @@ public class HelpControl extends Stage {
             ),
         new PFlow(
             new P("Typically multiple adjacent treads have the same colour. "),
-            new P("\"Thread Repeat Count\" colours up to eight adjacent threads using the currently selected colour. ")
+            new P("Up to eight adjacent threads can be set (with the currently selected colour) using the \"Thread Repeat Count\" spinner. ")
             ),
         new PFlow(
             new P("The size of the threads can be increased using the \"Thread Size\" control, to make life easier during the design phase, however this will effect the generated graphic when saved. "),
@@ -236,7 +240,8 @@ public class HelpControl extends Stage {
         new H3Flow(new H3("Adjusting")),
         new PFlow(
             new P("Additionally, threads can be inserted or deleted. "),
-            new P("With the focus on the \"Sample\" window, holding down the \"alt\" or \"ctrl\" key will display a message in the \"Sample\" heading bar to indicate functional options: ")
+            new P("When the focus is on the \"Sample\" window, hold down the \"alt\" or \"ctrl\" key. "),
+            new P("A helpful message is displayed in the \"Sample\" heading bar to indicate these functional options: ")
             ),
         new ListFlow(
             new ListItem("With the \"alt\" key held down, clicking on the extended threads will "),
