@@ -30,6 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -87,7 +88,6 @@ public class HelpControl extends Stage {
             super(text);
 
             this.setFont(Font.font("Arial", FontWeight.NORMAL, 17));
-            this.setWrappingWidth(475);
 
             final Color fore = Color.web("#e8e8e8");
             this.setFill(fore);
@@ -343,13 +343,12 @@ public class HelpControl extends Stage {
 
         final Color back = Color.web("#101010");
         help.setBackground(Background.fill(back));
-        // help.setPrefWidth(470);
         help.setPadding(new Insets(4, 16, 4, 4));
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setMaxSize(500, 600);
         scrollPane.setContent(help);
-        // scrollPane.setPadding(new Insets(10));
+        scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 
         return scrollPane;
     }
