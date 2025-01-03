@@ -124,7 +124,9 @@ public class PrimaryController {
             setSwatch(i, model.getSwatchColour(i), model.getSwatchName(i));
         }
 
-        setSelectedColourRadioButton(model.getSelectedColourIndex());
+        final int selected = model.getSelectedColourIndex();
+        colourSwatches.get(selected).setSelected(true);
+        setSelectedColourRadioButton(selected);
         colourSelect.setColour(model.getSelectedColour());
 
         rowCountSpinner.setDisable(model.isDuplicate());
@@ -352,14 +354,23 @@ public class PrimaryController {
     @FXML
     TextField colour7TextField;
 
+    private void selectedColourActionPerformed(int index) {
+        // System.out.println("selectedColourActionPerformed(" + index + ")");
+
+        final int previous = model.setSelectedColourIndex(index);
+        colourSwatches.get(previous).setSelected(false);
+        colourSwatches.get(index).setSelected(true);
+
+        colourSelect.setColour(model.getSwatchColour(index));
+    }
+
     @FXML
     void selectedColourRadioButtonActionPerformed(ActionEvent event) {
         RadioButton field = (RadioButton)event.getSource();
         // System.out.println("selectedColourRadioButtonActionPerformed(" + field.getId() + ", " + field.getText() + ")");
 
-        int index = idToInt(field.getId());
-        model.setSelectedColourIndex(index);
-        colourSelect.setColour(model.getSwatchColour(index));
+        final int index = idToInt(field.getId());
+        selectedColourActionPerformed(index);
     }
 
     @FXML
@@ -374,7 +385,7 @@ public class PrimaryController {
         final int index = model.getSelectedColourIndex();
         final Color colour = event.getColour();
         model.setSwatchColour(index, colour);
-        colourSwatches.get(index).setColor(colour);
+        colourSwatches.get(index).setColour(colour);
     }
 
     /**
@@ -388,8 +399,9 @@ public class PrimaryController {
      * Class that represents a colour swatch.
      */
     private class ColourSwatch {
-        private Rectangle color;
-        private TextField name;
+        private Rectangle colour;
+        private TextField label;
+        private boolean selected;
 
         /**
          * 
@@ -397,12 +409,25 @@ public class PrimaryController {
          * @param name of the swatch.
          */
         public ColourSwatch(Rectangle color, TextField name) {
-            this.color = color;
-            this.name = name;
+            colour = color;
+            label = name;
+
+            colour.setStrokeWidth(2.0);
+            colour.setOnMousePressed(mouseEvent -> {
+                final int index = idToInt(color.getId());
+                selectedColourActionPerformed(index);
+                setSelectedColourRadioButton(index);
+            });
+    
         }
 
-        public void setColor(Color color) { this.color.setFill(color); }
-        public void setName(String name) { this.name.setText(name); }
+        private void showActive() { colour.setStroke((selected ? Color.WHITE : Color.BLACK)); }
+        public void setColour(Color color) { colour.setFill(color); }
+        public void setName(String name) { label.setText(name); }
+        public void setSelected(boolean state) { 
+            selected = state;
+            showActive();
+        }
 
         /**
          * Set the id of the Rectangle and TextField associated with the swatch. 
@@ -410,29 +435,24 @@ public class PrimaryController {
          */
         public void setId(int index) {
             String id = String.valueOf(index);
-            color.setId(id);
-            name.setId(id);
+            colour.setId(id);
+            label.setId(id);
         }
 
     }
 
     /**
-     * Set the colour and name of the indexed swatch.
+     * Set the colour and name of the indexed swatch. Only called by syncUI().
      * @param index of the swatch to set.
      * @param colour of the swatch.
      * @param name of the swatch.
-     * @return true if the swatch was set, false otherwise.
      */
-    private boolean setSwatch(int index, Color colour, String name) {
-        if (index >= Default.SWATCH_COUNT.getInt())
-            return false;
-
+    private void setSwatch(int index, Color colour, String name) {
         ColourSwatch swatch = colourSwatches.get(index);
         
-        swatch.setColor(colour);
+        swatch.setColour(colour);
         swatch.setName(name);
-
-        return true;
+        swatch.setSelected(false);
     }
 
     /**

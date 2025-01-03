@@ -374,17 +374,18 @@ public class Model {
     }
 
 
-    private int colourSelected;
+    private int colourSelected = 0;
     private ArrayList<ColourSwatch> colourSwatches = new ArrayList<ColourSwatch>(Default.SWATCH_COUNT.getInt());
 
-    public boolean setSelectedColourIndex(int index) { 
+    public int setSelectedColourIndex(int index) { 
         if (index < colourSwatches.size()) {
+            final int previous = colourSelected;
             colourSelected = index;
 
-            return true;
+            return previous;
         }
 
-        return false;
+        return index;
     }
     public int getSelectedColourIndex() { return colourSelected; }
 
@@ -433,7 +434,7 @@ public class Model {
     }
 
     public boolean setSwatchName(int index, String name) {
-        if (index >= Default.SWATCH_COUNT.getInt()) {
+        if (index < colourSwatches.size()) {
             colourSwatches.get(index).name = name;
 
             return true;
