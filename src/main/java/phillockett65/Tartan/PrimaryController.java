@@ -403,6 +403,9 @@ public class PrimaryController {
         private TextField label;
         private boolean selected;
 
+        private final String activeStyle = "colour-selected";
+        private final String inactiveStyle = "colour-unselected";
+
         /**
          * 
          * @param color of the Rectangle to present the colour of the swatch.
@@ -413,6 +416,7 @@ public class PrimaryController {
             label = name;
 
             colour.setStrokeWidth(2.0);
+            colour.getStyleClass().add(inactiveStyle);
             colour.setOnMousePressed(mouseEvent -> {
                 final int index = idToInt(color.getId());
                 selectedColourActionPerformed(index);
@@ -421,7 +425,22 @@ public class PrimaryController {
     
         }
 
-        private void showActive() { colour.setStroke((selected ? Color.WHITE : Color.BLACK)); }
+        private void showActive() {
+            if (selected) {
+                colour.setStroke(Color.WHITE);
+                colour.getStyleClass().remove(inactiveStyle);
+                if (!colour.getStyleClass().contains(activeStyle)) {
+                    colour.getStyleClass().add(activeStyle);
+                }
+            } else {
+                colour.setStroke(Color.BLACK);
+                colour.getStyleClass().remove(activeStyle);
+                if (!colour.getStyleClass().contains(inactiveStyle)) {
+                    colour.getStyleClass().add(inactiveStyle);
+                }
+            }
+        }
+
         public void setColour(Color color) { colour.setFill(color); }
         public void setName(String name) { label.setText(name); }
         public void setSelected(boolean state) { 

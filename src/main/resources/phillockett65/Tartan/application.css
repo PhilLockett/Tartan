@@ -101,6 +101,14 @@
     -fx-background-color: linear-gradient(to right, #000040, #0000D0);
 }
 
+.colour-selected{
+    -fx-stroke: -main-fore-col;
+}
+
+.colour-unselected{
+    -fx-stroke: -main-back-col;
+}
+
 .content{
     -fx-background-color: #080808;
 	-fx-border-color: yellow;
