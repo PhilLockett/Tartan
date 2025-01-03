@@ -25,7 +25,6 @@
 package phillockett65.Tartan;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -73,7 +72,7 @@ public class Sample extends Stage {
     private Warp rowList = new Warp(true, Default.MIN_THREAD_COUNT.getInt(), Default.HEIGHT.getInt());
     private Warp colList = new Warp(false, Default.MIN_THREAD_COUNT.getInt(), Default.WIDTH.getInt());
 
-    private Vector<Line> guides = new Vector<Line>(Default.TOTAL_GUIDE_COUNT.getInt());
+    private ArrayList<Line> guides = new ArrayList<Line>(Default.TOTAL_GUIDE_COUNT.getInt());
 
     private final Color defaultColour;
 
@@ -234,7 +233,7 @@ public class Sample extends Stage {
 
     private class Queue {
         private final Integer empty;
-        private Vector<Integer> list = new Vector<Integer>();
+        private ArrayList<Integer> list = new ArrayList<Integer>();
 
         public Queue(Integer value) {
             empty = value;
@@ -255,7 +254,7 @@ public class Sample extends Stage {
                 return empty;
             }
 
-            return list.firstElement();
+            return list.get(0);
         }
     }
     private Queue requests = new Queue(NONE_ACTIVE);
