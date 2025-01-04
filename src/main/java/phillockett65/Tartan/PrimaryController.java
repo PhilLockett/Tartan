@@ -57,7 +57,7 @@ public class PrimaryController {
     private VBox root;
 
     @FXML
-    private VBox colourSelectSetUpHBox;
+    private VBox colourSelectSetUpVBox;
 
 
     /************************************************************************
@@ -88,8 +88,8 @@ public class PrimaryController {
         initializeStatusLine();
 
         colourSelect = new ColourSelect(false);
-        colourSelectSetUpHBox.getChildren().addAll(colourSelect);
-        colourSelectSetUpHBox.addEventFilter(ColourEvent.ANY, this::handleColourEvent);
+        colourSelectSetUpVBox.getChildren().addAll(colourSelect);
+        colourSelectSetUpVBox.addEventFilter(ColourEvent.ANY, this::handleColourEvent);
     }
 
     /**
