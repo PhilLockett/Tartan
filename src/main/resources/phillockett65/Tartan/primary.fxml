@@ -190,7 +190,7 @@
                   </TitledPane>
                   <TitledPane animated="false" collapsible="false" text="Selected Colour" GridPane.columnIndex="1" GridPane.rowSpan="2" GridPane.valignment="TOP">
                     <content>
-                        <VBox fx:id="colourSelectSetUpHBox" />
+                        <VBox fx:id="colourSelectSetUpVBox" />
                     </content>
                   </TitledPane>
                </children>
