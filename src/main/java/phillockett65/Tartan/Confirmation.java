@@ -19,8 +19,8 @@
  */
 
 /*
- * SaveAsControl is a class that is responsible for the controls of the 
- * save tartan as window.
+ * Confirmation is a class that is responsible for the controls of the 
+ * confirm action window.
  */
 package phillockett65.Tartan;
 
@@ -30,7 +30,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,21 +42,18 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class SaveAsControl extends Stage {
+public class Confirmation extends Stage {
 
 
     /************************************************************************
-     * Support code for "Save As" pop-up. 
+     * Support code for "Confirmation" pop-up. 
      */
-
-    private Model model;
 
     private Scene scene;
 
     private VBox root;
 
-    private TextField saveAsTextField;
-    private Button save;
+    private Button confirm;
     private Button cancel;
 
     private double x = 0.0;
@@ -128,37 +124,29 @@ public class SaveAsControl extends Stage {
         HBox options = new HBox();
 
         cancel = new Button("Cancel");
-        save = new Button("Save");
+        confirm = new Button("Confirm");
 
         cancel.setMnemonicParsing(false);
-        save.setMnemonicParsing(false);
+        confirm.setMnemonicParsing(false);
     
         cancel.setOnAction(event -> {
             result = false;
             this.close();
         });
 
-        save.setOnAction(event -> {
-            if (model.isOutputPathExists()) {
-                final String prompt = "File \"" + model.getName() + "\" already exists, confirm overwrite ?";
-                if (Confirmation.showControl("Confirm Save", prompt)) {
-                    result = true;
-                    this.close();
-                }
-            } else {
-                result = true;
-                this.close();
-            }
+        confirm.setOnAction(event -> {
+            result = true;
+            this.close();
         });
 
-        cancel.setTooltip(new Tooltip("Cancel save"));
-        save.setTooltip(new Tooltip("Save tartan using the specified name"));
+        cancel.setTooltip(new Tooltip("Cancel action"));
+        confirm.setTooltip(new Tooltip("Continue with action"));
 
         Region region = new Region();
 
         options.getChildren().add(cancel);
         options.getChildren().add(region);
-        options.getChildren().add(save);
+        options.getChildren().add(confirm);
 
         HBox.setHgrow(region, Priority.ALWAYS);
 
@@ -166,37 +154,18 @@ public class SaveAsControl extends Stage {
     }
 
     /**
-     * Builds the selected pairs display as a HBox.
-     * @return the HBox that represents the selected pairs display.
-     */
-    private TextField buildTextField() {
-        saveAsTextField = new TextField();
-        saveAsTextField.setPrefWidth(350);
-
-        saveAsTextField.setOnKeyTyped(event -> {
-            model.setName(saveAsTextField.getText());
-            save.setDisable(!model.isNamed());
-        });
-
-        saveAsTextField.setTooltip(new Tooltip("Enter the name the tartan is to be saved as"));
-
-        return saveAsTextField;
-    }
-
-    /**
      * Builds the User controls as a VBox.
      * @return the VBox that captures the User controls.
      */
-    private VBox buildControlPanel() {
+    private VBox buildControlPanel(String query) {
         VBox panel = new VBox();
 
         panel.setSpacing(10);
         panel.setPadding(new Insets(10.0));
 
-        Label prompt = new Label("Enter the name of the tartan:");
+        Label prompt = new Label(query);
 
         panel.getChildren().add(prompt);
-        panel.getChildren().add(buildTextField());
         panel.getChildren().add(buildOptions());
 
         return panel;
@@ -205,9 +174,7 @@ public class SaveAsControl extends Stage {
     /**
      * Initialize the control.
      */
-    private void init(String title) {
-        model = Model.getInstance();
-
+    private void init(String title, String query) {
         this.setTitle(title);
         this.resizableProperty().setValue(false);
         this.initStyle(StageStyle.UNDECORATED);
@@ -216,7 +183,7 @@ public class SaveAsControl extends Stage {
         root = new VBox();
 
         root.getChildren().add(buildTopBar());
-        root.getChildren().add(buildControlPanel());
+        root.getChildren().add(buildControlPanel(query));
 
         scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -231,31 +198,21 @@ public class SaveAsControl extends Stage {
      */
 
     /**
-     * Synchronise all controls with the model.
-     */
-    private void syncUI() {
-        saveAsTextField.setText(model.getName());
-        save.setDisable(!model.isNamed());
-    }
-
-
-    /**
      * Constructor.
      */
-    private SaveAsControl() {
+    private Confirmation() {
         super();
     }
 
 
     /**
-     * Construct and launch the Save As Tartan Control and wait for user input.
-     * @return true if the save was requested, false if cancelled.
+     * Construct and launch the Confirm Action Control and wait for user input.
+     * @return true if the action was confirmed, false if cancelled.
      */
-    public static boolean showControl(String title) {
-        SaveAsControl control = new SaveAsControl();
+    public static boolean showControl(String title, String query) {
+        Confirmation control = new Confirmation();
 
-        control.init(title);
-        control.syncUI();
+        control.init(title, query);
         control.showAndWait();
 
         return control.result;

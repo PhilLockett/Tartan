@@ -497,6 +497,12 @@ public class Model {
         return base + "\\" + name;
     }
 
+    public boolean isOutputPathExists() {
+        File file = new File(getOutputPath());
+
+        return file.exists();
+    }
+
     /**
      * Make the output directory if it doesn't already exist.
      * @return true if the directory exists, false otherwise.
