@@ -166,10 +166,9 @@ public class LoadControl extends Stage {
     private ListView<String> buildListView() {
         ListView<String> selection = new ListView<String>();
 
-        selection.setPrefSize(250, 121);
+        selection.setPrefSize(350, 240);
         selection.setItems(model.getTartanList());
         selection.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 model.setName(newValue);
@@ -240,23 +239,23 @@ public class LoadControl extends Stage {
     /**
      * Constructor.
      */
-    public LoadControl(String title) {
+    private LoadControl() {
         super();
-
-        init(title);
-        syncUI();
     }
 
 
     /**
-     * Launch the Pair Select Control and wait for user input.
-     * @return true if the control was updated, false if cancelled.
+     * Construct and launch the Load Tartan Control and wait for user input.
+     * @return true if the load was requested, false if cancelled.
      */
-    public boolean showControl() {
-        syncUI();
-        this.showAndWait();
+    public static boolean showControl(String title) {
+        LoadControl control = new LoadControl();
 
-        return result;
+        control.init(title);
+        control.syncUI();
+        control.showAndWait();
+
+        return control.result;
     }
 
 }

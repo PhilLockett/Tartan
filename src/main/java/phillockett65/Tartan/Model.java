@@ -144,8 +144,6 @@ public class Model {
         initializeColourPalette();
         initializeLayout();
         initializeSample();
-        initializeLoadPanel();
-        initializeSavePanel();
         initializeStatusLine();
 
     }
@@ -159,7 +157,6 @@ public class Model {
 
         stage = primaryStage;
         sample.init();
-        initializeHelpPanel();
 
         defaultSettings();
     }
@@ -263,7 +260,6 @@ public class Model {
      * Support code for "Load" panel.
      */
 
-    private LoadControl loadControl;
     private ObservableList<String> tartanList = FXCollections.observableArrayList();
 
     /**
@@ -297,68 +293,7 @@ public class Model {
         return tartanList;
     }
 
-    public boolean launchFileLoader() {
-        if (loadControl.showControl()) {
-            return true;
-        }
 
-        return false;
-    }
-
-    /**
-     * Called by the controller to initialize the load controller.
-     */
-    private void initializeLoadPanel() {
-        // System.out.println("Load Controller initialized.");
-        loadControl = new LoadControl("Load Tartan");
-    }
-
-
-    /************************************************************************
-     * Support code for "Save" panel.
-     */
-
-    private SaveAsControl saveAsControl;
-
-    public boolean launchSaveAs() {
-        if (saveAsControl.showControl()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Called by the controller to initialize the Save controller.
-     */
-    private void initializeSavePanel() {
-        // System.out.println("Save Controller initialized.");
-        saveAsControl = new SaveAsControl("Save Tartan");
-    }
-
-
-    /************************************************************************
-     * Support code for "Help" panel.
-     */
-
-     private HelpControl helpControl;
-
-     public boolean launchHelp() {
-         if (helpControl.showControl()) {
-             return true;
-         }
- 
-         return false;
-     }
- 
-     /**
-      * Called by the controller to initialize the Save controller.
-      */
-      private void initializeHelpPanel() {
-         // System.out.println("Help Controller initialized.");
-         helpControl = new HelpControl(getTitle());
-     }
- 
  
      /************************************************************************
      * Support code for "Colour Palette" panel.
@@ -546,17 +481,17 @@ public class Model {
      */
 
     private String baseDirectory = ".\\" + SWATCHES;
-    private String name = "";
+    private String name;
 
     public String getBaseDirectory() { return baseDirectory; }
 
-    public boolean isNamed() { return !name.isBlank(); }
+    public boolean isNamed() { return !((name == null) || (name.isBlank())); }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
     private String getOutputPath() {
         final String base = getBaseDirectory();
-        if (name.isBlank())
+        if (!isNamed())
             return base;
         
         return base + "\\" + name;

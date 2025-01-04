@@ -163,7 +163,7 @@ public class SaveAsControl extends Stage {
      */
     private TextField buildTextField() {
         saveAsTextField = new TextField();
-        saveAsTextField.setPrefWidth(250);
+        saveAsTextField.setPrefWidth(350);
 
         saveAsTextField.setOnKeyTyped(event -> {
             model.setName(saveAsTextField.getText());
@@ -234,23 +234,23 @@ public class SaveAsControl extends Stage {
     /**
      * Constructor.
      */
-    public SaveAsControl(String title) {
+    private SaveAsControl() {
         super();
-
-        init(title);
-        syncUI();
     }
 
 
     /**
-     * Launch the Pair Select Control and wait for user input.
-     * @return true if the control was updated, false if cancelled.
+     * Construct and launch the Save As Tartan Control and wait for user input.
+     * @return true if the save was requested, false if cancelled.
      */
-    public boolean showControl() {
-        syncUI();
-        this.showAndWait();
+    public static boolean showControl(String title) {
+        SaveAsControl control = new SaveAsControl();
 
-        return result;
+        control.init(title);
+        control.syncUI();
+        control.showAndWait();
+
+        return control.result;
     }
 
 }

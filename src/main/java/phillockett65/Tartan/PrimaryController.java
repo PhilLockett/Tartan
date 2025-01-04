@@ -232,7 +232,7 @@ public class PrimaryController {
      */
 
     private boolean launchLoadWindow() {
-        if (model.launchFileLoader()) {
+        if (LoadControl.showControl("Load Tartan")) {
             setStatusMessage("Loaded " + model.loadTartan());
             syncUI();
 
@@ -249,7 +249,7 @@ public class PrimaryController {
      */
 
     private boolean launchSaveAsWindow() {
-        if (model.launchSaveAs()) {
+        if (SaveAsControl.showControl("Save Tartan")) {
             setStatusMessage("Saved to " + model.saveTartan());
 
             return true;
@@ -265,7 +265,7 @@ public class PrimaryController {
      */
 
      private boolean launchHelpWindow() {
-        model.launchHelp();
+        HelpControl.showControl(model.getTitle());
 
         return true;
     }

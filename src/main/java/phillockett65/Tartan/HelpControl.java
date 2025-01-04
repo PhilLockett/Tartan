@@ -399,21 +399,22 @@ public class HelpControl extends Stage {
     /**
      * Constructor.
      */
-    public HelpControl(String title) {
+    private HelpControl() {
         super();
-
-        init(title);
     }
 
 
     /**
-     * Launch the Pair Select Control and wait for user input.
-     * @return true if the control was updated, false if cancelled.
+     * Construct and launch the User Guide and wait for user input.
+     * @return false when cancelled.
      */
-    public boolean showControl() {
-        this.showAndWait();
+    public static boolean showControl(String title) {
+        HelpControl control = new HelpControl();
 
-        return result;
+        control.init(title);
+        control.showAndWait();
+
+        return control.result;
     }
 
 }
