@@ -228,7 +228,7 @@ public class PrimaryController {
 
 
     /************************************************************************
-     * Support code for "Load" panel. 
+     * Support code for pop-up windows. 
      */
 
     private boolean launchLoadWindow() {
@@ -242,12 +242,6 @@ public class PrimaryController {
         return false;
     }
 
-
-
-    /************************************************************************
-     * Support code for "Save As" panel. 
-     */
-
     private boolean launchSaveAsWindow() {
         if (SaveAsControl.showControl("Save Tartan")) {
             setStatusMessage("Saved to " + model.saveTartan());
@@ -257,12 +251,6 @@ public class PrimaryController {
 
         return false;
     }
-
-
-
-    /************************************************************************
-     * Support code for "Help" panel. 
-     */
 
      private boolean launchHelpWindow() {
         HelpControl.showControl(model.getTitle());
