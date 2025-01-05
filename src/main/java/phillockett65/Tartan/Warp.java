@@ -25,7 +25,6 @@
 package phillockett65.Tartan;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
@@ -47,11 +46,9 @@ public class Warp {
     private final int MAX;
     private int active;
 
-    private Vector<Thread> list = new Vector<Thread>(Default.HEIGHT.getInt());
+    private ArrayList<Thread> list;
 
     private final Color defaultColour;
-
-
 
 
 
@@ -292,7 +289,7 @@ public class Warp {
         MAX = max;
         active = Default.INIT_THREAD_COUNT.getInt();
         
-        list = new Vector<Thread>(MAX);
+        list = new ArrayList<Thread>(MAX);
     }
 
 
