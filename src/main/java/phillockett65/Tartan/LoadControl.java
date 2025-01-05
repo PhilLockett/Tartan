@@ -215,9 +215,9 @@ public class LoadControl extends Stage {
 
         root.getChildren().add(buildTopBar());
         root.getChildren().add(buildControlPanel());
+        root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
         scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
         this.setScene(scene);
     }

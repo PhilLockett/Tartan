@@ -542,11 +542,11 @@ public class Sample extends Stage {
 
         root.getChildren().add(buildTopBar());
         root.getChildren().add(buildTartanDisplay(WIDTH, HEIGHT));
+        root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
         drawBlankLoom();
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
         this.setScene(scene);
         this.setX(0);
