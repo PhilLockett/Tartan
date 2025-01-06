@@ -50,6 +50,8 @@ public class SaveAsControl extends Stage {
      * Support code for "Save As" pop-up. 
      */
 
+    private static final String ERROR = "error-text-field";
+
     private Model model;
 
     private Scene scene;
@@ -175,7 +177,9 @@ public class SaveAsControl extends Stage {
 
         saveAsTextField.setOnKeyTyped(event -> {
             model.setName(saveAsTextField.getText());
-            save.setDisable(!model.isNamed());
+            final boolean valid = model.isOutputPathValid();
+            save.setDisable(!valid);
+            Model.styleFocus(saveAsTextField, ERROR, valid);
         });
 
         saveAsTextField.setTooltip(new Tooltip("Enter the name the tartan is to be saved as"));

@@ -74,6 +74,12 @@
     -fx-font-weight: bold;
     -fx-background-color: #e8e8e8;
 }
+.error-text-field{
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-color: red;
+}
+
 .text-area{
     -fx-text-fill: #e8e8e8;
 }

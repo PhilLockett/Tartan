@@ -34,6 +34,7 @@ import javax.imageio.ImageIO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -93,17 +94,17 @@ public class Model {
     }
 
     /**
-     * Add or remove the unfocussed style from the given pane object.
-     * @param pane to add/remove unfocussed style.
+     * Add or remove the unfocussed style from the given parent object.
+     * @param parent to add/remove unfocussed style.
      * @param style named in .css to define unfocussed style.
      * @param state is true if we have focus, false otherwise.
      */
-    public static void styleFocus(Pane pane, String style, boolean state) {
+    public static void styleFocus(Parent parent, String style, boolean state) {
         if (state) {
-            pane.getStyleClass().remove(style);
+            parent.getStyleClass().remove(style);
         } else {
-            if (!pane.getStyleClass().contains(style)) {
-                pane.getStyleClass().add(style);
+            if (!parent.getStyleClass().contains(style)) {
+                parent.getStyleClass().add(style);
             }
         }
     }
@@ -493,14 +494,26 @@ public class Model {
         final String base = getBaseDirectory();
         if (!isNamed())
             return base;
-        
+
         return base + "\\" + name;
     }
 
     public boolean isOutputPathExists() {
-        File file = new File(getOutputPath());
+        File dir = new File(getOutputPath());
 
-        return file.exists();
+        return dir.exists();
+    }
+
+    public boolean isOutputPathValid() {
+        File dir = new File(getOutputPath());
+        if (dir.exists())
+            return true;
+
+        final boolean created = dir.mkdir();
+        if (created)
+            dir.delete();
+
+        return created;
     }
 
     /**
@@ -508,8 +521,7 @@ public class Model {
      * @return true if the directory exists, false otherwise.
      */
     private boolean makeTartanDirectory() {
-        final String base = getOutputPath();
-        File dir = new File(base);
+        File dir = new File(getOutputPath());
         if (dir.exists())
             return true;
 
