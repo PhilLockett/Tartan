@@ -176,6 +176,13 @@ public class LoadControl extends Stage {
             }
         } );
 
+        selection.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                result = model.isNamed();
+                this.close();
+            }
+        });
+
         selection.setTooltip(new Tooltip("Select a tartan from the list"));
 
         return selection;
