@@ -50,7 +50,6 @@ import phillockett65.Tartan.ColourSelect.ColourEvent;
 public class PrimaryController {
 
     private Model model;
-    private Sample sample;
     private ColourSelect colourSelect;
 
     @FXML
@@ -80,7 +79,6 @@ public class PrimaryController {
     @FXML public void initialize() {
         // System.out.println("PrimaryController initialized.");
         model.initialize(this);
-        sample = model.getSample();
 
         initializeTopBar();
         initializeColourPalette();
@@ -579,24 +577,22 @@ public class PrimaryController {
 
         columnCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("columnCountSpinner.Listener(" + newValue + "))");
-            sample.setColumnCount(newValue.intValue());
-
-            model.syncDuplicateSVF();
+            model.setColumnCount(newValue.intValue());
         });
 
         rowCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("rowCountSpinner.Listener(" + newValue + "))");
-            sample.setRowCount(newValue.intValue());
+            model.setRowCount(newValue.intValue());
         });
 
         threadSizeSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("threadSizeSpinner.Listener(" + newValue + "))");
-            sample.syncThreadSize();
+            model.syncThreadSize();
         });
 
         borderThicknessSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
             // System.out.println("borderThicknessSpinner.Listener(" + newValue + "))");
-            sample.syncThreadSize();
+            model.syncThreadSize();
         });
 
     }

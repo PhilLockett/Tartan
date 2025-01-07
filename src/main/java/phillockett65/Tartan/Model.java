@@ -190,7 +190,6 @@ public class Model {
 
     public PrimaryController getController() { return controller; }
     public Stage getStage() { return stage; }
-    public Sample getSample() { return sample; }
     public String getTitle() { return stage.getTitle(); }
 
     public void close() {
@@ -238,6 +237,22 @@ public class Model {
         setColumnCountSVF(list.size());
         sample.setColumnList(list);
     }
+
+    /**
+     * Called from SVF listener, so we don't update the SVF.
+     * @param size the column count is to be set to.
+     */
+    public void setColumnCount(int size) {
+        sample.setColumnCount(size);
+        if (duplicate) {
+            setRowCountSVF(getColumnCount());
+        }
+    }
+    /**
+     * Called from SVF listener, so we don't update the SVF.
+     * @param size the row count is to be set to.
+     */
+    public void setRowCount(int size) { sample.setRowCount(size); }
 
     public ArrayList<Integer> getRowList() { return sample.getRowList(); }
     public ArrayList<Integer> getColumnList() { return sample.getColumnList(); }
@@ -435,12 +450,7 @@ public class Model {
 
     public void syncColumnCountSVF() { setColumnCountSVF(getColumnCount()); }
     public void syncRowCountSVF() { setRowCountSVF(getRowCount()); }
-
-    public void syncDuplicateSVF() {
-        if (duplicate) {
-            setRowCountSVF(getColumnCount());
-        }
-    }
+    public void syncThreadSize() { sample.syncThreadSize(); }
 
     public void setDuplicate(boolean state) {
         duplicate = state;
