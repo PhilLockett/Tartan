@@ -34,6 +34,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -188,6 +189,15 @@ public class SaveAsControl extends Stage {
             final boolean valid = model.isOutputPathValid();
             save.setDisable(!valid);
             Model.styleFocus(saveAsTextField, ERROR, valid);
+        });
+
+        saveAsTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                final boolean valid = model.isOutputPathValid();
+                if (valid) {
+                    checkOverwright();
+                }
+            }
         });
 
         saveAsTextField.setTooltip(new Tooltip("Enter the name the tartan is to be saved as"));
