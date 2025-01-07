@@ -253,9 +253,7 @@ public class PrimaryController {
     }
 
      private boolean launchHelpWindow() {
-        HelpControl.showControl(model.getTitle());
-
-        return true;
+        return HelpControl.showControl(model.getTitle());
     }
 
 
