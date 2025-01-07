@@ -141,16 +141,7 @@ public class SaveAsControl extends Stage {
         });
 
         save.setOnAction(event -> {
-            if (model.isOutputPathExists()) {
-                final String prompt = "File \"" + model.getName() + "\" already exists, confirm overwrite ?";
-                if (Confirmation.showControl("Confirm Save", prompt)) {
-                    result = true;
-                    this.close();
-                }
-            } else {
-                result = true;
-                this.close();
-            }
+            checkOverwright();
         });
 
         cancel.setTooltip(new Tooltip("Cancel save"));
@@ -165,6 +156,23 @@ public class SaveAsControl extends Stage {
         HBox.setHgrow(region, Priority.ALWAYS);
 
         return options;
+    }
+
+    /**
+     * Check if the Tartan exists and prompt for confirmation to overwright it
+     * if it does.
+     */
+    private void checkOverwright() {
+        if (model.isOutputPathExists()) {
+            final String prompt = "File \"" + model.getName() + "\" already exists, confirm overwrite ?";
+            if (Confirmation.showControl("Confirm Save", prompt)) {
+                result = true;
+                this.close();
+            }
+        } else {
+            result = true;
+            this.close();
+        }
     }
 
     /**
