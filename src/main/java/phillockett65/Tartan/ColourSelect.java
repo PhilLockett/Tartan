@@ -374,8 +374,8 @@ public class ColourSelect extends GridPane {
         final double rowHeight = 30.0;
         final double withPadding = rowHeight + 20.0;
         addRowConstraint(height);       // Selector.
-        addRowConstraint(rowHeight);    // Brightness.
         addRowConstraint(rowHeight);    // Saturation.
+        addRowConstraint(rowHeight);    // Brightness.
         addRowConstraint(withPadding);  // Opacity.
         addRowConstraint(rowHeight);    // Red.
         addRowConstraint(rowHeight);    // Green.
@@ -406,20 +406,6 @@ public class ColourSelect extends GridPane {
 
         // Add the HSB sliders
         ++row;
-        Label brightnessLabel = new Label("Brightness: ");
-        this.add(brightnessLabel, 0, row);
-
-        brightnessSlider = buildSlider(MAX);
-        brightnessSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-                // System.out.println("Brightness: " + new_val.doubleValue());
-                val = new_val.doubleValue() / MAX;
-                updateRGB();
-            }
-        });
-        this.add(brightnessSlider, 1, row);
-
-        ++row;
         Label saturationLabel = new Label("Saturation: ");
         this.add(saturationLabel, 0, row);
 
@@ -432,6 +418,20 @@ public class ColourSelect extends GridPane {
             }
         });
         this.add(saturationSlider, 1, row);
+
+        ++row;
+        Label brightnessLabel = new Label("Brightness: ");
+        this.add(brightnessLabel, 0, row);
+
+        brightnessSlider = buildSlider(MAX);
+        brightnessSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+                // System.out.println("Brightness: " + new_val.doubleValue());
+                val = new_val.doubleValue() / MAX;
+                updateRGB();
+            }
+        });
+        this.add(brightnessSlider, 1, row);
 
         ++row;
         if (opacity) {
