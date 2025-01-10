@@ -70,9 +70,9 @@
     -fx-background-color: #e8e8e8;
 }
 .text-field{
-    -fx-text-fill: #808080;
+    -fx-text-fill: -main-back-col;
     -fx-font-weight: bold;
-    -fx-background-color: #e8e8e8;
+    -fx-background-color: -main-fore-col;
 }
 .error-text-field{
     -fx-text-fill: white;
