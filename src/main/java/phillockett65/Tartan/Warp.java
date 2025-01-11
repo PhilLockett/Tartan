@@ -1,6 +1,6 @@
-/*  Tartan - a JavaFX based playing card image generator.
+/*  Tartan - a JavaFX based Tartan image generator.
  *
- *  Copyright 2022 Philip Lockett.
+ *  Copyright 2024 Philip Lockett.
  *
  *  This file is part of Tartan.
  *
@@ -19,8 +19,7 @@
  */
 
 /*
- * Sample is a class that is responsible for creating the Stage, drawing 
- * and refreshing the Tartan Swatch and accepting user input.
+ * Warp is a class that captures a collection of threads.
  */
 package phillockett65.Tartan;
 

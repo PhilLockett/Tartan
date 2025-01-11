@@ -1,6 +1,6 @@
-/*  Tartan - a JavaFX based playing card image generator.
+/*  Tartan - a JavaFX based Tartan image generator.
  *
- *  Copyright 2022 Philip Lockett.
+ *  Copyright 2024 Philip Lockett.
  *
  *  This file is part of Tartan.
  *
