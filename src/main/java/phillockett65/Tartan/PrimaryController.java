@@ -44,6 +44,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import phillockett65.Tartan.ColourExtend.ColourExtendEvent;
 import phillockett65.Tartan.ColourSelect.ColourEvent;
 
 
@@ -51,6 +52,7 @@ public class PrimaryController {
 
     private Model model;
     private ColourSelect colourSelect;
+    private ColourExtend colourExtend;
 
     @FXML
     private VBox root;
@@ -86,8 +88,12 @@ public class PrimaryController {
         initializeStatusLine();
 
         colourSelect = new ColourSelect(false);
-        colourSelectSetUpVBox.getChildren().addAll(colourSelect);
+        colourSelectSetUpVBox.getChildren().add(colourSelect);
         colourSelectSetUpVBox.addEventFilter(ColourEvent.ANY, this::handleColourEvent);
+        
+        colourExtend = new ColourExtend();
+        colourSelectSetUpVBox.getChildren().add(colourExtend);
+        colourSelectSetUpVBox.addEventFilter(ColourExtendEvent.ANY, this::handleColourExtendEvent);
     }
 
     /**
@@ -345,7 +351,7 @@ public class PrimaryController {
         colourSwatches.get(previous).setSelected(false);
         colourSwatches.get(index).setSelected(true);
 
-        colourSelect.setColour(model.getSwatchColour(index));
+        colourSelect.setColour(model.getSelectedColour());
     }
 
     @FXML
@@ -365,11 +371,20 @@ public class PrimaryController {
         model.setSwatchName(idToInt(field.getId()), field.getText());
     }
 
-    public void handleColourEvent(ColourEvent event) {
+    private void handleColourEvent(ColourEvent event) {
         final int index = model.getSelectedColourIndex();
         final Color colour = event.getColour();
         model.setSwatchColour(index, colour);
         colourSwatches.get(index).setColour(colour);
+        colourExtend.handleColourEvent();
+    }
+
+    private void handleColourExtendEvent(ColourExtendEvent event) {
+        final int index = model.getSelectedColourIndex();
+        final Color colour = event.getColour();
+        model.setSwatchColour(index, colour);
+        colourSwatches.get(index).setColour(colour);
+        colourSelect.setColour(colour);
     }
 
     /**

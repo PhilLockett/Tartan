@@ -371,12 +371,13 @@ public class ColourSelect extends GridPane {
         addColumnConstraint(height - LeftWidth);
 
         
-        final double rowHeight = 30.0;
+        final double rowHeight = 28.0;
         final double withPadding = rowHeight + 20.0;
+        final double justPadding = 6.0;
         addRowConstraint(height);       // Selector.
         addRowConstraint(rowHeight);    // Saturation.
         addRowConstraint(rowHeight);    // Brightness.
-        addRowConstraint(withPadding);  // Opacity.
+        addRowConstraint(opacity ? withPadding : justPadding);  // Opacity.
         addRowConstraint(rowHeight);    // Red.
         addRowConstraint(rowHeight);    // Green.
         addRowConstraint(rowHeight);    // Blue.
