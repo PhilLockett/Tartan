@@ -153,19 +153,19 @@ public class HelpControl extends Stage {
     private class P extends Body {
         public P(String text) {
             super(text);
-            this.setFont(Font.font("Verdana", FontWeight.NORMAL, 16));
+            this.setFont(Font.font("Arial", FontWeight.NORMAL, 17));
             }
     }
     private class Code extends Body {
         public Code(String text) {
             super(text);
-            this.setFont(Font.font("Courier New", FontWeight.NORMAL, 16));
+            this.setFont(Font.font("Courier New", FontWeight.NORMAL, 17));
             }
     }
     private class Bold extends Body {
         public Bold(String text) {
             super(text);
-            this.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
+            this.setFont(Font.font("Arial", FontWeight.BOLD, 17));
             }
     }
 
@@ -182,74 +182,99 @@ public class HelpControl extends Stage {
     private class ListItem extends Body {
         public ListItem(String text) {
             super(text);
-            this.setFont(Font.font("Verdana", FontWeight.NORMAL, 16));
+            this.setFont(Font.font("Arial", FontWeight.NORMAL, 17));
             }
     }
 
     VBox help = new VBox(
         new H1Flow(new H1("Tartan User Guide")),
-        new H2Flow(new H2("\"Tartan Designer\" Window")),
-        new H3Flow(new H3("Colours")),
+        new H2Flow(new H2("“Tartan Designer” Window")),
+        new H3Flow(new H3("“Colour Palette” Pane")),
         new PFlow(
-            new P("'Tartan' is an application for designing Tartan patterns using colours from a configurable \"Colour Palette\". "),
-            new P("Each colour in the \"Colour Palette\" can be selected then changed using the \"Selected Colour\" control. "),
-            new P("Each colour swatch can be labelled using the adjoining text field. ")
+            new P("‘Tartan’ is an application for designing Tartan patterns using colours from a configurable “Colour Palette”. "),
+            new P("Each colour in the “Colour Palette” can be selected then changed using the “Selected Colour” control. "),
+            new P("Each colour swatch can also be labelled using the adjoining text field. ")
             ),
-        new H3Flow(new H3("Layout")),
+        new H3Flow(new H3("“Selected Colour” Pane")),
         new PFlow(
-            new P("\"Tartan\" is a pattern that repeats after a specific number of threads. "),
+            new P("Colours can be defined using a number of different models. "),
+            new P("Two popular models are Red Green Blue (RGB) and Hue Saturation Brightness (HSB, A.K.A. Hue Saturation Lightness). ")
+            ),
+        new PFlow(
+            new P("The “Selected Colour” control allows colours to be defined using either of these models, in a number of ways. "),
+            new P("The Colour Wheel allows the Hue to be selected along with the Saturation and Brightness sliders below it. "),
+            new P("Alternatively the Red, Green and Blue sliders can be used. ")
+            ),
+        new PFlow(
+            new P("However, if for example the colour “Coral” is required and the RGB triplet is given as rgb(255, 127, 80), then these values can be entered into the corresponding text fields. "),
+            new P("If, instead of the decimal values, the hex values are given (FF7F50), the “Hex” check box can be selected to enter valid hexadecimal values. ")
+            ),
+        new PFlow(
+            new P("If HSB values are given, the “HSB” check box can be selected to enter Hue, Saturation and Brightness values. ")
+            ),
+        new PFlow(
+            new P("These values are specified within default ranges. "),
+            new P("RGB values are typically 0 to 255, Hue is 0 to 360 and Saturation and Brightness are usually 0 to 1, but here are 0 to 100. "),
+            new P("Any of theses values ranges can be changed to one of: 100, 255, 360 or 1000 as needed. ")
+            ),
+        new PFlow(
+            new P("Once the values have been entered, click the “Apply” button to use them. ")
+            ),
+        new H3Flow(new H3("“Layout” Pane")),
+        new PFlow(
+            new P("“Tartan” is a pattern that repeats after a specific number of threads. "),
             new P("This pattern layout can be controlled in a number of ways. "),
-            new P("Typically the pattern is the same for the vertical and horizontal threads and the \"Duplicate the Column colours for the Rows\" check box controls whether this duplication is automatically performed. "),
-            new P("If this duplication is not desired, uncheck the box and set the vertical and horizontal thread colours and thread counts (before repeating) independently. ")
+            new P("Typically the pattern is the same for the vertical and horizontal threads and the “Duplicate the Column colours for the Rows” check box controls whether this duplication is automatically performed. "),
+            new P("If this duplication is not desired, un-check the box and set the vertical and horizontal thread colours and thread counts (before repeating) independently. ")
             ),
         new PFlow(
-            new P("\"Column Repeat Count\" defines the number of vertical threads. ")
+            new P("“Column Repeat Count” defines the number of vertical threads. ")
             ),
         new PFlow(
-            new P("If duplication is not being used, \"Row Repeat Count\" defines the number of horizonal threads. ")
+            new P("If duplication is not being used, “Row Repeat Count” defines the number of horizontal threads. ")
             ),
         new PFlow(
-            new P("Guide lines divide the \"Sample\" window into eight equal parts vertically and horizontally. "),
-            new P("The \"Show Guide Lines\" check box controls whether these are displayed or not. "),
+            new P("Guide lines divide the “Sample” window into eight equal parts vertically and horizontally. "),
+            new P("The “Show Guide Lines” check box controls whether these are displayed or not. "),
             new P("The colour of the guide lines "),
             new Bold("AND "),
-            new P("the colour of thread highlights can be changed using the colour selector labelled \"Guide Line Colour\". ")
+            new P("the colour of thread highlights can be changed using the colour selector labelled “Guide Line Colour”. ")
             ),
         new PFlow(
             new P("Typically multiple adjacent treads have the same colour. "),
-            new P("Up to eight adjacent threads can be set (with the currently selected colour) using the \"Thread Repeat Count\" spinner. ")
+            new P("Up to eight adjacent threads can be set (with the currently selected colour) using the “Thread Repeat Count” spinner. ")
             ),
         new PFlow(
-            new P("The size of the threads can be increased using the \"Thread Size\" control, to make life easier during the design phase, however this will effect the generated graphic when saved. "),
-            new P("The thickness of the thread border can be adjusted using the \"Thread Border Thickness\" control, if needed. ")
+            new P("The size of the threads can be increased using the “Thread Size” control, to make life easier during the design phase, however this will effect the generated graphic when saved. "),
+            new P("The thickness of the thread border can be adjusted using the “Thread Border Thickness” control, if needed. ")
             ),
         new H3Flow(new H3("Pull-Down Menu")),
         new PFlow(
             new P("The Pull-Down Menu allows tartan designs to be loaded from and saved to the "),
             new Code("Tartan/swatches "),
             new P("directory. "),
-            new P("Each tartan design is saved in it's own subdirectory as a settings file and includes a .png image file showing the design repeated in a 2 by 2 layout. ")
+            new P("Each tartan design is saved in it’s own sub-directory as a settings file and includes a “.png” image file showing the design repeated in a 2 by 2 layout. ")
             ),
-        new H2Flow(new H2("\"Sample\" Window")),
+        new H2Flow(new H2("“Sample” Window")),
         new H3Flow(new H3("Colouring")),
         new PFlow(
-            new P("Across the top edge and down the left side of the \"Sample\" window are extended threads which are sensitive to mouse movement and clicking. "),
+            new P("Across the top edge and down the left side of the “Sample” window are extended threads which are sensitive to mouse movement and clicking. "),
             new P("Moving the mouse pointer over these areas will cause threads to be highlighted based on the current selections. "),
-            new P("Clicking on these areas will colour the highlighted threads using the currently selected colour from the \"Colour Palette\". ")
+            new P("Clicking on these areas will colour the highlighted threads using the currently selected colour from the “Colour Palette”. ")
             ),
         new H3Flow(new H3("Adjusting")),
         new PFlow(
             new P("Additionally, threads can be inserted or deleted. "),
-            new P("When the focus is on the \"Sample\" window, hold down the \"alt\" or \"ctrl\" key. "),
-            new P("A helpful message is displayed in the \"Sample\" heading bar to indicate these functional options: ")
+            new P("When the focus is on the “Sample” window, hold down the “alt” or “ctrl” key. "),
+            new P("A helpful message is displayed in the “Sample” heading bar to indicate these functional options: ")
             ),
         new ListFlow(
-            new ListItem("With the \"alt\" key held down, clicking on the extended threads will "),
+            new ListItem("With the “alt” key held down, clicking on the extended threads will "),
             new Bold("delete "),
             new ListItem("the highlighted number of threads. ")
             ),
         new ListFlow(
-            new ListItem("With the \"ctrl\" key held down, clicking on the extended threads will "),
+            new ListItem("With the “ctrl” key held down, clicking on the extended threads will "),
             new Bold("insert "),
             new ListItem("the highlighted number of threads. ")
             )

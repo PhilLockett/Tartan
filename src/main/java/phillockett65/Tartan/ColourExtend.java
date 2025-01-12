@@ -53,7 +53,7 @@ public class ColourExtend extends GridPane {
 
     private CheckBox hsbCheckbox = new CheckBox("HSB");
     private CheckBox hexCheckbox = new CheckBox("Hex");
-    private Button setButton = new Button(" Submit ");
+    private Button setButton = new Button(" Apply ");
 
     private boolean isHSB() { return hsbCheckbox.isSelected(); }
     private boolean isHex() { return hexCheckbox.isSelected(); }
