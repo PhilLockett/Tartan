@@ -1,36 +1,33 @@
-/*  Tartan - a JavaFX based Tartan image generator.
+/*  ColourSelect - a JavaFX based colour selector.
  *
  *  Copyright 2025 Philip Lockett.
  *
- *  This file is part of Tartan.
+ *  This file is part of ColourSelect.
  *
- *  Tartan is free software: you can redistribute it and/or modify
+ *  ColourSelect is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Tartan is distributed in the hope that it will be useful,
+ *  ColourSelect is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Tartan.  If not, see <https://www.gnu.org/licenses/>.
+ *  along with ColourSelect.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
  * ColourExtend is a class that helps select a colour by specifying numeric 
  * values.
  */
-package phillockett65.Tartan;
+package phillockett65.ColourSelect;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventTarget;
-import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
@@ -44,6 +41,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import phillockett65.Tartan.Model;
 
 public class ColourExtend extends GridPane {
 
@@ -148,7 +146,7 @@ public class ColourExtend extends GridPane {
         }
 
         public void updateValue() {
-            double current = filter.getCol(getSelectedColour());
+            double current = filter.filter(getSelectedColour());
             current *= colourComp.scale;
 
             setTooltip();
@@ -218,7 +216,10 @@ public class ColourExtend extends GridPane {
         });
 
         setButton.setOnAction(event -> {
-            setButton.fireEvent(new ColourExtendEvent(ColourExtendEvent.COLOUREXT_CHANGE, getColour()));
+            ColourEvent colourEvent = new ColourEvent(ColourEvent.COLOUR_CHANGE, getColour());
+            colourEvent.enableColourExtend();
+
+            setButton.fireEvent(colourEvent);
         });
     }
 
@@ -389,69 +390,6 @@ public class ColourExtend extends GridPane {
         // System.out.println("ColourSelect() constructed.");
         init();
      }
-
-
-
-
-
-    /************************************************************************
-     * Support code for the ColourSelect Event class.
-     */
-
-    public static class ColourExtendEvent extends Event {
-
-        private static final long serialVersionUID = 202501092114L;
-
-        /**
-         * The only valid EventTypes for the SelectEvent.
-         */
-        public static final EventType<ColourExtendEvent> COLOUREXT =
-            new EventType<>(Event.ANY, "COLOUREXT");
-        public static final EventType<ColourExtendEvent> ANY = COLOUREXT;
-        public static final EventType<ColourExtendEvent> COLOUREXT_CHANGE =
-            new EventType<>(ColourExtendEvent.ANY, "COLOUREXT_CHANGE");
-
-        private final Color colour;
-
-        public Color getColour() { return colour; }
-
-        /**
-         * Creates a new {@code ColourExtendEvent} with an event type of {@code ANY}.
-         * The source and target of the event is set to {@code NULL_SOURCE_TARGET}.
-         */
-        public ColourExtendEvent() { super(ANY); colour = Color.BLACK; }
-
-
-        /**
-         * Construct a new {@code ColourExtendEvent} with the specified event type and 
-         * selected colour.
-         * The source and target of the event are set to {@code NULL_SOURCE_TARGET}.
-         *
-         * @param eventType this event represents.
-         * @param colour    selected.
-         */
-        public ColourExtendEvent(EventType<? extends Event> eventType, Color colour) {
-            super(eventType);
-            this.colour = colour;
-        }
-
-        @Override
-        public ColourExtendEvent copyFor(Object newSource, EventTarget newTarget) {
-            return (ColourExtendEvent) super.copyFor(newSource, newTarget);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public EventType<? extends ColourExtendEvent> getEventType() {
-            return (EventType<? extends ColourExtendEvent>) super.getEventType();
-        }
-
-    }
-
-
-
-
-
 
 
 }

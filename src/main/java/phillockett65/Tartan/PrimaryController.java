@@ -44,8 +44,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import phillockett65.Tartan.ColourExtend.ColourExtendEvent;
-import phillockett65.Tartan.ColourSelect.ColourEvent;
+import phillockett65.ColourSelect.ColourExtend;
+import phillockett65.ColourSelect.ColourSelect;
+import phillockett65.ColourSelect.ColourEvent;
 
 
 public class PrimaryController {
@@ -93,7 +94,6 @@ public class PrimaryController {
         
         colourExtend = new ColourExtend();
         colourSelectSetUpVBox.getChildren().add(colourExtend);
-        colourSelectSetUpVBox.addEventFilter(ColourExtendEvent.ANY, this::handleColourExtendEvent);
     }
 
     /**
@@ -376,15 +376,13 @@ public class PrimaryController {
         final Color colour = event.getColour();
         model.setSwatchColour(index, colour);
         colourSwatches.get(index).setColour(colour);
-        colourExtend.handleColourEvent();
-    }
 
-    private void handleColourExtendEvent(ColourExtendEvent event) {
-        final int index = model.getSelectedColourIndex();
-        final Color colour = event.getColour();
-        model.setSwatchColour(index, colour);
-        colourSwatches.get(index).setColour(colour);
-        colourSelect.setColour(colour);
+        if (event.isColourExtend()) {
+            colourSelect.setColour(colour);
+        } else
+        if (event.isColourSelect()) {
+            colourExtend.handleColourEvent();
+        }
     }
 
     /**
