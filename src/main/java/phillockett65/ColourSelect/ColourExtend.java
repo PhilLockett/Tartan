@@ -41,13 +41,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import phillockett65.Tartan.Model;
 
 public class ColourExtend extends GridPane {
 
     private static final String ERROR = "error-text-field";
-
-    private Model model;
 
     private CheckBox hsbCheckbox = new CheckBox("HSB");
     private CheckBox hexCheckbox = new CheckBox("Hex");
@@ -59,6 +56,7 @@ public class ColourExtend extends GridPane {
     private int[] scales = { 100, 255, 360, 1000 };
     private ObservableList<String> scaleList = FXCollections.observableArrayList("100", "255", "360", "1000");
 
+    private Color selectedColour = Color.WHITE;
 
 
     /************************************************************************
@@ -119,9 +117,19 @@ public class ColourExtend extends GridPane {
         private void checkValidity() {
             valid = true;
 
+            // Check validity of the content of value.
             final int integer = stringToInt(value.getText());
             if ((integer < 0) || (integer > getScale())) {
                 valid = false;
+            }
+
+            // Style value based on the validity of it's content.
+            if (valid) {
+                value.getStyleClass().remove(ERROR);
+            } else {
+                if (!value.getStyleClass().contains(ERROR)) {
+                    value.getStyleClass().add(ERROR);
+                }
             }
         }
 
@@ -160,7 +168,6 @@ public class ColourExtend extends GridPane {
             value.setOnKeyTyped(event -> {
                 checkValidity();
                 syncUI();
-                Model.styleFocus(value, ERROR, valid);
             });
     
             scale = new ChoiceBox<String>(scaleList);
@@ -303,15 +310,15 @@ public class ColourExtend extends GridPane {
     }
 
     private void syncBase() {
-        final int MAX = colourCompList.length;
-
         // Update the ObservableList 'scaleList' to match the current base.
-        for (int i = 0; i < scales.length; ++i) {
+        final int SCALES = scales.length;
+        for (int i = 0; i < SCALES; ++i) {
             scaleList.set(i, intToString(scales[i]));
         }
 
         // Update the TextField 'value' with current base and update the 
         // ChoiceBox 'scale' with the base-corrected selection.
+        final int MAX = colourCompList.length;
         for (int i = 0; i < MAX; ++i) {
             ColourCompIO target = colourCompList[i];
             target.updateValue();
@@ -354,12 +361,10 @@ public class ColourExtend extends GridPane {
         setButton.setDisable(!isColourValid());
     }
 
-    private Color getSelectedColour() { return model.getSelectedColour(); }
+    private Color getSelectedColour() { return selectedColour; }
 
     private void init() {
         // System.out.println("ColourSelect() init()");
-
-        model = Model.getInstance();
 
         buildGrid();
         fillGrid();
@@ -374,16 +379,25 @@ public class ColourExtend extends GridPane {
      */
 
     /**
+     * Called by PrimaryController whenever the selected colour is changed.
+     * @param colour currently in use.
+     */
+    public void setColour(Color colour) {
+        selectedColour = colour;
+    }
+
+    /**
      * Called by PrimaryController whenever the colourSelect fires an event to 
      * indicate the current colour has changed.
+     * @param colour currently in use.
      */
-    public void handleColourEvent() {
+    public void handleColourEvent(Color colour) {
+        setColour(colour);
         syncBase();
     }
 
     /**
      * Constructor.
-     * @param withAlpha true if opacity can be set, false otherwise.
      */
     public ColourExtend() {
         super();

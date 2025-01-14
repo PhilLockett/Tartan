@@ -89,11 +89,11 @@ public class PrimaryController {
         initializeStatusLine();
 
         colourSelect = new ColourSelect(false);
-        colourSelectSetUpVBox.getChildren().add(colourSelect);
-        colourSelectSetUpVBox.addEventFilter(ColourEvent.ANY, this::handleColourEvent);
-        
         colourExtend = new ColourExtend();
-        colourSelectSetUpVBox.getChildren().add(colourExtend);
+
+        colourSelectSetUpVBox.getChildren().addAll(colourSelect, colourExtend);
+        
+        colourSelectSetUpVBox.addEventFilter(ColourEvent.ANY, this::handleColourEvent);
     }
 
     /**
@@ -131,7 +131,7 @@ public class PrimaryController {
         final int selected = model.getSelectedColourIndex();
         colourSwatches.get(selected).setSelected(true);
         setSelectedColourRadioButton(selected);
-        colourSelect.setColour(model.getSelectedColour());
+        syncSelectedColour();
 
         rowCountSpinner.setDisable(model.isDuplicate());
         duplicateCheckbox.setSelected(model.isDuplicate());
@@ -344,6 +344,12 @@ public class PrimaryController {
     @FXML
     TextField colour7TextField;
 
+    private void syncSelectedColour() {
+        final Color selectedColour = model.getSelectedColour();
+        colourSelect.setColour(selectedColour);
+        colourExtend.setColour(selectedColour);
+    }
+
     private void selectedColourActionPerformed(int index) {
         // System.out.println("selectedColourActionPerformed(" + index + ")");
 
@@ -351,7 +357,7 @@ public class PrimaryController {
         colourSwatches.get(previous).setSelected(false);
         colourSwatches.get(index).setSelected(true);
 
-        colourSelect.setColour(model.getSelectedColour());
+        syncSelectedColour();
     }
 
     @FXML
@@ -381,7 +387,7 @@ public class PrimaryController {
             colourSelect.setColour(colour);
         } else
         if (event.isColourSelect()) {
-            colourExtend.handleColourEvent();
+            colourExtend.handleColourEvent(colour);
         }
     }
 
