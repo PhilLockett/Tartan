@@ -63,6 +63,42 @@ public class PrimaryController {
 
 
     /************************************************************************
+     * General run-time support code.
+     */
+
+    /**
+     * Synchronise all controls with the model. This should be the last step 
+     * in the initialisation.
+     */
+    private void syncUI() {
+
+        for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i) {
+            setSwatch(i, model.getSwatchColour(i), model.getSwatchName(i));
+        }
+
+        final int selected = model.getSelectedColourIndex();
+        colourSwatches.get(selected).setSelected(true);
+        setSelectedColourRadioButton(selected);
+        syncSelectedColour();
+
+        rowCountSpinner.setDisable(model.isDuplicate());
+        duplicateCheckbox.setSelected(model.isDuplicate());
+        showGuideCheckbox.setSelected(model.isShowGuide());
+
+        guideLineColourPicker.setValue(model.getGuideLineColour());
+    }
+
+    /**
+     * Adjusts the UI based on "duplicate the column threads for the rows" 
+     * selection.
+     */
+    private void fixUISettings() {
+        rowCountSpinner.setDisable(model.isDuplicate());
+    }
+
+
+
+    /************************************************************************
      * Support code for the Initialization of the Controller.
      */
 
@@ -110,43 +146,20 @@ public class PrimaryController {
         setStatusMessage("Ready.");
     }
 
+
+
+    /************************************************************************
+     * Public interface.
+     */
+
     /**
-     * Set the styles based on the focus state.
+     * Set the styles based on the focus state. Only called by the 
+     * focusedProperty listener defined in App.
      * @param state is true if we have focus, false otherwise.
      */
     public void setFocus(boolean state) {
         Model.styleFocus(root, "unfocussed-root", state);
         Model.styleFocus(topBar, "unfocussed-bar", state);
-    }
-
-    /**
-     * Synchronise all controls with the model. This should be the last step 
-     * in the initialisation.
-     */
-    private void syncUI() {
-
-        for (int i = 0; i < Default.SWATCH_COUNT.getInt(); ++i) {
-            setSwatch(i, model.getSwatchColour(i), model.getSwatchName(i));
-        }
-
-        final int selected = model.getSelectedColourIndex();
-        colourSwatches.get(selected).setSelected(true);
-        setSelectedColourRadioButton(selected);
-        syncSelectedColour();
-
-        rowCountSpinner.setDisable(model.isDuplicate());
-        duplicateCheckbox.setSelected(model.isDuplicate());
-        showGuideCheckbox.setSelected(model.isShowGuide());
-
-        guideLineColourPicker.setValue(model.getGuideLineColour());
-    }
-
-    /**
-     * Adjusts the UI based on "duplicate the column threads for the rows" 
-     * selection.
-     */
-    private void fixUISettings() {
-        rowCountSpinner.setDisable(model.isDuplicate());
     }
 
 
