@@ -198,10 +198,10 @@ public class HelpControl extends Stage {
         new H3Flow(new H3("“Selected Colour” Pane")),
         new PFlow(
             new P("Colours can be defined using a number of different models. "),
-            new P("Two popular models are Red Green Blue (RGB) and Hue Saturation Brightness (HSB, A.K.A. Hue Saturation Lightness). ")
+            new P("Two popular models are RGB (Red Green Blue) and HSB (Hue Saturation Brightness, A.K.A. Hue Saturation Lightness). "),
+            new P("The “Selected Colour” control allows colours to be defined using either of these models, in a number of ways. ")
             ),
         new PFlow(
-            new P("The “Selected Colour” control allows colours to be defined using either of these models, in a number of ways. "),
             new P("The Colour Wheel allows the Hue to be selected along with the Saturation and Brightness sliders below it. "),
             new P("Alternatively the Red, Green and Blue sliders can be used. ")
             ),
@@ -215,7 +215,8 @@ public class HelpControl extends Stage {
         new PFlow(
             new P("These values are specified within default ranges. "),
             new P("RGB values are typically 0 to 255, Hue is 0 to 360 and Saturation and Brightness are usually 0 to 1, but here are 0 to 100. "),
-            new P("Any of theses values ranges can be changed to one of: 100, 255, 360 or 1000 as needed. ")
+            new P("Any of theses values ranges can be changed to one of: 100, 255, 360 or 1000 as needed. "),
+            new P("However, note that within the colour object the resolution of RGB values is limited to 255, so values using a higher range will be rounded. ")
             ),
         new PFlow(
             new P("Once the values have been entered, click the “Apply” button to use them. ")
@@ -264,8 +265,13 @@ public class HelpControl extends Stage {
             ),
         new H3Flow(new H3("Adjusting")),
         new PFlow(
+            new P("The tartan pattern can be rotated for convenience. "),
+            new P("With the focus is on the “Sample” window, use the arrow keys to rotate the pattern up, down, left or right. "),
+            new P("With the “Duplicate the Column colours for the Rows” check box selected the rotation is duplicated resulting in a diagonal movement. ")
+            ),
+        new PFlow(
             new P("Additionally, threads can be inserted or deleted. "),
-            new P("When the focus is on the “Sample” window, hold down the “alt” or “ctrl” key. "),
+            new P("With the focus is on the “Sample” window, hold down the “alt” or “ctrl” key. "),
             new P("A helpful message is displayed in the “Sample” heading bar to indicate these functional options: ")
             ),
         new ListFlow(
