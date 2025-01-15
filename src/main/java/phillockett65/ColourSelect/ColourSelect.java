@@ -269,10 +269,7 @@ public class ColourSelect extends GridPane {
         lastColour = colour;
         swatch.setFill(colour);
 
-        ColourEvent colourEvent = new ColourEvent(ColourEvent.COLOUR_CHANGE, colour);
-        colourEvent.enableColourSelect();
-
-        swatch.fireEvent(colourEvent);
+        swatch.fireEvent(new ColourEvent(ColourEvent.COLOUR_CHANGE, colour));
     }
 
     private void syncSwatch() {

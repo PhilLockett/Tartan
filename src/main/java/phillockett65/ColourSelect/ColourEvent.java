@@ -49,8 +49,6 @@ public class ColourEvent extends Event {
         new EventType<>(ColourEvent.ANY, "COLOUR_CHANGE");
 
     private final Color colour;
-    private boolean colourSelect = false;
-    private boolean colourExtend = false;
 
     public Color getAlphaColour() { return colour; }
     public double getRed() { return colour.getRed(); }
@@ -59,29 +57,6 @@ public class ColourEvent extends Event {
     public double getOpacity() { return colour.getOpacity(); }
     public Color getColour() {
         return Color.color(getRed(), getGreen(), getBlue());
-    }
-
-    public boolean isColourSelect() { return colourSelect; }
-    public boolean isColourExtend() { return colourExtend; }
-
-    public boolean enableColourSelect() {
-        if (colourExtend == true) {
-            return false;
-        }
-
-        colourSelect = true;
-
-        return true;
-    }
-
-    public boolean enableColourExtend() {
-        if (colourSelect == true) {
-            return false;
-        }
-
-        colourExtend = true;
-
-        return true;
     }
 
 

@@ -93,7 +93,8 @@ public class PrimaryController {
 
         colourSelectSetUpVBox.getChildren().addAll(colourSelect, colourExtend);
         
-        colourSelectSetUpVBox.addEventFilter(ColourEvent.ANY, this::handleColourEvent);
+        colourSelect.addEventFilter(ColourEvent.ANY, this::handleColourSelectEvent);
+        colourExtend.addEventFilter(ColourEvent.ANY, this::handleColourExtendEvent);
     }
 
     /**
@@ -377,18 +378,23 @@ public class PrimaryController {
         model.setSwatchName(idToInt(field.getId()), field.getText());
     }
 
-    private void handleColourEvent(ColourEvent event) {
+    private Color handleColourEvent(ColourEvent event) {
         final int index = model.getSelectedColourIndex();
         final Color colour = event.getColour();
         model.setSwatchColour(index, colour);
         colourSwatches.get(index).setColour(colour);
 
-        if (event.isColourExtend()) {
-            colourSelect.setColour(colour);
-        } else
-        if (event.isColourSelect()) {
-            colourExtend.handleColourEvent(colour);
-        }
+        return colour;
+    }
+
+    private void handleColourSelectEvent(ColourEvent event) {
+        final Color colour = handleColourEvent(event);
+        colourExtend.handleColourEvent(colour);
+    }
+
+    private void handleColourExtendEvent(ColourEvent event) {
+        final Color colour = handleColourEvent(event);
+        colourSelect.setColour(colour);
     }
 
     /**

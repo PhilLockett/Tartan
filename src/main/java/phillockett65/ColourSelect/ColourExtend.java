@@ -222,12 +222,7 @@ public class ColourExtend extends GridPane {
             }
         });
 
-        setButton.setOnAction(event -> {
-            ColourEvent colourEvent = new ColourEvent(ColourEvent.COLOUR_CHANGE, getColour());
-            colourEvent.enableColourExtend();
-
-            setButton.fireEvent(colourEvent);
-        });
+        setButton.setOnAction(event -> setButton.fireEvent(new ColourEvent(ColourEvent.COLOUR_CHANGE, getColour())) );
     }
 
     private void addColumnConstraint(double width, boolean right) {
