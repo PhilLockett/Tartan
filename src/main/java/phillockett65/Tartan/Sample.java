@@ -121,13 +121,13 @@ public class Sample extends Stage {
      * Get the width of the swatch in pixels.
      * @return the width of the swatch in pixels.
      */
-    public double getSwatchWidth() { return model.getThreadSize() * getColumnCount(); }
+    private double getSwatchWidth() { return model.getThreadSize() * getColumnCount(); }
 
     /**
      * Get the height of the swatch in pixels.
      * @return the height of the swatch in pixels.
      */
-    public double getSwatchHeight() { return model.getThreadSize() * getRowCount(); }
+    private double getSwatchHeight() { return model.getThreadSize() * getRowCount(); }
 
 
     /**
@@ -181,16 +181,8 @@ public class Sample extends Stage {
 
 
     /************************************************************************
-     * Support code for the handlers. 
+     * Support code for the key handlers. 
      */
-
-    public int getRowColourIndex(int index) {
-        return rowList.getColourIndex(index);
-    }
-
-    public int getColColourIndex(int index) {
-        return colList.getColourIndex(index);
-    }
 
     private void rotateUp() {
         rowList.rotateIncrease();
@@ -418,40 +410,6 @@ public class Sample extends Stage {
 
     }
 
-    private void deleteThreads(int scope, int pos) {
-        if (scope == BOTH_ZONE) {
-            rowList.deleteThreads(pos);
-            colList.deleteThreads(pos);
-            model.syncRowCountSVF();
-            model.syncColumnCountSVF();
-        } else if (scope == ROW_ZONE) {
-            rowList.deleteThreads(pos);
-            model.syncRowCountSVF();
-        } else if (scope == COLUMN_ZONE) {
-            colList.deleteThreads(pos);
-            model.syncColumnCountSVF();
-        }
-
-        syncGuideLinePositions();
-    }
-
-    private void insertThreads(int scope, int pos) {
-        if (scope == BOTH_ZONE) {
-            rowList.insertThreads(pos);
-            colList.insertThreads(pos);
-            model.syncRowCountSVF();
-            model.syncColumnCountSVF();
-        } else if (scope == ROW_ZONE) {
-            rowList.insertThreads(pos);
-            model.syncRowCountSVF();
-        } else if (scope == COLUMN_ZONE) {
-            colList.insertThreads(pos);
-            model.syncColumnCountSVF();
-        }
-
-        syncGuideLinePositions();
-    }
- 
 
 
     /************************************************************************
@@ -581,41 +539,6 @@ public class Sample extends Stage {
     }
 
     /**
-     * Constructor.
-     */
-    public Sample() {
-        super();
-		// System.out.println("CardSample constructed: " + title);
-
-        model = Model.getInstance();
-        defaultColour = model.getBorderColour();
-
-        this.setTitle("Sample");
-        this.resizableProperty().setValue(false);
-        setOnCloseRequest(e -> Platform.exit());
-        this.initStyle(StageStyle.UNDECORATED);
-
-        initializeCardSample();
-
-        this.focusedProperty().addListener((obs, oldVal, newVal) -> 
-            setFocus(newVal));
-        this.show();
-    }
-
-
-    /**
-     * Initialization after the model has been initialised.
-     */
-    public void init() {
-        rowList.init(group, gc);
-        colList.init(group, gc);
-
-        syncGuideLineColour();
-        syncGuideLinePositions();
-        syncThreadSize();
-    }
-
-    /**
      * Set the styles based on the focus state.
      * @param state is true if we have focus, false otherwise.
      */
@@ -624,15 +547,46 @@ public class Sample extends Stage {
         Model.styleFocus(topBar, "unfocussed-bar", state);
     }
 
-    public void clear() {
-        rowList.clear();
-        colList.clear();
-    }
-
 
     /************************************************************************
      * Support code for the mouse click handler.
      */
+
+    private void deleteThreads(int scope, int pos) {
+        if (scope == BOTH_ZONE) {
+            rowList.deleteThreads(pos);
+            colList.deleteThreads(pos);
+            model.syncRowCountSVF();
+            model.syncColumnCountSVF();
+        } else if (scope == ROW_ZONE) {
+            rowList.deleteThreads(pos);
+            model.syncRowCountSVF();
+        } else if (scope == COLUMN_ZONE) {
+            colList.deleteThreads(pos);
+            model.syncColumnCountSVF();
+        }
+
+        syncGuideLinePositions();
+    }
+
+    private void insertThreads(int scope, int pos) {
+        if (scope == BOTH_ZONE) {
+            rowList.insertThreads(pos);
+            colList.insertThreads(pos);
+            model.syncRowCountSVF();
+            model.syncColumnCountSVF();
+        } else if (scope == ROW_ZONE) {
+            rowList.insertThreads(pos);
+            model.syncRowCountSVF();
+        } else if (scope == COLUMN_ZONE) {
+            colList.insertThreads(pos);
+            model.syncColumnCountSVF();
+        }
+
+        syncGuideLinePositions();
+    }
+
+
 
     /**
      * Set the row and/or column (and repeats) to the selected swatch colour.
@@ -742,6 +696,19 @@ public class Sample extends Stage {
     public int getRowCount() { return rowList.getActive(); }
     public int getColumnCount() { return colList.getActive(); }
 
+    public int getRowColourIndex(int index) {
+        return rowList.getColourIndex(index);
+    }
+
+    public int getColColourIndex(int index) {
+        return colList.getColourIndex(index);
+    }
+
+    public void clear() {
+        rowList.clear();
+        colList.clear();
+    }
+
 
 
     /************************************************************************
@@ -847,6 +814,41 @@ public class Sample extends Stage {
         for (Line guide : guides) {
             guide.setStroke(colour);
         }
+    }
+
+
+    /**
+     * Constructor.
+     */
+    public Sample() {
+        super();
+		// System.out.println("CardSample constructed: " + title);
+
+        model = Model.getInstance();
+        defaultColour = model.getBorderColour();
+
+        this.setTitle("Sample");
+        this.resizableProperty().setValue(false);
+        setOnCloseRequest(e -> Platform.exit());
+        this.initStyle(StageStyle.UNDECORATED);
+
+        initializeCardSample();
+
+        this.focusedProperty().addListener((obs, oldVal, newVal) -> 
+            setFocus(newVal));
+        this.show();
+    }
+
+    /**
+     * Initialization after the model has been initialised.
+     */
+    public void init() {
+        rowList.init(group, gc);
+        colList.init(group, gc);
+
+        syncGuideLineColour();
+        syncGuideLinePositions();
+        syncThreadSize();
     }
 
 }
