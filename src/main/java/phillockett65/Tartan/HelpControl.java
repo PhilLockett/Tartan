@@ -193,12 +193,12 @@ public class HelpControl extends Stage {
         new PFlow(
             new P("‘Tartan’ is an application for designing Tartan patterns using colours from a configurable “Colour Palette”. "),
             new P("Each colour in the “Colour Palette” can be selected then changed using the “Selected Colour” control. "),
-            new P("Each colour swatch can also be labelled using the adjoining text field. ")
+            new P("Optionally, each colour swatch can be labelled using the adjoining text field. ")
             ),
         new H3Flow(new H3("“Selected Colour” Pane")),
         new PFlow(
             new P("Colours can be defined using a number of different models. "),
-            new P("Two popular models are RGB (Red Green Blue) and HSB (Hue Saturation Brightness, A.K.A. Hue Saturation Lightness). "),
+            new P("Two popular models are RGB (Red Green Blue) and HSB (Hue Saturation Brightness). "),
             new P("The “Selected Colour” control allows colours to be defined using either of these models, in a number of ways. ")
             ),
         new PFlow(
@@ -214,7 +214,7 @@ public class HelpControl extends Stage {
             ),
         new PFlow(
             new P("These values are specified within default ranges. "),
-            new P("RGB values are typically 0 to 255, Hue is 0 to 360 and Saturation and Brightness are usually 0 to 1, but here are 0 to 100. "),
+            new P("RGB values are typically 0 to 255, Hue is 0 to 360 and Saturation and Brightness are usually 0 to 1, but here are 0 to 100 (i.e. a percentage). "),
             new P("Any of theses values ranges can be changed to one of: 100, 255, 360 or 1000 as needed. "),
             new P("However, note that within the colour object the resolution of RGB values is limited to 255, so values using a higher range will be rounded. ")
             ),
@@ -260,27 +260,28 @@ public class HelpControl extends Stage {
         new H3Flow(new H3("Colouring")),
         new PFlow(
             new P("Across the top edge and down the left side of the “Sample” window are extended threads which are sensitive to mouse movement and clicking. "),
-            new P("Moving the mouse pointer over these areas will cause threads to be highlighted based on the current selections. "),
+            new P("Moving the mouse pointer over these areas will cause a number of threads to be highlighted based on the current selections. "),
             new P("Clicking on these areas will colour the highlighted threads using the currently selected colour from the “Colour Palette”. ")
             ),
         new H3Flow(new H3("Adjusting")),
         new PFlow(
-            new P("The tartan pattern can be rotated for convenience. "),
-            new P("With the focus is on the “Sample” window, use the arrow keys to rotate the pattern up, down, left or right. "),
-            new P("With the “Duplicate the Column colours for the Rows” check box selected the rotation is duplicated resulting in a diagonal movement. ")
+            new P("There are a few ways to adjust the tartan pattern, firstly it can be rotated for convenience. "),
+            new Bold("With the focus on the “Sample” window"),
+            new P(", use the arrow keys to rotate the pattern up, down, left or right. "),
+            new P("Note that with the “Duplicate the Column colours for the Rows” check box selected, the rotation is duplicated resulting in a diagonal movement. ")
             ),
         new PFlow(
             new P("Additionally, threads can be inserted or deleted. "),
-            new P("With the focus is on the “Sample” window, hold down the “alt” or “ctrl” key. "),
-            new P("A helpful message is displayed in the “Sample” heading bar to indicate these functional options: ")
+            new Bold("With the focus on the “Sample” window"),
+            new P(", holding down the “Alt” or “Ctrl” key will display a helpful message in the “Sample” heading bar to indicate these functional options: ")
             ),
         new ListFlow(
-            new ListItem("With the “alt” key held down, clicking on the extended threads will "),
+            new ListItem("With the “Alt” key held down, clicking on the extended threads will "),
             new Bold("delete "),
             new ListItem("the highlighted number of threads. ")
             ),
         new ListFlow(
-            new ListItem("With the “ctrl” key held down, clicking on the extended threads will "),
+            new ListItem("With the “Ctrl” key held down, clicking on the extended threads will "),
             new Bold("insert "),
             new ListItem("the highlighted number of threads. ")
             )
