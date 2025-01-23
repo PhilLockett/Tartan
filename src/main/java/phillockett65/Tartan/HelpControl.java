@@ -192,7 +192,7 @@ public class HelpControl extends Stage {
         new H3Flow(new H3("“Colour Palette” Pane")),
         new PFlow(
             new P("‘Tartan’ is an application for designing Tartan patterns using colours from a configurable “Colour Palette”. "),
-            new P("Each colour in the “Colour Palette” can be selected then changed using the “Selected Colour” control. "),
+            new P("Each colour swatch in the “Colour Palette” can be selected then changed using the “Selected Colour” control. "),
             new P("Optionally, each colour swatch can be labelled using the adjoining text field. ")
             ),
         new H3Flow(new H3("“Selected Colour” Pane")),
@@ -203,23 +203,23 @@ public class HelpControl extends Stage {
             ),
         new PFlow(
             new P("The Colour Wheel allows the Hue to be selected along with the Saturation and Brightness sliders below it. "),
-            new P("Alternatively the Red, Green and Blue sliders can be used. ")
+            new P("Alternatively the Red, Green and Blue sliders can be used to define a colour. ")
             ),
         new PFlow(
-            new P("However, if for example the colour “Coral” is required and the RGB triplet is given as rgb(255, 127, 80), then these values can be entered into the corresponding text fields. "),
+            new P("However, if for example the colour “Coral” is required and the RGB triplet is given as rgb(255, 127, 80), these values can be entered into the corresponding text fields. "),
             new P("If, instead of the decimal values, the hex values are given (FF7F50), the “Hex” check box can be selected to enter valid hexadecimal values. ")
             ),
         new PFlow(
-            new P("If HSB values are given, the “HSB” check box can be selected to enter Hue, Saturation and Brightness values. ")
+            new P("If HSB values are given, the “HSB” check box can be selected to enter values for Hue, Saturation and Brightness. ")
             ),
         new PFlow(
             new P("These values are specified within default ranges. "),
-            new P("RGB values are typically 0 to 255, Hue is 0 to 360 and Saturation and Brightness are usually 0 to 1, but here are 0 to 100 (i.e. a percentage). "),
+            new P("RGB values are typically 0 to 255, Hue is 0 to 360 and Saturation and Brightness are usually 0 to 1, but here are 0 to 100 (i.e. as percentages). "),
             new P("Any of theses values ranges can be changed to one of: 100, 255, 360 or 1000 as needed. "),
-            new P("However, note that within the colour object the resolution of RGB values is limited to 255, so values using a higher range will be rounded. ")
+            new P("However, note that within the colour object the resolution of the values is limited to 255, so values using higher ranges will be rounded. ")
             ),
         new PFlow(
-            new P("Once the values have been entered, click the “Apply” button to use them. ")
+            new P("Once the values have been entered, click the “Apply” button to use the defined colour. ")
             ),
         new H3Flow(new H3("“Layout” Pane")),
         new PFlow(
@@ -235,15 +235,15 @@ public class HelpControl extends Stage {
             new P("If duplication is not being used, “Row Repeat Count” defines the number of horizontal threads. ")
             ),
         new PFlow(
-            new P("Guide lines divide the “Sample” window into eight equal parts vertically and horizontally. "),
+            new P("The “Sample” window (i.e. the pattern before repeating) can be divided by guide lines into eight equal parts, vertically and horizontally. "),
             new P("The “Show Guide Lines” check box controls whether these are displayed or not. "),
             new P("The colour of the guide lines "),
             new Bold("AND "),
-            new P("the colour of thread highlights can be changed using the colour selector labelled “Guide Line Colour”. ")
+            new P("the colour of thread highlighting can be changed using the colour selector labelled “Guide Line Colour”. ")
             ),
         new PFlow(
-            new P("Typically multiple adjacent treads have the same colour. "),
-            new P("Up to eight adjacent threads can be set (with the currently selected colour) using the “Thread Repeat Count” spinner. ")
+            new P("Typically multiple adjacent threads have the same colour. "),
+            new P("Up to eight adjacent threads can be set (to the currently selected colour) using the “Thread Repeat Count” spinner. ")
             ),
         new PFlow(
             new P("The size of the threads can be increased using the “Thread Size” control, to make life easier during the design phase, however this will effect the generated graphic when saved. "),
@@ -265,7 +265,7 @@ public class HelpControl extends Stage {
             ),
         new H3Flow(new H3("Adjusting")),
         new PFlow(
-            new P("There are a few ways to adjust the tartan pattern, firstly it can be rotated for convenience. "),
+            new P("There are a few ways to adjust the tartan design, firstly it can be rotated as needed. "),
             new Bold("With the focus on the “Sample” window"),
             new P(", use the arrow keys to rotate the pattern up, down, left or right. "),
             new P("Note that with the “Duplicate the Column colours for the Rows” check box selected, the rotation is duplicated resulting in a diagonal movement. ")
@@ -278,12 +278,12 @@ public class HelpControl extends Stage {
         new ListFlow(
             new ListItem("With the “Alt” key held down, clicking on the extended threads will "),
             new Bold("delete "),
-            new ListItem("the highlighted number of threads. ")
+            new ListItem("the highlighted threads. ")
             ),
         new ListFlow(
             new ListItem("With the “Ctrl” key held down, clicking on the extended threads will "),
             new Bold("insert "),
-            new ListItem("the highlighted number of threads. ")
+            new ListItem("the highlighted threads. ")
             )
     );
 
