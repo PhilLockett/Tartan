@@ -42,6 +42,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
+import phillockett65.Debug.Debug;
 
 public class ColourSelect extends GridPane {
 
@@ -262,7 +263,7 @@ public class ColourSelect extends GridPane {
      * @param colour to set the swatch to.
      */
     private void setSwatch(Color colour) {
-        // System.out.println("setSwatch()" + colour.toString());
+        Debug.trace("setSwatch(" + colour.toString() + ")");
         if (colour.equals(lastColour))
             return;
 
@@ -273,7 +274,7 @@ public class ColourSelect extends GridPane {
     }
 
     private void syncSwatch() {
-        // System.out.println("syncSwatch()");
+        Debug.trace("syncSwatch()");
         setSwatch(getAlphaColour());
     }
 
@@ -410,7 +411,7 @@ public class ColourSelect extends GridPane {
         saturationSlider = buildSlider(MAX);
         saturationSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-                // System.out.println("Saturation: " + new_val.doubleValue());
+                Debug.info("Saturation: " + new_val.doubleValue());
                 sat = new_val.doubleValue() / MAX;
                 updateRGB();
             }
@@ -424,7 +425,7 @@ public class ColourSelect extends GridPane {
         brightnessSlider = buildSlider(MAX);
         brightnessSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-                // System.out.println("Brightness: " + new_val.doubleValue());
+                Debug.trace("Brightness: " + new_val.doubleValue());
                 val = new_val.doubleValue() / MAX;
                 updateRGB();
             }
@@ -439,7 +440,7 @@ public class ColourSelect extends GridPane {
             opacitySlider = buildSlider(MAX);
             opacitySlider.valueProperty().addListener(new ChangeListener<Number>() {
                 public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-                    // System.out.println("Opacity: " + new_val.doubleValue());
+                    Debug.trace("Opacity: " + new_val.doubleValue());
                     opa = new_val.doubleValue() / MAX;
                     syncSwatch();
                 }
@@ -456,7 +457,7 @@ public class ColourSelect extends GridPane {
         setSliderStyleClass(redSlider, "red-slider");
         redSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-                // System.out.println("Red: " + new_val.doubleValue());
+                Debug.trace("Red: " + new_val.doubleValue());
                 red = new_val.doubleValue() / MAX;
                 updateHSB();
             }
@@ -471,7 +472,7 @@ public class ColourSelect extends GridPane {
         setSliderStyleClass(greenSlider, "green-slider");
         greenSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-                // System.out.println("Green: " + new_val.doubleValue());
+                Debug.trace("Green: " + new_val.doubleValue());
                 gre = new_val.doubleValue() / MAX;
                 updateHSB();
             }
@@ -486,7 +487,7 @@ public class ColourSelect extends GridPane {
         setSliderStyleClass(blueSlider, "blue-slider");
         blueSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-                // System.out.println("Blue: " + new_val.doubleValue());
+                Debug.trace("Blue: " + new_val.doubleValue());
                 blu = new_val.doubleValue() / MAX;
                 updateHSB();
             }
@@ -505,7 +506,7 @@ public class ColourSelect extends GridPane {
      * RGB changed, so update values and UI for HSB.
      */
     private void updateHSB() {
-        // System.out.println("updateHSB()");
+        Debug.trace("updateHSB()");
         Color colour = Color.color(red, gre, blu, opa);
 
         hue = colour.getHue();
@@ -524,7 +525,7 @@ public class ColourSelect extends GridPane {
      * HSB changed, so update values and UI for RGB.
      */
     private void updateRGB() {
-        // System.out.println("updateRGB()");
+        Debug.trace("updateRGB()");
         Color colour = Color.hsb(hue, sat, val, opa);
 
         red = colour.getRed();
@@ -582,7 +583,7 @@ public class ColourSelect extends GridPane {
     }
 
     public void setColour(Color colour) {
-        // System.out.println("setColour() " + colour.toString());
+        Debug.info("setColour() " + colour.toString());
         red = colour.getRed();
         gre = colour.getGreen();
         blu = colour.getBlue();
@@ -613,7 +614,7 @@ public class ColourSelect extends GridPane {
      */
     public ColourSelect(boolean withAlpha) {
         super();
-        // System.out.println("ColourSelect() constructed.");
+        Debug.trace("ColourSelect() constructed.");
 
         opacity = withAlpha;
         buildGrid();
@@ -635,8 +636,7 @@ public class ColourSelect extends GridPane {
      }
  
     public void init() {
-        // System.out.println("ColourSelect() init()");
-
+        Debug.trace("ColourSelect() init()");
     }
  
 

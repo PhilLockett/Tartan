@@ -41,6 +41,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import phillockett65.Debug.Debug;
 
 public class ColourExtend extends GridPane {
 
@@ -359,7 +360,7 @@ public class ColourExtend extends GridPane {
     private Color getSelectedColour() { return selectedColour; }
 
     private void init() {
-        // System.out.println("ColourSelect() init()");
+        Debug.info("ColourSelect() init()");
 
         buildGrid();
         fillGrid();
@@ -396,7 +397,7 @@ public class ColourExtend extends GridPane {
      */
     public ColourExtend() {
         super();
-        // System.out.println("ColourSelect() constructed.");
+        Debug.trace("ColourSelect() constructed.");
         init();
      }
 

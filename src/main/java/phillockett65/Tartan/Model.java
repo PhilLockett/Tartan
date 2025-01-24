@@ -45,6 +45,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.Stage;
+import phillockett65.Debug.Debug;
 
 public class Model {
 
@@ -137,7 +138,7 @@ public class Model {
      * objects after the controls have been initialised.
      */
     public void initialize(PrimaryController mainController) {
-        // System.out.println("Model initialized.");
+        Debug.trace("Model initialized.");
 
         controller = mainController;
         sample = new Sample();
@@ -154,7 +155,7 @@ public class Model {
      * initialization dependent on other components being initialized.
      */
     public void init(Stage primaryStage) {
-        // System.out.println("Model init.");
+        Debug.trace("Model init.");
 
         stage = primaryStage;
         sample.init();
@@ -291,7 +292,7 @@ public class Model {
         tartanList.clear();
         for (final File tartan : tartanPath.listFiles()) {
             if (tartan.isDirectory()) {
-                // System.out.println(directoryName + "\\" + tartan.getName());
+                Debug.info(directoryName + "\\" + tartan.getName());
                 tartanList.add(tartan.getName());
             }
         }
@@ -621,7 +622,7 @@ public class Model {
         try {
             canvas.snapshot(parameters, snapshot);
         } catch (IllegalStateException e) {
-            System.out.println("saveImage() - Failed to take snapshot: " + e);
+            Debug.critical("saveImage() - Failed to take snapshot: " + e);
         }
 
         try {
@@ -631,7 +632,7 @@ public class Model {
             ImageIO.write(image, "png", output);
             success = true;
         } catch (Exception e) {
-            System.out.println("saveImage() - Failed saving image: " + e);
+            Debug.critical("saveImage() - Failed saving image: " + e);
         }
 
         return success;

@@ -34,6 +34,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import javafx.scene.paint.Color;
+import phillockett65.Debug.Debug;
 
 public class DataStore1 extends DataStoreBase {
     private static final long serialVersionUID = 1L;
@@ -163,7 +164,7 @@ public class DataStore1 extends DataStoreBase {
 
         DataStore1 store = new DataStore1();
         store.pull(model);
-        // store.dump();
+        store.dump();
 
         ObjectOutputStream objectOutputStream;
         try {
@@ -173,7 +174,7 @@ public class DataStore1 extends DataStoreBase {
             success = true;
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
+            Debug.critical(e.getMessage());
         }
 
         return success;
@@ -199,13 +200,13 @@ public class DataStore1 extends DataStoreBase {
             if (SVUID == 1) {
                 store = (DataStore1)base;
                 success = store.push(model);
-                // store.dump();
+                store.dump();
             }
 
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            Debug.critical(e.getMessage());
         } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            Debug.critical(e.getMessage());
         }
 
         return success;
@@ -217,34 +218,36 @@ public class DataStore1 extends DataStoreBase {
      * Support code for debug.
      */
 
+    private String listToString(ArrayList<Integer> list) {
+        String output = "[" + rowList.size() + "] = {";
+        for (Integer i : rowList)
+            output += " " + i;
+        output += " }";
+
+        return output;
+    }
+
     /**
      * Print data store on the command line.
      */
     public void dump() {
-        System.out.print("Row Colours[" + rowList.size() + "] = { ");
-        for (Integer i : rowList)
-            System.out.print(i + " ");
-        System.out.println("}");
+        Debug.info("Row Colours[" + listToString(rowList));
+        Debug.info("Col Colours[" + listToString(colList));
 
-        System.out.print("Col Colours[" + colList.size() + "] = { ");
-        for (Integer i : colList)
-            System.out.print(i + " ");
-        System.out.println("}");
-
-        System.out.println("Selected Swatch: " + selectedSwatch);
-        System.out.println("Swatches[" + colourSwatches.size() + "] = { ");
+        Debug.info("Selected Swatch: " + selectedSwatch);
+        Debug.info("Swatches[" + colourSwatches.size() + "] = { ");
         int i = 0;
         for (ColourSwatch s : colourSwatches)
-            System.out.println("  " + i++ + " RGB(" + s.red + ", " + s.green + ", " + s.blue + ") - " + s.name);
-        System.out.println("}");
+            Debug.info("  " + i++ + " RGB(" + s.red + ", " + s.green + ", " + s.blue + ") - " + s.name);
+        Debug.info("}");
 
-        System.out.println("Duplicate Flag: " + duplicate);
-        System.out.println("Show Guide Lines: " + showGuide);
-        System.out.println("Guide Line Colour: RGB(" + red + ", " + green + ", " + blue + ")");
+        Debug.info("Duplicate Flag: " + duplicate);
+        Debug.info("Show Guide Lines: " + showGuide);
+        Debug.info("Guide Line Colour: RGB(" + red + ", " + green + ", " + blue + ")");
 
-        System.out.println("Thread Repeat Count: " + threadCount);
-        System.out.println("Thread Size: " + threadSize);
-        System.out.println("Border Thickness: " + borderThickness);
+        Debug.info("Thread Repeat Count: " + threadCount);
+        Debug.info("Thread Size: " + threadSize);
+        Debug.info("Border Thickness: " + borderThickness);
     }
 
 }

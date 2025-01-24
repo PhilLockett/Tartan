@@ -31,6 +31,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import phillockett65.Debug.Debug;
 
 
 public class Warp {
@@ -278,7 +279,7 @@ public class Warp {
      * Constructor.
      */
     public Warp(boolean row, int min, int max) {
-		// System.out.println("CardSample constructed: " + title);
+		Debug.trace("Warp constructed");
 
         model = Model.getInstance();
         defaultColour = model.getBorderColour();

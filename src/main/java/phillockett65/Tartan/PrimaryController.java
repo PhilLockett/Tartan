@@ -46,6 +46,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import phillockett65.ColourSelect.ColourExtend;
 import phillockett65.ColourSelect.ColourSelect;
+import phillockett65.Debug.Debug;
 import phillockett65.ColourSelect.ColourEvent;
 
 
@@ -107,7 +108,7 @@ public class PrimaryController {
      * the FXMLLoader().
      */
     public PrimaryController() {
-        // System.out.println("PrimaryController constructed.");
+        Debug.trace("PrimaryController constructed.");
         model = Model.getInstance();
     }
 
@@ -116,7 +117,7 @@ public class PrimaryController {
      * the constructor to initialise all the controls.
      */
     @FXML public void initialize() {
-        // System.out.println("PrimaryController initialized.");
+        Debug.trace("PrimaryController initialized.");
         model.initialize(this);
 
         initializeTopBar();
@@ -138,7 +139,7 @@ public class PrimaryController {
      * initialization dependent on other components being initialized.
      */
     public void init(Stage stage) {
-        // System.out.println("PrimaryController init.");
+        Debug.trace("PrimaryController init.");
         
         model.init(stage);
 
@@ -365,7 +366,7 @@ public class PrimaryController {
     }
 
     private void selectedColourActionPerformed(int index) {
-        // System.out.println("selectedColourActionPerformed(" + index + ")");
+        Debug.trace("selectedColourActionPerformed(" + index + ")");
 
         final int previous = model.setSelectedColourIndex(index);
         colourSwatches.get(previous).setSelected(false);
@@ -377,7 +378,7 @@ public class PrimaryController {
     @FXML
     void selectedColourRadioButtonActionPerformed(ActionEvent event) {
         RadioButton field = (RadioButton)event.getSource();
-        // System.out.println("selectedColourRadioButtonActionPerformed(" + field.getId() + ", " + field.getText() + ")");
+        Debug.trace("selectedColourRadioButtonActionPerformed(" + field.getId() + ", " + field.getText() + ")");
 
         final int index = idToInt(field.getId());
         selectedColourActionPerformed(index);
@@ -386,7 +387,7 @@ public class PrimaryController {
     @FXML
     void swatchNameKeyPressed(KeyEvent event) {
         TextField field = (TextField)event.getSource();
-        // System.out.println("reflectorKeyTyped(" + field.getId() + ", " + field.getText() + ")");
+        Debug.trace("reflectorKeyTyped(" + field.getId() + ", " + field.getText() + ")");
 
         model.setSwatchName(idToInt(field.getId()), field.getText());
     }
@@ -614,22 +615,22 @@ public class PrimaryController {
         borderThicknessSpinner.setTooltip(new Tooltip("Set the thread border thickness in 0.1 pixels"));
 
         columnCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
-            // System.out.println("columnCountSpinner.Listener(" + newValue + "))");
+            Debug.trace("columnCountSpinner.Listener(" + newValue + "))");
             model.setColumnCount(newValue.intValue());
         });
 
         rowCountSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
-            // System.out.println("rowCountSpinner.Listener(" + newValue + "))");
+            Debug.trace("rowCountSpinner.Listener(" + newValue + "))");
             model.setRowCount(newValue.intValue());
         });
 
         threadSizeSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
-            // System.out.println("threadSizeSpinner.Listener(" + newValue + "))");
+            Debug.trace("threadSizeSpinner.Listener(" + newValue + "))");
             model.syncThreadSize();
         });
 
         borderThicknessSpinner.valueProperty().addListener( (v, oldValue, newValue) -> {
-            // System.out.println("borderThicknessSpinner.Listener(" + newValue + "))");
+            Debug.trace("borderThicknessSpinner.Listener(" + newValue + "))");
             model.syncThreadSize();
         });
 

@@ -44,6 +44,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import phillockett65.Debug.Debug;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -493,7 +494,7 @@ public class Sample extends Stage {
 
         final double WIDTH = Default.MPC_WIDTH.getFloat();
         final double HEIGHT = Default.MPC_HEIGHT.getFloat();
-        // System.out.println("initializeCardSample(" + WIDTH + ", " + HEIGHT + ")");
+        Debug.trace("initializeCardSample(" + WIDTH + ", " + HEIGHT + ")");
 
         root = new VBox();
         root.setPrefSize(WIDTH, HEIGHT);
@@ -822,7 +823,7 @@ public class Sample extends Stage {
      */
     public Sample() {
         super();
-		// System.out.println("CardSample constructed: " + title);
+		Debug.trace("CardSample constructed");
 
         model = Model.getInstance();
         defaultColour = model.getBorderColour();
