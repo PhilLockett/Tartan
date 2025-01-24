@@ -33,7 +33,7 @@ public class Debug {
     private static final int TRACE = 4;
     private static final int INFO = 5;
 
-    private static final int LEVEL = INFO;
+    private static final int LEVEL = MAJOR;
 
 
 

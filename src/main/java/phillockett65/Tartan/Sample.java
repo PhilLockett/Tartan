@@ -823,7 +823,7 @@ public class Sample extends Stage {
      */
     public Sample() {
         super();
-		Debug.trace("CardSample constructed");
+        Debug.trace("CardSample constructed");
 
         model = Model.getInstance();
         defaultColour = model.getBorderColour();

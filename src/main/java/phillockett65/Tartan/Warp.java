@@ -279,7 +279,7 @@ public class Warp {
      * Constructor.
      */
     public Warp(boolean row, int min, int max) {
-		Debug.trace("Warp constructed");
+        Debug.trace("Warp constructed");
 
         model = Model.getInstance();
         defaultColour = model.getBorderColour();
