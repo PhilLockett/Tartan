@@ -36,6 +36,9 @@ import phillockett65.Debug.Debug;
 
 public class Warp {
 
+    // Debug delta used to adjust the local logging level.
+    private static final int DD = 0;
+
     private Model model;
 
     private Group group;
@@ -279,7 +282,7 @@ public class Warp {
      * Constructor.
      */
     public Warp(boolean row, int min, int max) {
-        Debug.trace("Warp constructed");
+        Debug.trace(DD, "Warp constructed for " + (row ? "Row" : "Column") + "  " + min + ".." + max);
 
         model = Model.getInstance();
         defaultColour = model.getBorderColour();
@@ -297,6 +300,8 @@ public class Warp {
      * Initialization after the model has been initialised.
      */
     public void init(Group g, GraphicsContext c) {
+        Debug.trace(DD, "Warp init()");
+
         group = g;
         gc = c;
 

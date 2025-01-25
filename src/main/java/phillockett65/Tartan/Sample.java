@@ -52,6 +52,9 @@ import javafx.scene.shape.Rectangle;
 
 public class Sample extends Stage {
 
+    // Debug delta used to adjust the local logging level.
+    private static final int DD = 0;
+
     private final static int NONE_ZONE = 0;
     private final static int ROW_ZONE = 1;
     private final static int COLUMN_ZONE = 2;
@@ -494,7 +497,7 @@ public class Sample extends Stage {
 
         final double WIDTH = Default.MPC_WIDTH.getFloat();
         final double HEIGHT = Default.MPC_HEIGHT.getFloat();
-        Debug.trace("initializeCardSample(" + WIDTH + ", " + HEIGHT + ")");
+        Debug.trace(DD, "initializeCardSample(" + WIDTH + ", " + HEIGHT + ")");
 
         root = new VBox();
         root.setPrefSize(WIDTH, HEIGHT);
@@ -823,7 +826,7 @@ public class Sample extends Stage {
      */
     public Sample() {
         super();
-        Debug.trace("CardSample constructed");
+        Debug.trace(DD, "CardSample constructed");
 
         model = Model.getInstance();
         defaultColour = model.getBorderColour();

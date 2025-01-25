@@ -49,6 +49,9 @@ import phillockett65.Debug.Debug;
 
 public class Model {
 
+    // Debug delta used to adjust the local logging level.
+    private static final int DD = 0;
+
     private final static String DATAFILE = "Settings.dat";
     private final static String SWATCHES = "swatches";
     private final static String IMAGEFILE = "tartan.png";
@@ -138,7 +141,7 @@ public class Model {
      * objects after the controls have been initialised.
      */
     public void initialize(PrimaryController mainController) {
-        Debug.trace("Model initialized.");
+        Debug.trace(DD, "Model initialized.");
 
         controller = mainController;
         sample = new Sample();
@@ -155,7 +158,7 @@ public class Model {
      * initialization dependent on other components being initialized.
      */
     public void init(Stage primaryStage) {
-        Debug.trace("Model init.");
+        Debug.trace(DD, "Model init.");
 
         stage = primaryStage;
         sample.init();
@@ -292,7 +295,7 @@ public class Model {
         tartanList.clear();
         for (final File tartan : tartanPath.listFiles()) {
             if (tartan.isDirectory()) {
-                Debug.info(directoryName + "\\" + tartan.getName());
+                Debug.info(DD, directoryName + "\\" + tartan.getName());
                 tartanList.add(tartan.getName());
             }
         }
@@ -622,7 +625,7 @@ public class Model {
         try {
             canvas.snapshot(parameters, snapshot);
         } catch (IllegalStateException e) {
-            Debug.critical("saveImage() - Failed to take snapshot: " + e);
+            Debug.critical(DD, "saveImage() - Failed to take snapshot: " + e);
         }
 
         try {
@@ -632,7 +635,7 @@ public class Model {
             ImageIO.write(image, "png", output);
             success = true;
         } catch (Exception e) {
-            Debug.critical("saveImage() - Failed saving image: " + e);
+            Debug.critical(DD, "saveImage() - Failed saving image: " + e);
         }
 
         return success;

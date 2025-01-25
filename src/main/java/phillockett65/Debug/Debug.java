@@ -32,8 +32,10 @@ public class Debug {
     private static final int MINOR = 3;
     private static final int TRACE = 4;
     private static final int INFO = 5;
+    private static final int ALL = 6;
 
-    private static final int LEVEL = MAJOR;
+    // Logging level for entire application.
+    private static final int LEVEL = MINOR;
 
 
 
@@ -53,9 +55,21 @@ public class Debug {
         return "";
     }
 
-    private static void display(int level, String line) {
-        if (level <= LEVEL) {
-            final String message = pre(level) + ": " + line;
+    private static String formMessage(int level, String line) {
+        if (line == null) {
+            return "";
+        }
+
+        if (line.isEmpty()) {
+            return "";
+        }
+
+        return pre(level) + ": " + line;
+    }
+
+    private static void display(int level, int delta, String line) {
+        if (level-delta <= LEVEL) {
+            final String message = formMessage(level, line);
             if (level <= MAJOR)
                 System.err.println(message);
             else
@@ -82,11 +96,55 @@ public class Debug {
      * Support code for static public interface.
      */
 
-    public static void critical(String line) { display(CRITICAL, line); }
-    public static void major(String line) { display(MAJOR, line); }
-    public static void minor(String line) { display(MINOR, line); }
-    public static void trace(String line) { display(TRACE, line); }
-    public static void info(String line) { display(INFO, line); }
+    /**
+     * Log Critical error messsage.
+     * 
+     * @param delta adjustment, +ve values increase the amount of debug 
+     *              generated, whereas -ve values decrease it.
+     * @param line to log
+     */
+    public static void critical(int delta, String line) {
+        display(CRITICAL, delta, line);
+    }
 
+    /**
+     * Log Major error messsage.
+     * @param delta adjustment, +ve values increase the amount of debug 
+     *              generated, whereas -ve values decrease it.
+     * @param line to log
+     */
+    public static void major(int delta, String line) {
+        display(MAJOR, delta, line);
+    }
+
+    /**
+     * Log Minor error messsage.
+     * @param delta adjustment, +ve values increase the amount of debug 
+     *              generated, whereas -ve values decrease it.
+     * @param line to log
+     */
+    public static void minor(int delta, String line) {
+        display(MINOR, delta, line);
+    }
+
+    /**
+     * Log Trace messsage.
+     * @param delta adjustment, +ve values increase the amount of debug 
+     *              generated, whereas -ve values decrease it.
+     * @param line to log
+     */
+    public static void trace(int delta, String line) {
+        display(TRACE, delta, line);
+    }
+
+    /**
+     * Log Informational messsage.
+     * @param delta adjustment, +ve values increase the amount of debug 
+     *              generated, whereas -ve values decrease it.
+     * @param line to log
+     */
+    public static void info(int delta, String line) {
+        display(INFO, delta, line);
+    }
 
 }

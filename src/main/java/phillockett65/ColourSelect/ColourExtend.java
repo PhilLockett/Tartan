@@ -45,6 +45,9 @@ import phillockett65.Debug.Debug;
 
 public class ColourExtend extends GridPane {
 
+    // Debug delta used to adjust the local logging level.
+    private static final int DD = 0;
+
     private static final String ERROR = "error-text-field";
 
     private CheckBox hsbCheckbox = new CheckBox("HSB");
@@ -360,7 +363,7 @@ public class ColourExtend extends GridPane {
     private Color getSelectedColour() { return selectedColour; }
 
     private void init() {
-        Debug.info("ColourSelect() init()");
+        Debug.info(DD, "ColourSelect() init()");
 
         buildGrid();
         fillGrid();
@@ -397,7 +400,7 @@ public class ColourExtend extends GridPane {
      */
     public ColourExtend() {
         super();
-        Debug.trace("ColourSelect() constructed.");
+        Debug.trace(DD, "ColourSelect() constructed.");
         init();
      }
 

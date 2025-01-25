@@ -39,6 +39,9 @@ import phillockett65.Debug.Debug;
 public class DataStore1 extends DataStoreBase {
     private static final long serialVersionUID = 1L;
 
+    // Debug delta used to adjust the local logging level.
+    private static final int DD = 0;
+
     private ArrayList<Integer> rowList;
     private ArrayList<Integer> colList;
 
@@ -174,7 +177,7 @@ public class DataStore1 extends DataStoreBase {
             success = true;
         } catch (IOException e) {
             e.printStackTrace();
-            Debug.critical(e.getMessage());
+            Debug.critical(DD, e.getMessage());
         }
 
         return success;
@@ -204,9 +207,9 @@ public class DataStore1 extends DataStoreBase {
             }
 
         } catch (IOException e) {
-            Debug.critical(e.getMessage());
+            Debug.critical(DD, e.getMessage());
         } catch (ClassNotFoundException e) {
-            Debug.critical(e.getMessage());
+            Debug.critical(DD, e.getMessage());
         }
 
         return success;
@@ -231,23 +234,28 @@ public class DataStore1 extends DataStoreBase {
      * Print data store on the command line.
      */
     public void dump() {
-        Debug.info("Row Colours[" + listToString(rowList));
-        Debug.info("Col Colours[" + listToString(colList));
+        Debug.info(DD, "");
+        Debug.info(DD, "Row Colours[" + listToString(rowList));
+        Debug.info(DD, "Col Colours[" + listToString(colList));
+        Debug.info(DD, "");
 
-        Debug.info("Selected Swatch: " + selectedSwatch);
-        Debug.info("Swatches[" + colourSwatches.size() + "] = { ");
+        Debug.info(DD, "Selected Swatch: " + selectedSwatch);
+        Debug.info(DD, "Swatches[" + colourSwatches.size() + "] = { ");
         int i = 0;
         for (ColourSwatch s : colourSwatches)
-            Debug.info("  " + i++ + " RGB(" + s.red + ", " + s.green + ", " + s.blue + ") - " + s.name);
-        Debug.info("}");
+            Debug.info(DD, "  " + i++ + " RGB(" + s.red + ", " + s.green + ", " + s.blue + ") - " + s.name);
+        Debug.info(DD, "}");
+        Debug.info(DD, "");
 
-        Debug.info("Duplicate Flag: " + duplicate);
-        Debug.info("Show Guide Lines: " + showGuide);
-        Debug.info("Guide Line Colour: RGB(" + red + ", " + green + ", " + blue + ")");
+        Debug.info(DD, "Duplicate Flag: " + duplicate);
+        Debug.info(DD, "Show Guide Lines: " + showGuide);
+        Debug.info(DD, "Guide Line Colour: RGB(" + red + ", " + green + ", " + blue + ")");
+        Debug.info(DD, "");
 
-        Debug.info("Thread Repeat Count: " + threadCount);
-        Debug.info("Thread Size: " + threadSize);
-        Debug.info("Border Thickness: " + borderThickness);
+        Debug.info(DD, "Thread Repeat Count: " + threadCount);
+        Debug.info(DD, "Thread Size: " + threadSize);
+        Debug.info(DD, "Border Thickness: " + borderThickness);
+        Debug.info(DD, "");
     }
 
 }
