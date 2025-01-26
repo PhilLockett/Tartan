@@ -1,21 +1,21 @@
-/*  Tartan - a JavaFX application 'framework' that uses Maven, FXML and CSS.
+/*  Debug - a JavaFX package for logging diagnostics.
  *
  *  Copyright 2025 Philip Lockett.
  *
- *  This file is part of Tartan.
+ *  This file is part of Debug.
  *
- *  Tartan is free software: you can redistribute it and/or modify
+ *  Debug is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Tartan is distributed in the hope that it will be useful,
+ *  Debug is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Tartan.  If not, see <https://www.gnu.org/licenses/>.
+ *  along with Debug.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*

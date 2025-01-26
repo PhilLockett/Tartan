@@ -50,3 +50,4 @@ This code has the following points of interest:
   * Data persistence is provided by the Serializable DataStore object.
   * The GUI is implemented in FXML using SceneBuilder.
   * Uses a custom controller, "ColourSelect", to select desired colours.
+  * A `static` Debug object helps control diagnostic output.
