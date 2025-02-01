@@ -19,7 +19,36 @@
  */
 
 /*
- * Debug is the static class that manages debug output.
+ * Debug is the static class that manages debug output. The static value LEVEL 
+ * defines the level of debug output for the entire application. Each call to 
+ * display debug must provide a delta adjustment. Positive values increase the 
+ * amount of debug generated, whereas negative values decrease it. Defining 
+ * and using a local debug delta attribute (such as DD) will adjust the amount 
+ * of debug displayed within the scope that DD is defined in. However, if local
+ * debug levels must be set irrespective of the value of LEVEL the value of DD
+ * can be set by calculating the delta for the absolute debugging level.
+ * 
+ * Examples:
+ * 1) if only critical debug is to be displayed use:
+ *      LEVEL = CRITICAL;
+ * 
+ * 2) if all debug up to trace level is to be displayed use:
+ *      LEVEL = TRACE;
+ * 
+ * 3) if all debug is to be displayed use:
+ *      LEVEL = ALL;
+ * 
+ * 4) if slightly more local debug for a class is to be displayed use:
+ *      DD = 1;
+ * 
+ * 5) if a lot more local debug for a class is to be displayed use a larger value:
+ *      DD = 5;
+ * 
+ * 6) if slightly less local debug for a class is to be displayed use:
+ *      DD = -1;
+ * 
+ * 7) if all debug, up to and including info, is to be displayed for a class use:
+ *      DD = infoLevel();
  */
 package phillockett65.Debug;
 
@@ -30,11 +59,12 @@ public class Debug {
     private static final int CRITICAL = 1;
     private static final int MAJOR = 2;
     private static final int MINOR = 3;
-    private static final int TRACE = 4;
-    private static final int INFO = 5;
-    private static final int ALL = 6;
+    private static final int WARNING = 4;
+    private static final int TRACE = 5;
+    private static final int INFO = 6;
+    private static final int ALL = 7;
 
-    // Logging level for entire application.
+    // Debugging level for entire application.
     private static final int LEVEL = MINOR;
 
 
@@ -43,11 +73,14 @@ public class Debug {
      * General support code.
      */
 
+    private static int calcLevel(int level) { return level - LEVEL; }
+
     private static String pre(int level) {
         switch (level) {
             case CRITICAL:  return "Critical error";
             case MAJOR:     return "Major error";
             case MINOR:     return "Minor error";
+            case WARNING:   return "Warning";
             case TRACE:     return "Trace";
             case INFO:      return "Info";
         }
@@ -128,6 +161,16 @@ public class Debug {
     }
 
     /**
+     * Log Warning messsage.
+     * @param delta adjustment, +ve values increase the amount of debug 
+     *              generated, whereas -ve values decrease it.
+     * @param line to log
+     */
+    public static void warning(int delta, String line) {
+        display(WARNING, delta, line);
+    }
+
+    /**
      * Log Trace messsage.
      * @param delta adjustment, +ve values increase the amount of debug 
      *              generated, whereas -ve values decrease it.
@@ -146,5 +189,19 @@ public class Debug {
     public static void info(int delta, String line) {
         display(INFO, delta, line);
     }
+
+
+    /************************************************************************
+     * Calculate delta values for absolute debugging levels.
+     */
+
+    public static int noneLevel() { return calcLevel(NONE); }
+    public static int criticalLevel() { return calcLevel(CRITICAL); }
+    public static int majorLevel() { return calcLevel(MAJOR); }
+    public static int minorLevel() { return calcLevel(MINOR); }
+    public static int warningLevel() { return calcLevel(WARNING); }
+    public static int traceLevel() { return calcLevel(TRACE); }
+    public static int infoLevel() { return calcLevel(INFO); }
+    public static int allLevel() { return calcLevel(ALL); }
 
 }
